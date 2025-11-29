@@ -22,10 +22,15 @@ struct AppTextField: View {
             }
 
             TextField(placeholder, text: $text)
-                .padding(theme.spacing.s)
-                .background(theme.colors.backgroundSecondary)
-                .cornerRadius(theme.radii.medium)
                 .font(theme.typography.bodyM)
+                .foregroundColor(theme.colors.textPrimary)
+                .padding(theme.spacing.m)
+                .background(theme.colors.surfaceSecondary)
+                .cornerRadius(theme.radii.medium)
+                .overlay(
+                    RoundedRectangle(cornerRadius: theme.radii.medium)
+                        .stroke(theme.colors.borderSubtle, lineWidth: 1)
+                )
                 .textFieldStyle(.plain)
         }
     }

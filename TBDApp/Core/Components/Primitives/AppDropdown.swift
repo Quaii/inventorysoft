@@ -1,31 +1,62 @@
 import SwiftUI
 
-struct AppDropdown<Selection: Hashable, Content: View>: View {
-    let title: String
-    @Binding var selection: Selection
-    let content: Content
+struct AppDropdown<T: Hashable>: View {
+    let label: String?
+    let placeholder: String
+    let options: [T]
+    @Binding var selection: T
 
     @Environment(\.theme) var theme
 
-    init(title: String, selection: Binding<Selection>, @ViewBuilder content: () -> Content) {
-        self.title = title
+    init(
+        label: String? = nil,
+        placeholder: String = "Select",
+        options: [T],
+        selection: Binding<T>
+    ) {
+        self.label = label
+        self.placeholder = placeholder
+        self.options = options
         self._selection = selection
-        self.content = content()
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: theme.spacing.xs) {
-            Text(title)
-                .font(theme.typography.caption)
-                .foregroundColor(theme.colors.textSecondary)
-
-            Picker(title, selection: $selection) {
-                content
+            if let label = label {
+                Text(label)
+                    .font(theme.typography.caption)
+                    .foregroundColor(theme.colors.textSecondary)
             }
-            .pickerStyle(.menu)  // Use menu style for dropdown behavior
-            .padding(theme.spacing.s)
-            .background(theme.colors.surfaceElevated)
-            .cornerRadius(theme.radii.medium)
+
+            Menu {
+                ForEach(options, id: \.self) { option in
+                    Button(action: { selection = option }) {
+                        HStack {
+                            Text(String(describing: option))
+                            if selection == option {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } label: {
+                HStack {
+                    Text(String(describing: selection))
+                        .font(theme.typography.bodyM)
+                        .foregroundColor(theme.colors.textPrimary)
+                    Spacer()
+                    Image(systemName: "chevron.down")
+                        .font(theme.typography.caption)
+                        .foregroundColor(theme.colors.textSecondary)
+                }
+                .padding(theme.spacing.m)
+                .background(theme.colors.surfaceSecondary)
+                .cornerRadius(theme.radii.medium)
+                .overlay(
+                    RoundedRectangle(cornerRadius: theme.radii.medium)
+                        .stroke(theme.colors.borderSubtle, lineWidth: 1)
+                )
+            }
         }
     }
 }

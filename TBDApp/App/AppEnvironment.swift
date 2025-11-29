@@ -11,7 +11,11 @@ class AppEnvironment: ObservableObject {
     let analyticsService: AnalyticsServiceProtocol
     let imageService: ImageServiceProtocol
 
+    @Published var hasCompletedOnboarding: Bool
+
     init() {
+        self.hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+
         self.itemRepository = ItemRepository()
         self.salesRepository = SalesRepository()
         self.purchaseRepository = PurchaseRepository()
@@ -22,6 +26,11 @@ class AppEnvironment: ObservableObject {
         self.analyticsService = AnalyticsService(
             itemRepository: itemRepository, salesRepository: salesRepository)
         self.imageService = ImageService()
+    }
+
+    func completeOnboarding() {
+        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+        self.hasCompletedOnboarding = true
     }
 
     func makeDashboardViewModel() -> DashboardViewModel {

@@ -6,24 +6,39 @@ struct AppStatusPill: View {
     @Environment(\.theme) var theme
 
     var body: some View {
-        Text(status.rawValue)
+        Text(status.rawValue.capitalized)
             .font(theme.typography.caption)
-            .fontWeight(.medium)
+            .fontWeight(.semibold)
+            .padding(.vertical, 4)
             .padding(.horizontal, theme.spacing.s)
-            .padding(.vertical, theme.spacing.xxs)
-            .background(backgroundColor.opacity(0.2))
-            .foregroundColor(backgroundColor)
+            .background(backgroundColor)
+            .foregroundColor(foregroundColor)
             .cornerRadius(theme.radii.pill)
+            .overlay(
+                RoundedRectangle(cornerRadius: theme.radii.pill)
+                    .stroke(foregroundColor.opacity(0.3), lineWidth: 1)
+            )
     }
 
     private var backgroundColor: Color {
         switch status {
+        case .inStock: return theme.colors.success.opacity(0.15)
+        case .listed: return theme.colors.accentSecondary.opacity(0.15)  // Assuming .listed should map to something, using the new sold color
+        case .sold: return theme.colors.accentSecondary.opacity(0.15)
+        case .reserved: return theme.colors.warning.opacity(0.15)
+        case .archived: return theme.colors.surfaceMuted
+        case .draft: return theme.colors.surfaceMuted
+        }
+    }
+
+    private var foregroundColor: Color {
+        switch status {
         case .inStock: return theme.colors.success
-        case .listed: return theme.colors.accentSecondary
-        case .sold: return theme.colors.accentPrimary
+        case .listed: return theme.colors.accentSecondary  // Assuming .listed should map to something, using the new sold color
+        case .sold: return theme.colors.accentSecondary
         case .reserved: return theme.colors.warning
-        case .archived: return theme.colors.textSecondary
-        case .draft: return theme.colors.borderSubtle
+        case .draft: return theme.colors.textMuted
+        case .archived: return theme.colors.textMuted
         }
     }
 }

@@ -5,9 +5,13 @@ class InventoryViewModel: ObservableObject {
     @Published var items: [Item] = []
     @Published var searchText: String = ""
     @Published var selectedStatus: ItemStatus?
+    @Published var selectedCategory: String?
     @Published var sortOption: ItemSortOption = .byDateAddedDescending
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
+
+    // Mock categories for now
+    let categories = ["Electronics", "Clothing", "Home", "Sports", "Other"]
 
     private let itemRepository: ItemRepositoryProtocol
 

@@ -9,22 +9,28 @@ struct AppSearchField: View {
     var body: some View {
         HStack(spacing: theme.spacing.s) {
             Image(systemName: "magnifyingglass")
-                .foregroundColor(theme.colors.textSecondary)
+                .foregroundColor(theme.colors.textMuted)
 
             TextField(placeholder, text: $text)
                 .textFieldStyle(.plain)
                 .font(theme.typography.bodyM)
+                .foregroundColor(theme.colors.textPrimary)
 
             if !text.isEmpty {
                 Button(action: { text = "" }) {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(theme.colors.textSecondary)
+                        .foregroundColor(theme.colors.textMuted)
                 }
                 .buttonStyle(.plain)
             }
         }
-        .padding(theme.spacing.s)
-        .background(theme.colors.surfaceElevated)
-        .cornerRadius(theme.radii.medium)
+        .padding(.vertical, theme.spacing.s)
+        .padding(.horizontal, theme.spacing.m)
+        .background(theme.colors.surfaceSecondary)
+        .cornerRadius(theme.radii.pill)
+        .overlay(
+            RoundedRectangle(cornerRadius: theme.radii.pill)
+                .stroke(theme.colors.borderSubtle, lineWidth: 1)
+        )
     }
 }

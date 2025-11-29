@@ -1,120 +1,175 @@
 import SwiftUI
 
 struct ItemDetailView: View {
-    let itemId: UUID
+    let itemId: UUID?
     @StateObject var viewModel: ItemDetailViewModel
     @Environment(\.theme) var theme
     @Environment(\.dismiss) var dismiss
 
-    // Local state for form fields (simplified for Phase 2)
-    @State private var title: String = ""
-    @State private var sku: String = ""
-    @State private var price: String = ""
-    @State private var quantity: String = ""
-    @State private var status: ItemStatus = .draft
+    init(itemId: UUID? = nil, viewModel: ItemDetailViewModel) {
+        self.itemId = itemId
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
 
     var body: some View {
         AppScreenContainer {
-            ScrollView {
-                VStack(spacing: theme.spacing.l) {
-                    // Header
-                    HStack {
-                        Text("Item Details")
-                            .font(theme.typography.h2)
-                            .foregroundColor(theme.colors.textPrimary)
-                        Spacer()
-                        AppButton(title: "Save", style: .primary) {
-                            saveItem()
+            VStack(spacing: theme.spacing.xl) {
+                // Header
+                HStack {
+                    AppButton(icon: "arrow.left", style: .ghost) {
+                        dismiss()
+                    }
+                    Text(viewModel.isNewItem ? "Add Item" : "Edit Item")
+                        .font(theme.typography.headingXL)
+                        .foregroundColor(theme.colors.textPrimary)
+                    Spacer()
+                    if !viewModel.isNewItem {
+                        AppButton(title: "Delete", icon: "trash", style: .destructive) {
+                            // Show delete confirmation
                         }
                     }
-
-                    if viewModel.isLoading {
-                        ProgressView()
-                    } else if let error = viewModel.errorMessage {
-                        Text(error).foregroundColor(theme.colors.error)
-                    } else {
-                        // Form
-                        VStack(spacing: theme.spacing.m) {
-                            AppTextField("Title", placeholder: "Item Title", text: $title)
-                            AppTextField("SKU", placeholder: "SKU-123", text: $sku)
-
-                            HStack(spacing: theme.spacing.m) {
-                                AppTextField("Price", placeholder: "0.00", text: $price)
-                                AppTextField("Quantity", placeholder: "1", text: $quantity)
+                    AppButton(title: "Save", icon: "checkmark", style: .primary) {
+                        Task {
+                            if await viewModel.saveItem() {
+                                dismiss()
                             }
-
-                            AppDropdown(title: "Status", selection: $status) {
-                                ForEach(ItemStatus.allCases, id: \.self) { status in
-                                    Text(status.rawValue).tag(status)
-                                }
-                            }
-                        }
-                        .padding(theme.spacing.m)
-                        .background(theme.colors.surfaceElevated)
-                        .cornerRadius(theme.radii.large)
-
-                        // Images Section (Placeholder)
-                        VStack(alignment: .leading, spacing: theme.spacing.s) {
-                            Text("Images")
-                                .font(theme.typography.h3)
-
-                            ScrollView(.horizontal) {
-                                HStack {
-                                    ForEach(viewModel.images) { image in
-                                        // In real app, load image from disk. Here just a placeholder
-                                        Rectangle()
-                                            .fill(theme.colors.surfaceElevated)
-                                            .frame(width: 100, height: 100)
-                                            .overlay(Text(image.fileName).font(.caption))
-                                            .cornerRadius(theme.radii.medium)
-                                    }
-
-                                    AppButton(icon: "plus", style: .secondary) {
-                                        // Add image action
-                                    }
-                                }
-                            }
-                        }
-
-                        // Delete Button
-                        AppButton(title: "Delete Item", style: .destructive) {
-                            // Delete action
                         }
                     }
                 }
-                .padding(theme.spacing.m)
+
+                if viewModel.isLoading {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    ScrollView {
+                        HStack(alignment: .top, spacing: theme.spacing.xl) {
+                            // Left Column: Image and Basic Info
+                            VStack(spacing: theme.spacing.l) {
+                                // Image Placeholder
+                                AppCard {
+                                    ZStack {
+                                        theme.colors.surfaceSecondary
+                                        if let image = viewModel.selectedImage {
+                                            #if os(iOS)
+                                                Image(uiImage: image)
+                                                    .resizable()
+                                                    .aspectRatio(contentMode: .fill)
+                                            #elseif os(macOS)
+                                                Image(nsImage: image)
+                                                    .resizable()
+                                                    .aspectRatio(contentMode: .fill)
+                                            #endif
+                                        } else {
+                                            VStack(spacing: theme.spacing.s) {
+                                                Image(systemName: "photo")
+                                                    .font(.system(size: 40))
+                                                    .foregroundColor(theme.colors.textMuted)
+                                                Text("Upload Image")
+                                                    .font(theme.typography.bodyM)
+                                                    .foregroundColor(theme.colors.textSecondary)
+                                            }
+                                        }
+                                    }
+                                    .frame(height: 300)
+                                    .cornerRadius(theme.radii.medium)
+                                    .onTapGesture {
+                                        // Trigger image picker
+                                    }
+                                }
+
+                                AppCard {
+                                    VStack(alignment: .leading, spacing: theme.spacing.l) {
+                                        Text("Basic Information")
+                                            .font(theme.typography.headingM)
+                                            .foregroundColor(theme.colors.textPrimary)
+
+                                        AppTextField(
+                                            "Name", placeholder: "Item Name", text: $viewModel.name)
+                                        AppTextField(
+                                            "Brand", placeholder: "Brand", text: $viewModel.brand)
+
+                                        AppDropdown(
+                                            label: "Category",
+                                            placeholder: "Select Category",
+                                            options: viewModel.categories,
+                                            selection: $viewModel.selectedCategory
+                                        )
+                                    }
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+
+                            // Right Column: Pricing and Inventory
+                            VStack(spacing: theme.spacing.l) {
+                                AppCard {
+                                    VStack(alignment: .leading, spacing: theme.spacing.l) {
+                                        Text("Pricing")
+                                            .font(theme.typography.headingM)
+                                            .foregroundColor(theme.colors.textPrimary)
+
+                                        HStack(spacing: theme.spacing.m) {
+                                            AppTextField(
+                                                "Purchase Price", placeholder: "0.00",
+                                                text: Binding(
+                                                    get: { String(viewModel.purchasePrice) },
+                                                    set: {
+                                                        viewModel.purchasePrice = Double($0) ?? 0
+                                                    }
+                                                ))
+
+                                            AppTextField(
+                                                "Selling Price", placeholder: "0.00",
+                                                text: Binding(
+                                                    get: { String(viewModel.sellingPrice) },
+                                                    set: {
+                                                        viewModel.sellingPrice = Double($0) ?? 0
+                                                    }
+                                                ))
+                                        }
+                                    }
+                                }
+
+                                AppCard {
+                                    VStack(alignment: .leading, spacing: theme.spacing.l) {
+                                        Text("Inventory")
+                                            .font(theme.typography.headingM)
+                                            .foregroundColor(theme.colors.textPrimary)
+
+                                        AppTextField(
+                                            "Quantity", placeholder: "0",
+                                            text: Binding(
+                                                get: { String(viewModel.quantity) },
+                                                set: { viewModel.quantity = Int($0) ?? 0 }
+                                            ))
+
+                                        AppDropdown(
+                                            label: "Status",
+                                            placeholder: "Select Status",
+                                            options: ItemStatus.allCases,
+                                            selection: $viewModel.status
+                                        )
+                                    }
+                                }
+
+                                AppCard {
+                                    VStack(alignment: .leading, spacing: theme.spacing.l) {
+                                        Text("Notes")
+                                            .font(theme.typography.headingM)
+                                            .foregroundColor(theme.colors.textPrimary)
+
+                                        AppTextField(
+                                            "Description", placeholder: "Add notes...",
+                                            text: $viewModel.note
+                                        )
+                                        .frame(height: 100, alignment: .top)
+                                    }
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                    }
+                }
             }
-        }
-        .task {
-            await viewModel.loadItem(id: itemId)
-            if let item = viewModel.item {
-                self.title = item.title
-                self.sku = item.sku ?? ""
-                self.price = "\(item.purchasePrice)"
-                self.quantity = "\(item.quantity)"
-                self.status = item.status
-            }
-        }
-    }
-
-    private func saveItem() {
-        guard let priceDecimal = Decimal(string: price), let quantityInt = Int(quantity) else {
-            return
-        }
-
-        var item =
-            viewModel.item
-            ?? Item(
-                title: title, purchasePrice: priceDecimal, quantity: quantityInt, status: status)
-        item.title = title
-        item.sku = sku
-        item.purchasePrice = priceDecimal
-        item.quantity = quantityInt
-        item.status = status
-
-        Task {
-            await viewModel.saveItem(item)
-            dismiss()
         }
     }
 }

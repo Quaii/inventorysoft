@@ -21,22 +21,24 @@ struct Item: Identifiable, Codable, Equatable {
     var notes: String?
     var status: ItemStatus
     var sku: String?
-    
+
     // In-memory convenience, not persisted directly in Item table
     var images: [ImageAttachment] = []
-    
-    init(id: UUID = UUID(), 
-         title: String, 
-         brandId: UUID? = nil, 
-         categoryId: UUID? = nil, 
-         purchasePrice: Decimal = 0, 
-         quantity: Int = 1, 
-         dateAdded: Date = Date(), 
-         condition: String = "New", 
-         notes: String? = nil, 
-         status: ItemStatus = .draft, 
-         sku: String? = nil,
-         images: [ImageAttachment] = []) {
+
+    init(
+        id: UUID = UUID(),
+        title: String,
+        brandId: UUID? = nil,
+        categoryId: UUID? = nil,
+        purchasePrice: Decimal = 0,
+        quantity: Int = 1,
+        dateAdded: Date = Date(),
+        condition: String = "New",
+        notes: String? = nil,
+        status: ItemStatus = .draft,
+        sku: String? = nil,
+        images: [ImageAttachment] = []
+    ) {
         self.id = id
         self.title = title
         self.brandId = brandId

@@ -13,14 +13,44 @@ where Data.Element: Identifiable {
     }
 
     var body: some View {
-        List(data) { item in
-            rowContent(item)
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.clear)
-                .padding(.vertical, theme.spacing.xs)
+        VStack(spacing: 0) {
+            // Header
+            HStack {
+                Text("Item")
+                Spacer()
+                Text("Details")
+            }
+            .font(theme.typography.caption)
+            .foregroundColor(theme.colors.textSecondary)
+            .padding(theme.spacing.m)
+            .background(theme.colors.surfaceSecondary)
+
+            // Rows
+            LazyVStack(spacing: 0) {
+                ForEach(Array(data.enumerated()), id: \.element.id) { index, item in
+                    rowContent(item)
+                        .padding(.vertical, theme.spacing.m)
+                        .padding(.horizontal, theme.spacing.m)
+                        .background(
+                            index % 2 == 0
+                                ? Color.clear : theme.colors.backgroundSecondary.opacity(0.3)
+                        )
+                        .contentShape(Rectangle())
+                        // Hover effect could be added here with onHover
+                        .overlay(
+                            Rectangle()
+                                .frame(height: 1)
+                                .foregroundColor(theme.colors.borderSubtle.opacity(0.5)),
+                            alignment: .bottom
+                        )
+                }
+            }
         }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
-        .background(theme.colors.backgroundPrimary)
+        .background(theme.colors.surfacePrimary)
+        .cornerRadius(theme.radii.medium)
+        .overlay(
+            RoundedRectangle(cornerRadius: theme.radii.medium)
+                .stroke(theme.colors.borderSubtle, lineWidth: 1)
+        )
     }
 }

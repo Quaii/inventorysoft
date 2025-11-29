@@ -6,37 +6,46 @@ struct SalesListView: View {
 
     var body: some View {
         AppScreenContainer {
-            VStack(spacing: theme.spacing.m) {
+            VStack(spacing: theme.spacing.xl) {
+                // Header
                 HStack {
                     Text("Sales")
-                        .font(theme.typography.h2)
+                        .font(theme.typography.headingXL)
                         .foregroundColor(theme.colors.textPrimary)
                     Spacer()
-                    AppButton(title: "Add Sale", icon: "plus", style: .primary) {
-                        // Add sale action
+                    AppButton(title: "New Sale", icon: "plus", style: .primary) {
+                        // Navigate to new sale
                     }
                 }
 
+                // Content
                 if viewModel.isLoading {
                     ProgressView()
-                } else if let error = viewModel.errorMessage {
-                    Text(error).foregroundColor(theme.colors.error)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     AppTable(viewModel.sales) { sale in
                         HStack {
-                            Text(sale.dateSold.formatted(date: .abbreviated, time: .omitted))
-                                .font(theme.typography.bodyM)
-                                .frame(width: 100, alignment: .leading)
-
-                            Text(sale.platform)
-                                .font(theme.typography.bodyM)
-                                .frame(width: 100, alignment: .leading)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(sale.platform)
+                                    .font(theme.typography.bodyM)
+                                    .foregroundColor(theme.colors.textPrimary)
+                                Text(sale.dateSold.formatted(date: .abbreviated, time: .shortened))
+                                    .font(theme.typography.caption)
+                                    .foregroundColor(theme.colors.textSecondary)
+                            }
 
                             Spacer()
 
+                            Text("1 Item")  // Placeholder as Sale doesn't have item count yet
+                                .font(theme.typography.bodyS)
+                                .foregroundColor(theme.colors.textSecondary)
+                                .frame(width: 80, alignment: .trailing)
+
                             Text(sale.soldPrice.formatted(.currency(code: "USD")))
                                 .font(theme.typography.bodyM)
-                                .fontWeight(.semibold)
+                                .fontWeight(.medium)
+                                .foregroundColor(theme.colors.textPrimary)
+                                .frame(width: 100, alignment: .trailing)
                         }
                         .padding(.horizontal, theme.spacing.s)
                     }

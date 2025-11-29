@@ -4,11 +4,30 @@ import SwiftUI
 struct TBDApp: App {
     @StateObject private var appEnvironment = AppEnvironment()
 
+    init() {
+        ThemeConfigurator.configure(Theme.standard)
+    }
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(appEnvironment)
+            if appEnvironment.hasCompletedOnboarding {
+                MainShellView()
+                    .environmentObject(appEnvironment)
+                    .preferredColorScheme(.dark)
+                    .tint(Theme.standard.colors.accentPrimary)
+            } else {
+                OnboardingView()
+                    .environmentObject(appEnvironment)
+                    .preferredColorScheme(.dark)
+                    .tint(Theme.standard.colors.accentPrimary)
+            }
         }
+        #if os(macOS)
+            .windowStyle(.hiddenTitleBar)
+            .commands {
+                SidebarCommands()
+            }
+        #endif
     }
 }
 

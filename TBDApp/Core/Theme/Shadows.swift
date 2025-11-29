@@ -1,9 +1,10 @@
 import SwiftUI
 
 struct AppShadows {
-    let subtle = ShadowStyle(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
-    let card = ShadowStyle(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-    let elevated = ShadowStyle(color: .black.opacity(0.15), radius: 8, x: 0, y: 4)
+    let subtle = ShadowStyle(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
+    let card = ShadowStyle(color: Color.black.opacity(0.3), radius: 20, x: 0, y: 10)
+    let elevated = ShadowStyle(color: Color.black.opacity(0.4), radius: 30, x: 0, y: 15)
+    let glow = ShadowStyle(color: Color(hex: "3B82F6").opacity(0.2), radius: 20, x: 0, y: 0)  // New glow effect
 }
 
 struct ShadowStyle {

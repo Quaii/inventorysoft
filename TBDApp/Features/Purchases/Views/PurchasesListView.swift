@@ -6,39 +6,49 @@ struct PurchasesListView: View {
 
     var body: some View {
         AppScreenContainer {
-            VStack(spacing: theme.spacing.m) {
+            VStack(spacing: theme.spacing.xl) {
+                // Header
                 HStack {
                     Text("Purchases")
-                        .font(theme.typography.h2)
+                        .font(theme.typography.headingXL)
                         .foregroundColor(theme.colors.textPrimary)
                     Spacer()
-                    AppButton(title: "Add Purchase", icon: "plus", style: .primary) {
-                        // Add purchase action
+                    AppButton(title: "New Purchase", icon: "plus", style: .primary) {
+                        // Navigate to new purchase
                     }
                 }
 
+                // Content
                 if viewModel.isLoading {
                     ProgressView()
-                } else if let error = viewModel.errorMessage {
-                    Text(error).foregroundColor(theme.colors.error)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     AppTable(viewModel.purchases) { purchase in
                         HStack {
-                            Text(
-                                purchase.datePurchased.formatted(date: .abbreviated, time: .omitted)
-                            )
-                            .font(theme.typography.bodyM)
-                            .frame(width: 100, alignment: .leading)
-
-                            Text(purchase.supplier)
-                                .font(theme.typography.bodyM)
-                                .frame(width: 150, alignment: .leading)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(purchase.supplier)
+                                    .font(theme.typography.bodyM)
+                                    .foregroundColor(theme.colors.textPrimary)
+                                Text(
+                                    purchase.datePurchased.formatted(
+                                        date: .abbreviated, time: .shortened)
+                                )
+                                .font(theme.typography.caption)
+                                .foregroundColor(theme.colors.textSecondary)
+                            }
 
                             Spacer()
 
+                            Text("1 Item")  // Placeholder as Purchase doesn't have item count yet
+                                .font(theme.typography.bodyS)
+                                .foregroundColor(theme.colors.textSecondary)
+                                .frame(width: 80, alignment: .trailing)
+
                             Text(purchase.cost.formatted(.currency(code: "USD")))
                                 .font(theme.typography.bodyM)
-                                .fontWeight(.semibold)
+                                .fontWeight(.medium)
+                                .foregroundColor(theme.colors.textPrimary)
+                                .frame(width: 100, alignment: .trailing)
                         }
                         .padding(.horizontal, theme.spacing.s)
                     }

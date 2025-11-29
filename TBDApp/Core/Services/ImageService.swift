@@ -1,12 +1,11 @@
-import Foundation
 import SwiftUI
 
 #if os(macOS)
     import AppKit
-    typealias PlatformImage = NSImage
+    public typealias PlatformImage = NSImage
 #else
     import UIKit
-    typealias PlatformImage = UIImage
+    public typealias PlatformImage = UIImage
 #endif
 
 protocol ImageServiceProtocol {

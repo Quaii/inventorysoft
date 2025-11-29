@@ -6,26 +6,33 @@ struct InventoryView: View {
 
     var body: some View {
         AppScreenContainer {
-            VStack(spacing: theme.spacing.m) {
-                // Header & Controls
-                HStack(spacing: theme.spacing.m) {
+            VStack(spacing: theme.spacing.xl) {
+                // Header
+                HStack {
                     Text("Inventory")
-                        .font(theme.typography.h2)
+                        .font(theme.typography.headingXL)
                         .foregroundColor(theme.colors.textPrimary)
-
                     Spacer()
-
                     AppButton(title: "Add Item", icon: "plus", style: .primary) {
-                        // Action to open add item sheet (to be implemented)
+                        // Navigate to add item
                     }
                 }
 
+                // Search and Filter Bar
                 HStack(spacing: theme.spacing.m) {
                     AppSearchField(text: $viewModel.searchText, placeholder: "Search items...")
-                        .frame(maxWidth: 300)
+                        .frame(maxWidth: 400)
 
-                    // Filter by Status (Simplified for now)
-                    // AppDropdown(title: "Status", selection: $viewModel.selectedStatus) { ... }
+                    AppDropdown(
+                        label: nil,
+                        placeholder: "Category",
+                        options: ["All"] + viewModel.categories,
+                        selection: Binding(
+                            get: { viewModel.selectedCategory ?? "All" },
+                            set: { viewModel.selectedCategory = $0 == "All" ? nil : $0 }
+                        )
+                    )
+                    .frame(width: 200)
 
                     Spacer()
                 }
@@ -33,32 +40,24 @@ struct InventoryView: View {
                 // Content
                 if viewModel.isLoading {
                     ProgressView()
-                        .frame(maxHeight: .infinity)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if let error = viewModel.errorMessage {
                     Text(error)
                         .foregroundColor(theme.colors.error)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     AppTable(viewModel.items) { item in
                         HStack {
-                            VStack(alignment: .leading) {
+                            VStack(alignment: .leading, spacing: 4) {
                                 Text(item.title)
                                     .font(theme.typography.bodyM)
                                     .foregroundColor(theme.colors.textPrimary)
-                                Text(item.sku ?? "No SKU")
+                                Text(item.sku ?? "-")
                                     .font(theme.typography.caption)
                                     .foregroundColor(theme.colors.textSecondary)
                             }
 
                             Spacer()
-
-                            Text("\(item.quantity)")
-                                .font(theme.typography.bodyM)
-                                .foregroundColor(theme.colors.textPrimary)
-                                .frame(width: 50, alignment: .trailing)
-
-                            Text(item.purchasePrice.formatted(.currency(code: "USD")))
-                                .font(theme.typography.bodyM)
-                                .foregroundColor(theme.colors.textPrimary)
                                 .frame(width: 80, alignment: .trailing)
 
                             AppStatusPill(status: item.status)

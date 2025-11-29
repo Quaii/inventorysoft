@@ -6,6 +6,9 @@ protocol AnalyticsServiceProtocol {
     func totalNetProfit() async throws -> Decimal
     func itemCount() async throws -> Int
     func saleCount() async throws -> Int
+    func getRecentActivity() async throws -> [ActivityItem]
+    func getLowStockItems() async throws -> [Item]
+    func getSalesChartData() async throws -> [SalesDataPoint]
 }
 
 class AnalyticsService: AnalyticsServiceProtocol {
@@ -58,4 +61,93 @@ class AnalyticsService: AnalyticsServiceProtocol {
         let sales = try await salesRepository.fetchAllSales()
         return sales.count
     }
+
+    func getRecentActivity() async throws -> [ActivityItem] {
+        // Fetch recent sales
+        let sales = try await salesRepository.fetchAllSales()
+        let recentSales = sales.sorted(by: { $0.dateSold > $1.dateSold }).prefix(5)
+
+        // Fetch recent items
+        let items = try await itemRepository.fetchAllItems(
+            search: nil, statusFilter: nil, sort: .byDateAddedDescending)
+        let recentItems = items.prefix(5)
+
+        var activities: [ActivityItem] = []
+
+        for sale in recentSales {
+            activities.append(
+                ActivityItem(
+                    id: sale.id,
+                    title: "Item Sold",
+                    description: "Sold for \(sale.soldPrice.formatted(.currency(code: "USD")))",
+                    date: sale.dateSold,
+                    type: .sale
+                ))
+        }
+
+        for item in recentItems {
+            activities.append(
+                ActivityItem(
+                    id: item.id,
+                    title: "New Item Added",
+                    description: item.title,
+                    date: item.dateAdded,
+                    type: .inventory
+                ))
+        }
+
+        return activities.sorted(by: { $0.date > $1.date }).prefix(10).map { $0 }
+    }
+
+    func getLowStockItems() async throws -> [Item] {
+        let items = try await itemRepository.fetchAllItems(
+            search: nil, statusFilter: [.inStock], sort: .byDateAddedDescending)
+        return items.filter { $0.quantity < 3 }
+    }
+
+    func getSalesChartData() async throws -> [SalesDataPoint] {
+        let sales = try await salesRepository.fetchAllSales()
+        // Group by day for the last 7 days
+        let calendar = Calendar.current
+        let today = Date()
+        let sevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: today)!
+
+        let recentSales = sales.filter { $0.dateSold >= sevenDaysAgo }
+
+        var dailyTotals: [Date: Decimal] = [:]
+
+        for sale in recentSales {
+            let day = calendar.startOfDay(for: sale.dateSold)
+            dailyTotals[day, default: 0] += sale.soldPrice
+        }
+
+        var dataPoints: [SalesDataPoint] = []
+        for i in 0..<7 {
+            if let date = calendar.date(byAdding: .day, value: -i, to: today) {
+                let day = calendar.startOfDay(for: date)
+                dataPoints.append(SalesDataPoint(date: day, amount: dailyTotals[day] ?? 0))
+            }
+        }
+
+        return dataPoints.sorted(by: { $0.date < $1.date })
+    }
+}
+
+struct ActivityItem: Identifiable {
+    let id: UUID
+    let title: String
+    let description: String
+    let date: Date
+    let type: ActivityType
+
+    enum ActivityType {
+        case sale
+        case inventory
+    }
+}
+
+struct SalesDataPoint: Identifiable {
+    let id = UUID()
+    let date: Date
+    let amount: Decimal
 }
