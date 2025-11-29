@@ -7,4 +7,9 @@ struct AppTypography {
     let bodyL = Font.body
     let bodyM = Font.callout
     let caption = Font.caption
+
+    // Aliases
+    var h1: Font { headingL }
+    var h2: Font { headingM }
+    var h3: Font { headingS }
 }

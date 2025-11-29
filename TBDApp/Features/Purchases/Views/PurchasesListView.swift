@@ -7,15 +7,40 @@ struct PurchasesListView: View {
     var body: some View {
         AppScreenContainer {
             VStack(spacing: theme.spacing.m) {
-                Text("Purchases")
-                    .font(theme.typography.headingL)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                HStack {
+                    Text("Purchases")
+                        .font(theme.typography.h2)
+                        .foregroundColor(theme.colors.textPrimary)
+                    Spacer()
+                    AppButton(title: "Add Purchase", icon: "plus", style: .primary) {
+                        // Add purchase action
+                    }
+                }
 
-                List(viewModel.purchases) { purchase in
-                    HStack {
-                        Text(purchase.date.formatted(date: .abbreviated, time: .shortened))
-                        Spacer()
-                        Text("$\(NSDecimalNumber(decimal: purchase.amount).stringValue)")
+                if viewModel.isLoading {
+                    ProgressView()
+                } else if let error = viewModel.errorMessage {
+                    Text(error).foregroundColor(theme.colors.error)
+                } else {
+                    AppTable(viewModel.purchases) { purchase in
+                        HStack {
+                            Text(
+                                purchase.datePurchased.formatted(date: .abbreviated, time: .omitted)
+                            )
+                            .font(theme.typography.bodyM)
+                            .frame(width: 100, alignment: .leading)
+
+                            Text(purchase.supplier)
+                                .font(theme.typography.bodyM)
+                                .frame(width: 150, alignment: .leading)
+
+                            Spacer()
+
+                            Text(purchase.cost.formatted(.currency(code: "USD")))
+                                .font(theme.typography.bodyM)
+                                .fontWeight(.semibold)
+                        }
+                        .padding(.horizontal, theme.spacing.s)
                     }
                 }
             }

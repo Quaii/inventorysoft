@@ -2,40 +2,52 @@ import Foundation
 
 enum ItemStatus: String, Codable, CaseIterable {
     case inStock = "In Stock"
+    case listed = "Listed"
     case sold = "Sold"
-    case pending = "Pending"
+    case reserved = "Reserved"
+    case archived = "Archived"
     case draft = "Draft"
 }
 
-struct Item: Identifiable, Codable {
+struct Item: Identifiable, Codable, Equatable {
     let id: UUID
     var title: String
-    var description: String
-    var purchasePrice: Decimal
-    var sellingPrice: Decimal?
-    var status: ItemStatus
     var brandId: UUID?
     var categoryId: UUID?
-    var imageIds: [UUID]
-    var createdAt: Date
-    var updatedAt: Date
-
-    init(
-        id: UUID = UUID(), title: String, description: String = "", purchasePrice: Decimal = 0,
-        sellingPrice: Decimal? = nil, status: ItemStatus = .draft, brandId: UUID? = nil,
-        categoryId: UUID? = nil, imageIds: [UUID] = [], createdAt: Date = Date(),
-        updatedAt: Date = Date()
-    ) {
+    var purchasePrice: Decimal
+    var quantity: Int
+    var dateAdded: Date
+    var condition: String
+    var notes: String?
+    var status: ItemStatus
+    var sku: String?
+    
+    // In-memory convenience, not persisted directly in Item table
+    var images: [ImageAttachment] = []
+    
+    init(id: UUID = UUID(), 
+         title: String, 
+         brandId: UUID? = nil, 
+         categoryId: UUID? = nil, 
+         purchasePrice: Decimal = 0, 
+         quantity: Int = 1, 
+         dateAdded: Date = Date(), 
+         condition: String = "New", 
+         notes: String? = nil, 
+         status: ItemStatus = .draft, 
+         sku: String? = nil,
+         images: [ImageAttachment] = []) {
         self.id = id
         self.title = title
-        self.description = description
-        self.purchasePrice = purchasePrice
-        self.sellingPrice = sellingPrice
-        self.status = status
         self.brandId = brandId
         self.categoryId = categoryId
-        self.imageIds = imageIds
-        self.createdAt = createdAt
-        self.updatedAt = updatedAt
+        self.purchasePrice = purchasePrice
+        self.quantity = quantity
+        self.dateAdded = dateAdded
+        self.condition = condition
+        self.notes = notes
+        self.status = status
+        self.sku = sku
+        self.images = images
     }
 }

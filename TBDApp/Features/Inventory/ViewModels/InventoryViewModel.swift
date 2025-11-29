@@ -1,22 +1,43 @@
-import SwiftUI
+import Combine
+import Foundation
 
 class InventoryViewModel: ObservableObject {
     @Published var items: [Item] = []
+    @Published var searchText: String = ""
+    @Published var selectedStatus: ItemStatus?
+    @Published var sortOption: ItemSortOption = .byDateAddedDescending
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String?
 
-    private let repository: ItemRepositoryProtocol
+    private let itemRepository: ItemRepositoryProtocol
 
-    init(repository: ItemRepositoryProtocol) {
-        self.repository = repository
+    init(itemRepository: ItemRepositoryProtocol) {
+        self.itemRepository = itemRepository
     }
 
+    @MainActor
     func loadItems() async {
+        isLoading = true
+        errorMessage = nil
+
         do {
-            let fetchedItems = try await repository.fetchAllItems()
-            await MainActor.run {
-                self.items = fetchedItems
-            }
+            let statusFilter = selectedStatus.map { [$0] }
+            self.items = try await itemRepository.fetchAllItems(
+                search: searchText, statusFilter: statusFilter, sort: sortOption)
         } catch {
-            print("Error loading items: \(error)")
+            self.errorMessage = "Failed to load items: \(error.localizedDescription)"
+        }
+
+        isLoading = false
+    }
+
+    @MainActor
+    func deleteItem(id: UUID) async {
+        do {
+            try await itemRepository.deleteItem(id: id)
+            await loadItems()
+        } catch {
+            self.errorMessage = "Failed to delete item: \(error.localizedDescription)"
         }
     }
 }

@@ -1,32 +1,68 @@
 import Foundation
 import SwiftUI
 
+#if os(macOS)
+    import AppKit
+    typealias PlatformImage = NSImage
+#else
+    import UIKit
+    typealias PlatformImage = UIImage
+#endif
+
 protocol ImageServiceProtocol {
-    func saveImage(_ image: Data, id: UUID) async throws -> URL
-    func loadImage(id: UUID) async throws -> Data?
-    func deleteImage(id: UUID) async throws
+    func saveImage(_ data: Data, for itemId: UUID) async throws -> ImageAttachment
+    func loadImage(attachment: ImageAttachment) async throws -> PlatformImage?
+    func deleteImage(attachment: ImageAttachment) async throws
 }
 
 class ImageService: ImageServiceProtocol {
-    func saveImage(_ image: Data, id: UUID) async throws -> URL {
-        // Placeholder implementation
-        let tempDir = FileManager.default.temporaryDirectory
-        let fileURL = tempDir.appendingPathComponent("\(id).jpg")
-        try image.write(to: fileURL)
-        return fileURL
+    private let fileManager = FileManager.default
+    private let imagesDirectoryName = "Images"
+
+    private var imagesDirectoryURL: URL {
+        let appSupportURL = try! fileManager.url(
+            for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil,
+            create: true)
+        let directoryURL = appSupportURL.appendingPathComponent(
+            imagesDirectoryName, isDirectory: true)
+        if !fileManager.fileExists(atPath: directoryURL.path) {
+            try? fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+        }
+        return directoryURL
     }
 
-    func loadImage(id: UUID) async throws -> Data? {
-        // Placeholder implementation
-        let tempDir = FileManager.default.temporaryDirectory
-        let fileURL = tempDir.appendingPathComponent("\(id).jpg")
-        return try? Data(contentsOf: fileURL)
+    func saveImage(_ data: Data, for itemId: UUID) async throws -> ImageAttachment {
+        let imageId = UUID()
+        let fileName = "\(imageId.uuidString).jpg"
+        let itemDirectoryURL = imagesDirectoryURL.appendingPathComponent(
+            itemId.uuidString, isDirectory: true)
+
+        if !fileManager.fileExists(atPath: itemDirectoryURL.path) {
+            try fileManager.createDirectory(at: itemDirectoryURL, withIntermediateDirectories: true)
+        }
+
+        let fileURL = itemDirectoryURL.appendingPathComponent(fileName)
+        try data.write(to: fileURL)
+
+        return ImageAttachment(
+            id: imageId,
+            itemId: itemId,
+            fileName: fileName,
+            relativePath: "\(itemId.uuidString)/\(fileName)",
+            createdAt: Date()
+        )
     }
 
-    func deleteImage(id: UUID) async throws {
-        // Placeholder implementation
-        let tempDir = FileManager.default.temporaryDirectory
-        let fileURL = tempDir.appendingPathComponent("\(id).jpg")
-        try? FileManager.default.removeItem(at: fileURL)
+    func loadImage(attachment: ImageAttachment) async throws -> PlatformImage? {
+        let fileURL = imagesDirectoryURL.appendingPathComponent(attachment.relativePath)
+        let data = try Data(contentsOf: fileURL)
+        return PlatformImage(data: data)
+    }
+
+    func deleteImage(attachment: ImageAttachment) async throws {
+        let fileURL = imagesDirectoryURL.appendingPathComponent(attachment.relativePath)
+        if fileManager.fileExists(atPath: fileURL.path) {
+            try fileManager.removeItem(at: fileURL)
+        }
     }
 }

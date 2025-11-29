@@ -1,29 +1,46 @@
-import SwiftUI
+import Combine
+import Foundation
 
 class DashboardViewModel: ObservableObject {
-    @Published var totalItems: Int = 0
-    @Published var totalSales: Decimal = 0
+    @Published var totalInventoryValue: Decimal = 0
+    @Published var totalSalesRevenue: Decimal = 0
+    @Published var totalNetProfit: Decimal = 0
+    @Published var itemCount: Int = 0
+    @Published var saleCount: Int = 0
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String?
 
-    private let itemRepository: ItemRepositoryProtocol
-    private let salesRepository: SalesRepositoryProtocol
+    private let analyticsService: AnalyticsServiceProtocol
 
-    init(itemRepository: ItemRepositoryProtocol, salesRepository: SalesRepositoryProtocol) {
-        self.itemRepository = itemRepository
-        self.salesRepository = salesRepository
+    init(analyticsService: AnalyticsServiceProtocol) {
+        self.analyticsService = analyticsService
     }
 
-    func loadData() async {
-        // Placeholder logic
-        do {
-            let items = try await itemRepository.fetchAllItems()
-            let sales = try await salesRepository.fetchAllSales()
+    @MainActor
+    func loadMetrics() async {
+        isLoading = true
+        errorMessage = nil
 
-            await MainActor.run {
-                self.totalItems = items.count
-                self.totalSales = sales.reduce(0) { $0 + $1.amount }
-            }
+        do {
+            // Run in parallel
+            async let inventoryValue = analyticsService.totalInventoryValue()
+            async let salesRevenue = analyticsService.totalSalesRevenue()
+            async let netProfit = analyticsService.totalNetProfit()
+            async let items = analyticsService.itemCount()
+            async let sales = analyticsService.saleCount()
+
+            let (v, r, p, i, s) = try await (inventoryValue, salesRevenue, netProfit, items, sales)
+
+            self.totalInventoryValue = v
+            self.totalSalesRevenue = r
+            self.totalNetProfit = p
+            self.itemCount = i
+            self.saleCount = s
+
         } catch {
-            print("Error loading dashboard data: \(error)")
+            self.errorMessage = "Failed to load dashboard metrics: \(error.localizedDescription)"
         }
+
+        isLoading = false
     }
 }

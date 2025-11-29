@@ -1,6 +1,6 @@
 import Foundation
 
-struct Brand: Identifiable, Codable {
+struct Brand: Identifiable, Codable, Equatable {
     let id: UUID
     var name: String
 

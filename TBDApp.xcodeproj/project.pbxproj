@@ -7,21 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01DF8E8771BF6034C967404B /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 903562DCF264653ECAE50131 /* GRDB */; };
 		02C75DC1D4C28471EF6F9FCE /* ItemRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E101DB8D799FFCD06DD05 /* ItemRepository.swift */; };
 		0413235F9B06B4FA26AACB62 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55053E0F99CD969597685A21 /* Typography.swift */; };
 		05A0142540D8758D3F22851E /* Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2514F6BA30DF89BF44B4709 /* Shadows.swift */; };
 		05EBFAFB6AE69F4D57BD3909 /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B02E6EA0926A55CBEC988AB5 /* DateExtensions.swift */; };
+		0822339426F745511BE8260E /* ItemDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AA1C359AE9845DFDA17FAF /* ItemDetailViewModel.swift */; };
 		083B4793D669F701486A2BEE /* AppCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D493834C7333FC98BE2BC7 /* AppCard.swift */; };
 		089556BBEAA75A096EB2B8E1 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8707D581824402765207D8 /* DashboardView.swift */; };
 		0C3FE3783F03EC4B700E1553 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A02FE6B67657605ADAD26F /* AppEnvironment.swift */; };
 		0E724C12A3F9C493BD42B0FE /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEA8579511B48C796E5E902E /* SettingsViewModel.swift */; };
+		0E7BA805BE8E8D1E46D6F8B2 /* AppTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B726007390FDF9A89352281 /* AppTable.swift */; };
 		0E9B17D75C5E17369F99F92C /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52CC5562492C7A6E50EE72E /* Spacing.swift */; };
 		10AD83B642B768307C624689 /* PurchasesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAF74623200B08C425FD211 /* PurchasesListView.swift */; };
+		132222036024150F5F7A4813 /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D74F8BC02C93EBABB8EB96 /* ItemDetailView.swift */; };
 		136766FCC5F18185B0737473 /* AppEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DBC739C29ABDC2138C1CC2F /* AppEntry.swift */; };
 		1562910061247450D5012519 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEA8579511B48C796E5E902E /* SettingsViewModel.swift */; };
+		1B5B534EFA402D37931DFF86 /* ModelExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32DDCE644CA05C6CC4A12A3 /* ModelExtensions.swift */; };
 		1E42BD09F047A68A90A40599 /* AppCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D493834C7333FC98BE2BC7 /* AppCard.swift */; };
 		20BA9EE9BFE25BC128542DAC /* AppScreenContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D313F966B93EDCE34C7B7C1 /* AppScreenContainer.swift */; };
 		20EFA03A01F731C99461E599 /* PurchasesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBCFF8A2C3D75F58CCE485 /* PurchasesViewModel.swift */; };
+		22B70C16BCD04BFA16040392 /* CategoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32C90F7610C2F0EA1792182 /* CategoryRepository.swift */; };
+		2522695EB7CF5B47B3A5F9AD /* AppToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5621E2EF1EEF0D2CA79F403 /* AppToggle.swift */; };
 		2A46653B28777C18BAED890F /* PurchasesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAF74623200B08C425FD211 /* PurchasesListView.swift */; };
 		2C75E78B0FE5B06EF49CE9A2 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55053E0F99CD969597685A21 /* Typography.swift */; };
 		3157BA6C65454D9370BDAB27 /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52CC5562492C7A6E50EE72E /* Spacing.swift */; };
@@ -34,26 +41,38 @@
 		42DD2FB8668C8A310E02BB85 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4458E334C02128695F8DD2D1 /* DatabaseManager.swift */; };
 		43051A22E0D85D4A2C9A640D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507413FAB0E8BF9779249149 /* SettingsView.swift */; };
 		437FDDC3BEAF5DD6AFC10FC9 /* ResultExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F6DC52F3188E8095325E95 /* ResultExtensions.swift */; };
+		448D34A4E8FCB151497C6493 /* CategoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32C90F7610C2F0EA1792182 /* CategoryRepository.swift */; };
 		47B92F7E485A12F462D19F4D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 793A5B1C81CBAB85FF287712 /* Assets.xcassets */; };
 		54024F716DDE9A4B37217FA8 /* PurchasesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBCFF8A2C3D75F58CCE485 /* PurchasesViewModel.swift */; };
+		548A4ADC96D5793064AA8487 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 02C189662C4EA59D292AAE34 /* GRDB */; };
+		55F0C2EBA599BF1BBAA2D0A5 /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D74F8BC02C93EBABB8EB96 /* ItemDetailView.swift */; };
+		567D39FCB683FA377A49C30E /* ImageAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703008592BF5E022EA87D4E4 /* ImageAttachment.swift */; };
+		57EC3E75B2E2288612BFB0B4 /* BrandRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7685BE3CBF86BAEAF1DB45B0 /* BrandRepository.swift */; };
 		5B83BFE8CE65F0969A080819 /* PurchaseRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA840AE7E94CFD3888CAC5A0 /* PurchaseRepository.swift */; };
 		5BE5DD70091C716786C87388 /* Purchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F9A94869F805A6B6C10F46 /* Purchase.swift */; };
 		5D489CCD79B31F8128F34086 /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B02E6EA0926A55CBEC988AB5 /* DateExtensions.swift */; };
 		5D73C710A1DB3F405C997155 /* AppButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BD4F1D488567322DDF5698 /* AppButton.swift */; };
 		61C3137186A157C6E9553DB1 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46AC189D981F36230546D23 /* Item.swift */; };
 		633379045A8820BC3AD0AA8D /* ResultExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F6DC52F3188E8095325E95 /* ResultExtensions.swift */; };
+		652955B7D05159CD80E35A15 /* AppSearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FC12990BBA372C4CCCE1EC /* AppSearchField.swift */; };
 		680B76CC98EEA836D2E7C266 /* AppSidebarContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E08E776645A4311F64E3288 /* AppSidebarContainer.swift */; };
+		6837B4F706DE3D82D9FD72F1 /* ImageAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703008592BF5E022EA87D4E4 /* ImageAttachment.swift */; };
+		6A3D1BF452AE8CCA4995BD8E /* ItemDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AA1C359AE9845DFDA17FAF /* ItemDetailViewModel.swift */; };
 		6B68805A5CE42E3CD88D54B7 /* Brand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17FE1A64C589E013CA43CBD /* Brand.swift */; };
+		6DBAC84224C285CF8D39D793 /* AppSearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FC12990BBA372C4CCCE1EC /* AppSearchField.swift */; };
+		711DBC8FF6F09E862A8876DC /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA795BD6CA7724D79A7DFC6 /* ImageRepository.swift */; };
 		7389429C11056818BB5748EC /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20898D87D97CCAF7B2CA7C8D /* ColorPalette.swift */; };
 		743DACAB51EA532E7335DA0A /* SalesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130CB91241DB83238C9A606D /* SalesRepository.swift */; };
 		7650331493A3BB37EEE1ACEB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507413FAB0E8BF9779249149 /* SettingsView.swift */; };
 		7A1F159F93EF64BC2A9098BB /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8707D581824402765207D8 /* DashboardView.swift */; };
 		7AF38831E75588F64A52E343 /* InventoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2BE8BEBE439F2DAD03D46F /* InventoryViewModel.swift */; };
+		7E340DD57413B5EB1755E779 /* AppDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = A292AA5AA87349A40B2FADC8 /* AppDropdown.swift */; };
 		7F3AD261824A604E49B497F4 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C739F1D3556DAEA733325D2 /* Theme.swift */; };
 		7FD13523566769F2E15CF82A /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E237202FA205F2954290C5 /* Enums.swift */; };
 		85555C3B9AE6FE6AD0492DB7 /* PurchaseRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA840AE7E94CFD3888CAC5A0 /* PurchaseRepository.swift */; };
 		8561219638AE5F6B5B92D468 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AB640845B2AA0A52B75CB8 /* InventoryView.swift */; };
 		85CDA29445301E55F4F00F74 /* SalesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008C2C713875288B7D33C64D /* SalesViewModel.swift */; };
+		88E7B1E75A063FDC07353273 /* AppTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B726007390FDF9A89352281 /* AppTable.swift */; };
 		89B417BD35A47AAF8855DBC5 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5EEC88869A9E3EE915E690 /* AnalyticsService.swift */; };
 		8A52658AC4CA55E21B147F7C /* Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2514F6BA30DF89BF44B4709 /* Shadows.swift */; };
 		8B862997398ABEA7E688E593 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A02FE6B67657605ADAD26F /* AppEnvironment.swift */; };
@@ -61,9 +80,11 @@
 		8DFE71DE8F0275FCAE13A8B7 /* AppStatusPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6FE31588E8453AAFC9C7CA /* AppStatusPill.swift */; };
 		90E3EFDA9B028AD055DB6BBD /* AppButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BD4F1D488567322DDF5698 /* AppButton.swift */; };
 		90EB29CDC8E8E42E01E5A693 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01171CE509ECC77B6133262A /* SwiftUI.framework */; };
+		9159B055DFC7EFFC4205F918 /* Migrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16F710A866605B6914BAFD7 /* Migrations.swift */; };
 		983F8CA0A3065A5D3798DEEA /* SalesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008C2C713875288B7D33C64D /* SalesViewModel.swift */; };
 		99DA6B26C4EBCCBFDE1E5EFB /* InventoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2BE8BEBE439F2DAD03D46F /* InventoryViewModel.swift */; };
 		A366A970C414DB660CB23D03 /* AppScreenContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D313F966B93EDCE34C7B7C1 /* AppScreenContainer.swift */; };
+		A984624D38F1A421D1ACFDD7 /* Migrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16F710A866605B6914BAFD7 /* Migrations.swift */; };
 		AA311E1E574DAC42537E3C8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 793A5B1C81CBAB85FF287712 /* Assets.xcassets */; };
 		AB94B49DBB88AB4D253B8939 /* Sale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93770E26B2B2DA7975643019 /* Sale.swift */; };
 		B7D576DDF7C1C431F3D83E54 /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929C1BBEA10AAB11FCFBC32C /* ImageService.swift */; };
@@ -73,15 +94,22 @@
 		CA8FD121A87FA798208C00BE /* AppTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5DACC43B85230C560AB6C4 /* AppTextField.swift */; };
 		CBC2CEF3C1028745F02BD28A /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C739F1D3556DAEA733325D2 /* Theme.swift */; };
 		CD151F4BCE19D530B7026332 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4458E334C02128695F8DD2D1 /* DatabaseManager.swift */; };
+		CE8B76DC8D3ECAB58816714A /* ModelExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32DDCE644CA05C6CC4A12A3 /* ModelExtensions.swift */; };
+		D217260785A9CD04AA704AFF /* SchemaDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBB26F2918590E777E7E120 /* SchemaDefinitions.swift */; };
 		D7842BA10CBBAB6010464D59 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5EEC88869A9E3EE915E690 /* AnalyticsService.swift */; };
 		DA38ABD066984366D040CEFB /* AppSidebarContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E08E776645A4311F64E3288 /* AppSidebarContainer.swift */; };
 		DCA70CA82C93BFFBD06CA5FE /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46AC189D981F36230546D23 /* Item.swift */; };
+		DD7752A2D253F2CA9A6EDC6B /* AppDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = A292AA5AA87349A40B2FADC8 /* AppDropdown.swift */; };
 		E281A46087928353236AF06F /* Purchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F9A94869F805A6B6C10F46 /* Purchase.swift */; };
 		E4B9147CF78CEB709F961B05 /* AppEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DBC739C29ABDC2138C1CC2F /* AppEntry.swift */; };
 		E5AFC80E2071056325DE891D /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01171CE509ECC77B6133262A /* SwiftUI.framework */; };
+		E7B4CD6AFBD109B87A004D97 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA795BD6CA7724D79A7DFC6 /* ImageRepository.swift */; };
+		E91E1AC21A853EFE3B4B81FC /* BrandRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7685BE3CBF86BAEAF1DB45B0 /* BrandRepository.swift */; };
 		EA5C4DF9F13A961D4303D712 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD131AA3F44A5634F4F3D81 /* DashboardViewModel.swift */; };
 		EA6D2B1EE0FCCFA06A3FEECE /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA774F79222F543CDE2E556C /* Category.swift */; };
 		EAB6A1C6669524484818548F /* SalesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 011B08A34D65D017CB3FFCA4 /* SalesListView.swift */; };
+		EDB559DDC382C6FC373534DD /* SchemaDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBB26F2918590E777E7E120 /* SchemaDefinitions.swift */; };
+		EDC6A31CDBBB74E7E19D3BCC /* AppToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5621E2EF1EEF0D2CA79F403 /* AppToggle.swift */; };
 		F0713B8FFC2B4FD4819EFEA4 /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929C1BBEA10AAB11FCFBC32C /* ImageService.swift */; };
 		F22CB909828F975124957D42 /* ItemRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6E101DB8D799FFCD06DD05 /* ItemRepository.swift */; };
 		F623BB21996D69015B466F59 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AB640845B2AA0A52B75CB8 /* InventoryView.swift */; };
@@ -93,7 +121,9 @@
 		008C2C713875288B7D33C64D /* SalesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesViewModel.swift; sourceTree = "<group>"; };
 		01171CE509ECC77B6133262A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		011B08A34D65D017CB3FFCA4 /* SalesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesListView.swift; sourceTree = "<group>"; };
+		0B726007390FDF9A89352281 /* AppTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTable.swift; sourceTree = "<group>"; };
 		0DBC739C29ABDC2138C1CC2F /* AppEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEntry.swift; sourceTree = "<group>"; };
+		0FB05AE42C9ECF9CE513AFDF /* TBDApp_macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TBDApp_macOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		130CB91241DB83238C9A606D /* SalesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesRepository.swift; sourceTree = "<group>"; };
 		20898D87D97CCAF7B2CA7C8D /* ColorPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPalette.swift; sourceTree = "<group>"; };
 		28A02FE6B67657605ADAD26F /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
@@ -101,36 +131,47 @@
 		3F5853E9F1BF1D0872C9CA9B /* CornerRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerRadius.swift; sourceTree = "<group>"; };
 		4458E334C02128695F8DD2D1 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		507413FAB0E8BF9779249149 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		51AA1C359AE9845DFDA17FAF /* ItemDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewModel.swift; sourceTree = "<group>"; };
 		55053E0F99CD969597685A21 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		57D74F8BC02C93EBABB8EB96 /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
 		5B6FE31588E8453AAFC9C7CA /* AppStatusPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStatusPill.swift; sourceTree = "<group>"; };
+		5EA795BD6CA7724D79A7DFC6 /* ImageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRepository.swift; sourceTree = "<group>"; };
 		6F5EEC88869A9E3EE915E690 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
+		703008592BF5E022EA87D4E4 /* ImageAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAttachment.swift; sourceTree = "<group>"; };
 		71AB640845B2AA0A52B75CB8 /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
-		722B2633AF2BD321970D0AFC /* TBDApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TBDApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72E237202FA205F2954290C5 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
+		7685BE3CBF86BAEAF1DB45B0 /* BrandRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandRepository.swift; sourceTree = "<group>"; };
 		793A5B1C81CBAB85FF287712 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7BBB26F2918590E777E7E120 /* SchemaDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaDefinitions.swift; sourceTree = "<group>"; };
 		7C739F1D3556DAEA733325D2 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		7E08E776645A4311F64E3288 /* AppSidebarContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarContainer.swift; sourceTree = "<group>"; };
 		88F9A94869F805A6B6C10F46 /* Purchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Purchase.swift; sourceTree = "<group>"; };
+		8A2F971A9C8E60DE085D0C0F /* TBDApp_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TBDApp_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D313F966B93EDCE34C7B7C1 /* AppScreenContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppScreenContainer.swift; sourceTree = "<group>"; };
 		929C1BBEA10AAB11FCFBC32C /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		93770E26B2B2DA7975643019 /* Sale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sale.swift; sourceTree = "<group>"; };
 		9FD131AA3F44A5634F4F3D81 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
 		A2514F6BA30DF89BF44B4709 /* Shadows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shadows.swift; sourceTree = "<group>"; };
+		A292AA5AA87349A40B2FADC8 /* AppDropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDropdown.swift; sourceTree = "<group>"; };
+		A32DDCE644CA05C6CC4A12A3 /* ModelExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExtensions.swift; sourceTree = "<group>"; };
 		A8D493834C7333FC98BE2BC7 /* AppCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCard.swift; sourceTree = "<group>"; };
 		B02E6EA0926A55CBEC988AB5 /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
 		B2F6DC52F3188E8095325E95 /* ResultExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultExtensions.swift; sourceTree = "<group>"; };
+		B32C90F7610C2F0EA1792182 /* CategoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryRepository.swift; sourceTree = "<group>"; };
 		BA6E101DB8D799FFCD06DD05 /* ItemRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemRepository.swift; sourceTree = "<group>"; };
 		BA774F79222F543CDE2E556C /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		BA840AE7E94CFD3888CAC5A0 /* PurchaseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseRepository.swift; sourceTree = "<group>"; };
+		C16F710A866605B6914BAFD7 /* Migrations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Migrations.swift; sourceTree = "<group>"; };
 		D17FE1A64C589E013CA43CBD /* Brand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Brand.swift; sourceTree = "<group>"; };
 		D52CC5562492C7A6E50EE72E /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
 		D8BD4F1D488567322DDF5698 /* AppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButton.swift; sourceTree = "<group>"; };
-		DD452E889F6B7770A30E7269 /* TBDApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TBDApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD5DACC43B85230C560AB6C4 /* AppTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTextField.swift; sourceTree = "<group>"; };
 		DEA8579511B48C796E5E902E /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		E46AC189D981F36230546D23 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		E6FBCFF8A2C3D75F58CCE485 /* PurchasesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasesViewModel.swift; sourceTree = "<group>"; };
 		EEAF74623200B08C425FD211 /* PurchasesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasesListView.swift; sourceTree = "<group>"; };
+		F5621E2EF1EEF0D2CA79F403 /* AppToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppToggle.swift; sourceTree = "<group>"; };
+		F7FC12990BBA372C4CCCE1EC /* AppSearchField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSearchField.swift; sourceTree = "<group>"; };
 		FB2BE8BEBE439F2DAD03D46F /* InventoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -140,6 +181,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E5AFC80E2071056325DE891D /* SwiftUI.framework in Frameworks */,
+				548A4ADC96D5793064AA8487 /* GRDB in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,6 +190,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				90EB29CDC8E8E42E01E5A693 /* SwiftUI.framework in Frameworks */,
+				01DF8E8771BF6034C967404B /* GRDB in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,6 +294,7 @@
 			isa = PBXGroup;
 			children = (
 				FB2BE8BEBE439F2DAD03D46F /* InventoryViewModel.swift */,
+				51AA1C359AE9845DFDA17FAF /* ItemDetailViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -305,8 +349,8 @@
 		93B80B1B54BF59E4E9C9352E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DD452E889F6B7770A30E7269 /* TBDApp.app */,
-				722B2633AF2BD321970D0AFC /* TBDApp.app */,
+				8A2F971A9C8E60DE085D0C0F /* TBDApp_iOS.app */,
+				0FB05AE42C9ECF9CE513AFDF /* TBDApp_macOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -324,6 +368,7 @@
 			isa = PBXGroup;
 			children = (
 				71AB640845B2AA0A52B75CB8 /* InventoryView.swift */,
+				57D74F8BC02C93EBABB8EB96 /* ItemDetailView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -340,6 +385,9 @@
 		970B4A63E5F8D65A3855DD74 /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				7685BE3CBF86BAEAF1DB45B0 /* BrandRepository.swift */,
+				B32C90F7610C2F0EA1792182 /* CategoryRepository.swift */,
+				5EA795BD6CA7724D79A7DFC6 /* ImageRepository.swift */,
 				BA6E101DB8D799FFCD06DD05 /* ItemRepository.swift */,
 				BA840AE7E94CFD3888CAC5A0 /* PurchaseRepository.swift */,
 				130CB91241DB83238C9A606D /* SalesRepository.swift */,
@@ -368,6 +416,9 @@
 			isa = PBXGroup;
 			children = (
 				4458E334C02128695F8DD2D1 /* DatabaseManager.swift */,
+				C16F710A866605B6914BAFD7 /* Migrations.swift */,
+				A32DDCE644CA05C6CC4A12A3 /* ModelExtensions.swift */,
+				7BBB26F2918590E777E7E120 /* SchemaDefinitions.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -421,6 +472,7 @@
 				D17FE1A64C589E013CA43CBD /* Brand.swift */,
 				BA774F79222F543CDE2E556C /* Category.swift */,
 				72E237202FA205F2954290C5 /* Enums.swift */,
+				703008592BF5E022EA87D4E4 /* ImageAttachment.swift */,
 				E46AC189D981F36230546D23 /* Item.swift */,
 				88F9A94869F805A6B6C10F46 /* Purchase.swift */,
 				93770E26B2B2DA7975643019 /* Sale.swift */,
@@ -441,8 +493,12 @@
 			children = (
 				D8BD4F1D488567322DDF5698 /* AppButton.swift */,
 				A8D493834C7333FC98BE2BC7 /* AppCard.swift */,
+				A292AA5AA87349A40B2FADC8 /* AppDropdown.swift */,
+				F7FC12990BBA372C4CCCE1EC /* AppSearchField.swift */,
 				5B6FE31588E8453AAFC9C7CA /* AppStatusPill.swift */,
+				0B726007390FDF9A89352281 /* AppTable.swift */,
 				DD5DACC43B85230C560AB6C4 /* AppTextField.swift */,
+				F5621E2EF1EEF0D2CA79F403 /* AppToggle.swift */,
 			);
 			path = Primitives;
 			sourceTree = "<group>";
@@ -475,9 +531,10 @@
 			);
 			name = TBDApp_iOS;
 			packageProductDependencies = (
+				903562DCF264653ECAE50131 /* GRDB */,
 			);
 			productName = TBDApp_iOS;
-			productReference = DD452E889F6B7770A30E7269 /* TBDApp.app */;
+			productReference = 8A2F971A9C8E60DE085D0C0F /* TBDApp_iOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 		3A3A7C3E0523917D237F02AD /* TBDApp_macOS */ = {
@@ -494,9 +551,10 @@
 			);
 			name = TBDApp_macOS;
 			packageProductDependencies = (
+				02C189662C4EA59D292AAE34 /* GRDB */,
 			);
 			productName = TBDApp_macOS;
-			productReference = 722B2633AF2BD321970D0AFC /* TBDApp.app */;
+			productReference = 0FB05AE42C9ECF9CE513AFDF /* TBDApp_macOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -518,6 +576,9 @@
 			);
 			mainGroup = 65660DD1A9BAEE39F881A0F8;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				30DD0117F7482B69FCD07210 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
@@ -555,14 +616,20 @@
 				89B417BD35A47AAF8855DBC5 /* AnalyticsService.swift in Sources */,
 				5D73C710A1DB3F405C997155 /* AppButton.swift in Sources */,
 				083B4793D669F701486A2BEE /* AppCard.swift in Sources */,
+				DD7752A2D253F2CA9A6EDC6B /* AppDropdown.swift in Sources */,
 				E4B9147CF78CEB709F961B05 /* AppEntry.swift in Sources */,
 				0C3FE3783F03EC4B700E1553 /* AppEnvironment.swift in Sources */,
 				20BA9EE9BFE25BC128542DAC /* AppScreenContainer.swift in Sources */,
+				652955B7D05159CD80E35A15 /* AppSearchField.swift in Sources */,
 				680B76CC98EEA836D2E7C266 /* AppSidebarContainer.swift in Sources */,
 				8DFE71DE8F0275FCAE13A8B7 /* AppStatusPill.swift in Sources */,
+				0E7BA805BE8E8D1E46D6F8B2 /* AppTable.swift in Sources */,
 				BE7C2E8A681DE1710392E590 /* AppTextField.swift in Sources */,
+				EDC6A31CDBBB74E7E19D3BCC /* AppToggle.swift in Sources */,
 				6B68805A5CE42E3CD88D54B7 /* Brand.swift in Sources */,
+				57EC3E75B2E2288612BFB0B4 /* BrandRepository.swift in Sources */,
 				42CA006527F8E56B0AB51B7D /* Category.swift in Sources */,
+				22B70C16BCD04BFA16040392 /* CategoryRepository.swift in Sources */,
 				7389429C11056818BB5748EC /* ColorPalette.swift in Sources */,
 				FD8D67F70D69C9EDEF204E56 /* CornerRadius.swift in Sources */,
 				089556BBEAA75A096EB2B8E1 /* DashboardView.swift in Sources */,
@@ -570,11 +637,17 @@
 				42DD2FB8668C8A310E02BB85 /* DatabaseManager.swift in Sources */,
 				5D489CCD79B31F8128F34086 /* DateExtensions.swift in Sources */,
 				8CD25B7C26A8A9C958DE9668 /* Enums.swift in Sources */,
+				567D39FCB683FA377A49C30E /* ImageAttachment.swift in Sources */,
+				711DBC8FF6F09E862A8876DC /* ImageRepository.swift in Sources */,
 				F0713B8FFC2B4FD4819EFEA4 /* ImageService.swift in Sources */,
 				F623BB21996D69015B466F59 /* InventoryView.swift in Sources */,
 				99DA6B26C4EBCCBFDE1E5EFB /* InventoryViewModel.swift in Sources */,
 				61C3137186A157C6E9553DB1 /* Item.swift in Sources */,
+				55F0C2EBA599BF1BBAA2D0A5 /* ItemDetailView.swift in Sources */,
+				0822339426F745511BE8260E /* ItemDetailViewModel.swift in Sources */,
 				F22CB909828F975124957D42 /* ItemRepository.swift in Sources */,
+				A984624D38F1A421D1ACFDD7 /* Migrations.swift in Sources */,
+				CE8B76DC8D3ECAB58816714A /* ModelExtensions.swift in Sources */,
 				E281A46087928353236AF06F /* Purchase.swift in Sources */,
 				5B83BFE8CE65F0969A080819 /* PurchaseRepository.swift in Sources */,
 				10AD83B642B768307C624689 /* PurchasesListView.swift in Sources */,
@@ -584,6 +657,7 @@
 				EAB6A1C6669524484818548F /* SalesListView.swift in Sources */,
 				3FD1F85030FFE4FF1B91658F /* SalesRepository.swift in Sources */,
 				983F8CA0A3065A5D3798DEEA /* SalesViewModel.swift in Sources */,
+				EDB559DDC382C6FC373534DD /* SchemaDefinitions.swift in Sources */,
 				43051A22E0D85D4A2C9A640D /* SettingsView.swift in Sources */,
 				0E724C12A3F9C493BD42B0FE /* SettingsViewModel.swift in Sources */,
 				8A52658AC4CA55E21B147F7C /* Shadows.swift in Sources */,
@@ -600,14 +674,20 @@
 				D7842BA10CBBAB6010464D59 /* AnalyticsService.swift in Sources */,
 				90E3EFDA9B028AD055DB6BBD /* AppButton.swift in Sources */,
 				1E42BD09F047A68A90A40599 /* AppCard.swift in Sources */,
+				7E340DD57413B5EB1755E779 /* AppDropdown.swift in Sources */,
 				136766FCC5F18185B0737473 /* AppEntry.swift in Sources */,
 				8B862997398ABEA7E688E593 /* AppEnvironment.swift in Sources */,
 				A366A970C414DB660CB23D03 /* AppScreenContainer.swift in Sources */,
+				6DBAC84224C285CF8D39D793 /* AppSearchField.swift in Sources */,
 				DA38ABD066984366D040CEFB /* AppSidebarContainer.swift in Sources */,
 				BB9BDD0A08E546E410830C38 /* AppStatusPill.swift in Sources */,
+				88E7B1E75A063FDC07353273 /* AppTable.swift in Sources */,
 				CA8FD121A87FA798208C00BE /* AppTextField.swift in Sources */,
+				2522695EB7CF5B47B3A5F9AD /* AppToggle.swift in Sources */,
 				FF4F108302DFA5776E55E7F0 /* Brand.swift in Sources */,
+				E91E1AC21A853EFE3B4B81FC /* BrandRepository.swift in Sources */,
 				EA6D2B1EE0FCCFA06A3FEECE /* Category.swift in Sources */,
+				448D34A4E8FCB151497C6493 /* CategoryRepository.swift in Sources */,
 				B944DF09AA57DDDD71828444 /* ColorPalette.swift in Sources */,
 				3B410696351A811B358E0796 /* CornerRadius.swift in Sources */,
 				7A1F159F93EF64BC2A9098BB /* DashboardView.swift in Sources */,
@@ -615,11 +695,17 @@
 				CD151F4BCE19D530B7026332 /* DatabaseManager.swift in Sources */,
 				05EBFAFB6AE69F4D57BD3909 /* DateExtensions.swift in Sources */,
 				7FD13523566769F2E15CF82A /* Enums.swift in Sources */,
+				6837B4F706DE3D82D9FD72F1 /* ImageAttachment.swift in Sources */,
+				E7B4CD6AFBD109B87A004D97 /* ImageRepository.swift in Sources */,
 				B7D576DDF7C1C431F3D83E54 /* ImageService.swift in Sources */,
 				8561219638AE5F6B5B92D468 /* InventoryView.swift in Sources */,
 				7AF38831E75588F64A52E343 /* InventoryViewModel.swift in Sources */,
 				DCA70CA82C93BFFBD06CA5FE /* Item.swift in Sources */,
+				132222036024150F5F7A4813 /* ItemDetailView.swift in Sources */,
+				6A3D1BF452AE8CCA4995BD8E /* ItemDetailViewModel.swift in Sources */,
 				02C75DC1D4C28471EF6F9FCE /* ItemRepository.swift in Sources */,
+				9159B055DFC7EFFC4205F918 /* Migrations.swift in Sources */,
+				1B5B534EFA402D37931DFF86 /* ModelExtensions.swift in Sources */,
 				5BE5DD70091C716786C87388 /* Purchase.swift in Sources */,
 				85555C3B9AE6FE6AD0492DB7 /* PurchaseRepository.swift in Sources */,
 				2A46653B28777C18BAED890F /* PurchasesListView.swift in Sources */,
@@ -629,6 +715,7 @@
 				317255142DFA4C7DAEE20823 /* SalesListView.swift in Sources */,
 				743DACAB51EA532E7335DA0A /* SalesRepository.swift in Sources */,
 				85CDA29445301E55F4F00F74 /* SalesViewModel.swift in Sources */,
+				D217260785A9CD04AA704AFF /* SchemaDefinitions.swift in Sources */,
 				7650331493A3BB37EEE1ACEB /* SettingsView.swift in Sources */,
 				1562910061247450D5012519 /* SettingsViewModel.swift in Sources */,
 				05A0142540D8758D3F22851E /* Shadows.swift in Sources */,
@@ -765,13 +852,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = TBDApp;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tbdapp.TBDApp-macOS";
 				PRODUCT_NAME = TBDApp;
 				SDKROOT = macosx;
@@ -785,6 +875,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -804,13 +895,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = TBDApp;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tbdapp.TBDApp-macOS";
 				PRODUCT_NAME = TBDApp;
 				SDKROOT = macosx;
@@ -824,6 +918,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -869,6 +964,30 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		30DD0117F7482B69FCD07210 /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDB.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		02C189662C4EA59D292AAE34 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 30DD0117F7482B69FCD07210 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
+		};
+		903562DCF264653ECAE50131 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 30DD0117F7482B69FCD07210 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 00A5BF12746CCF1FA00997B6 /* Project object */;
 }

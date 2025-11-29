@@ -1,19 +1,23 @@
 import Foundation
 
-struct Purchase: Identifiable, Codable {
+struct Purchase: Identifiable, Codable, Equatable {
     let id: UUID
-    var itemId: UUID
-    var date: Date
-    var amount: Decimal
-    var source: String?
+    var supplier: String
+    var batchName: String?
+    var datePurchased: Date
+    var cost: Decimal
 
     init(
-        id: UUID = UUID(), itemId: UUID, date: Date = Date(), amount: Decimal, source: String? = nil
+        id: UUID = UUID(),
+        supplier: String,
+        batchName: String? = nil,
+        datePurchased: Date = Date(),
+        cost: Decimal
     ) {
         self.id = id
-        self.itemId = itemId
-        self.date = date
-        self.amount = amount
-        self.source = source
+        self.supplier = supplier
+        self.batchName = batchName
+        self.datePurchased = datePurchased
+        self.cost = cost
     }
 }

@@ -6,15 +6,19 @@ struct SettingsView: View {
 
     var body: some View {
         AppScreenContainer {
-            VStack(spacing: theme.spacing.m) {
+            VStack(alignment: .leading, spacing: theme.spacing.l) {
                 Text("Settings")
-                    .font(theme.typography.headingL)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(theme.typography.h2)
+                    .foregroundColor(theme.colors.textPrimary)
 
-                Toggle("Dark Mode", isOn: $viewModel.isDarkMode)
-                    .padding()
-                    .background(theme.colors.surfaceElevated)
-                    .cornerRadius(theme.radii.medium)
+                AppCard {
+                    VStack(alignment: .leading, spacing: theme.spacing.m) {
+                        Text("Appearance")
+                            .font(theme.typography.h3)
+
+                        AppToggle(title: "Dark Mode", isOn: $viewModel.isDarkMode)
+                    }
+                }
 
                 Spacer()
             }

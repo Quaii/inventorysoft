@@ -1,6 +1,6 @@
 import Foundation
 
-struct Category: Identifiable, Codable {
+struct Category: Identifiable, Codable, Equatable {
     let id: UUID
     var name: String
 
