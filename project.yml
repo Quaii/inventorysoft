@@ -1,0 +1,27 @@
+name: TBDApp
+options:
+  bundleIdPrefix: com.tbdapp
+  deploymentTarget:
+    iOS: 17.0
+    macOS: 14.0
+targets:
+  TBDApp:
+    type: application
+    platform: [iOS, macOS]
+    deploymentTarget:
+      iOS: 17.0
+      macOS: 14.0
+    sources:
+      - path: TBDApp
+    settings:
+      base:
+        PRODUCT_NAME: TBDApp
+        SWIFT_VERSION: 5.9
+        INFOPLIST_KEY_UILaunchScreen_Generation: true
+      configs:
+        Debug:
+          DEBUG_INFORMATION_FORMAT: dwarf
+        Release:
+          DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+    dependencies:
+      - sdk: SwiftUI.framework
