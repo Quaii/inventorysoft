@@ -29,9 +29,10 @@ struct SettingsView: View {
                         dataManagementSection
                         dangerZoneSection
                     }
-                    .frame(maxWidth: 1000)
+                    .frame(maxWidth: 1100)
                     .frame(maxWidth: .infinity)
                 }
+                .padding(.horizontal, 32)
                 .padding(.bottom, theme.spacing.xxl)
             }
             .scrollIndicators(.hidden)

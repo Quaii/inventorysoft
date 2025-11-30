@@ -50,7 +50,10 @@ final class AppEnvironment: ObservableObject {
         self.dashboardConfigService = DashboardConfigService(repository: dashboardConfigRepository)
         self.columnConfigService = ColumnConfigService(repository: columnConfigRepository)
         self.importMappingService = ImportMappingService()
-        self.analyticsConfigService = AnalyticsConfigService(repository: analyticsConfigRepository)
+        self.analyticsConfigService = AnalyticsConfigService(
+            repository: analyticsConfigRepository,
+            preferencesRepo: userPreferencesRepository
+        )
         self.exportService = ExportService(
             db: DatabaseManager.shared, columnConfigService: columnConfigService)
 

@@ -6,14 +6,13 @@ struct AnalyticsView: View {
     @Environment(\.theme) var theme
     @State private var timeRange: String = "Last 30 Days"
 
-    // Configuration sheets
+    // Custom UI state
+    @State private var showingChartEditor = false
     @State private var editingChart: ChartDefinition?
-    @State private var showingMetricConfig = false
-    @State private var showingFormulaConfig = false
-    @State private var showingColorConfig = false
     @State private var showingDeleteConfirmation = false
     @State private var chartToDelete: ChartDefinition?
-    @State private var showingAddChartSheet = false
+    @State private var showingContextMenu = false
+    @State private var contextMenuChart: ChartDefinition?
 
     // Grid layout
     let columns = [
@@ -37,7 +36,8 @@ struct AnalyticsView: View {
                         .frame(width: 160)
 
                         AppButton(title: "Add Chart", icon: "plus", style: .primary) {
-                            showingAddChartSheet = true
+                            editingChart = nil
+                            showingChartEditor = true
                         }
                     }
                 }
@@ -63,7 +63,8 @@ struct AnalyticsView: View {
                         icon: "chart.bar.xaxis",
                         actionTitle: "Add Chart",
                         action: {
-                            showingAddChartSheet = true
+                            editingChart = nil
+                            showingChartEditor = true
                         }
                     )
                 } else {
@@ -79,85 +80,37 @@ struct AnalyticsView: View {
         .task {
             await viewModel.loadCharts()
         }
-        .sheet(isPresented: $showingMetricConfig) {
-            if let chartIndex = viewModel.charts.firstIndex(where: { $0.id == editingChart?.id }),
-                editingChart != nil
-            {
-                ChartMetricConfigView(chartDefinition: $viewModel.charts[chartIndex])
-                    .onDisappear {
-                        if let updatedChart = viewModel.charts.first(where: {
-                            $0.id == editingChart?.id
-                        }) {
-                            viewModel.updateChart(updatedChart)
+        .overlay {
+            // Custom chart editor modal
+            if showingChartEditor {
+                ChartEditorView(
+                    chart: editingChart,
+                    onSave: { chart in
+                        if editingChart == nil {
+                            // Create mode
+                            viewModel.addChart(chart)
+                        } else {
+                            // Edit mode
+                            viewModel.updateChart(chart)
                         }
+                        editingChart = nil
+                    },
+                    isPresented: $showingChartEditor
+                )
+            }
+        }
+        .overlay {
+            // Custom delete confirmation
+            if showingDeleteConfirmation, let chart = chartToDelete {
+                ChartDeleteConfirmationView(
+                    isPresented: $showingDeleteConfirmation,
+                    chart: chart,
+                    onConfirm: {
+                        viewModel.deleteChart(chart)
+                        chartToDelete = nil
                     }
+                )
             }
-        }
-        .sheet(isPresented: $showingFormulaConfig) {
-            if let chartIndex = viewModel.charts.firstIndex(where: { $0.id == editingChart?.id }),
-                editingChart != nil
-            {
-                ChartFormulaConfigView(formula: $viewModel.charts[chartIndex].formula)
-                    .onDisappear {
-                        if let updatedChart = viewModel.charts.first(where: {
-                            $0.id == editingChart?.id
-                        }) {
-                            viewModel.updateChart(updatedChart)
-                        }
-                    }
-            }
-        }
-        .sheet(isPresented: $showingColorConfig) {
-            if let chartIndex = viewModel.charts.firstIndex(where: { $0.id == editingChart?.id }),
-                editingChart != nil
-            {
-                ChartColorConfigView(colorPalette: $viewModel.charts[chartIndex].colorPalette)
-                    .onDisappear {
-                        if let updatedChart = viewModel.charts.first(where: {
-                            $0.id == editingChart?.id
-                        }) {
-                            viewModel.updateChart(updatedChart)
-                        }
-                    }
-            }
-        }
-        .alert("Delete Chart", isPresented: $showingDeleteConfirmation, presenting: chartToDelete) {
-            chart in
-            Button("Cancel", role: .cancel) {}
-            Button("Delete", role: .destructive) {
-                viewModel.deleteChart(chart)
-            }
-        } message: { chart in
-            Text("Are you sure you want to delete '\(chart.title)'? This action cannot be undone.")
-        }
-        .sheet(isPresented: $showingAddChartSheet) {
-            // Simple sheet to choose a starting point
-            VStack(spacing: theme.spacing.l) {
-                Text("Add New Chart")
-                    .font(theme.typography.sectionTitle)
-
-                Button("Revenue Trend") {
-                    viewModel.addChart(.revenueTrend)
-                    showingAddChartSheet = false
-                }
-
-                Button("Sales by Category") {
-                    viewModel.addChart(.salesByCategory)
-                    showingAddChartSheet = false
-                }
-
-                Button("Top Products") {
-                    viewModel.addChart(.topProducts)
-                    showingAddChartSheet = false
-                }
-
-                Button("Cancel", role: .cancel) {
-                    showingAddChartSheet = false
-                }
-                .padding(.top)
-            }
-            .padding()
-            .presentationDetents([.medium])
         }
     }
 
@@ -172,71 +125,60 @@ struct AnalyticsView: View {
 
                     Spacer()
 
-                    // Chart type indicator
-                    Image(systemName: chart.chartType.icon)
-                        .font(.system(size: 14))
-                        .foregroundColor(theme.colors.textSecondary)
+                    // Menu button
+                    Button(action: {
+                        contextMenuChart = chart
+                        showingContextMenu = true
+                    }) {
+                        Image(systemName: "ellipsis")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(theme.colors.textSecondary)
+                            .frame(width: 32, height: 32)
+                            .background(
+                                Circle()
+                                    .fill(theme.colors.surfaceSecondary)
+                            )
+                    }
+                    .buttonStyle(.plain)
                 }
 
                 // Chart content based on type and data
                 chartContent(for: chart)
             }
         }
-        .contextMenu {
-            // Change Chart Type submenu
-            Menu("Change Chart Type") {
-                ForEach([ChartType.bar, .line, .area, .donut, .table], id: \.self) { type in
-                    Button(action: {
-                        var updatedChart = chart
-                        updatedChart.chartType = type
-                        viewModel.updateChart(updatedChart)
-                    }) {
-                        Label(type.displayName, systemImage: type.icon)
-                    }
-                }
-            }
-
-            Divider()
-
-            Button(action: {
-                editingChart = chart
-                showingMetricConfig = true
-            }) {
-                Label("Change Metric…", systemImage: "slider.horizontal.3")
-            }
-
-            Button(action: {
-                editingChart = chart
-                showingFormulaConfig = true
-            }) {
-                Label("Custom Formula…", systemImage: "function")
-            }
-
-            Button(action: {
-                editingChart = chart
-                showingColorConfig = true
-            }) {
-                Label("Change Colors…", systemImage: "paintpalette")
-            }
-
-            Divider()
-
-            Button(action: {
-                viewModel.duplicateChart(chart)
-            }) {
-                Label("Duplicate Chart", systemImage: "doc.on.doc")
-            }
-
-            Button(
-                role: .destructive,
-                action: {
-                    chartToDelete = chart
-                    showingDeleteConfirmation = true
-                }
-            ) {
-                Label("Remove Chart", systemImage: "trash")
+        .overlay(alignment: .topTrailing) {
+            // Custom context menu
+            if showingContextMenu && contextMenuChart?.id == chart.id {
+                ChartContextMenu(
+                    chart: chart,
+                    onEdit: {
+                        editingChart = chart
+                        showingChartEditor = true
+                    },
+                    onDuplicate: {
+                        viewModel.duplicateChart(chart)
+                    },
+                    onDelete: {
+                        chartToDelete = chart
+                        showingDeleteConfirmation = true
+                    },
+                    isPresented: $showingContextMenu
+                )
+                .offset(x: -8, y: 40)
+                .zIndex(100)
             }
         }
+        .onTapGesture(count: 1) { location in
+            // Detect right-click (secondary button)
+        }
+        .gesture(
+            TapGesture()
+                .modifiers(.option)  // Right-click on macOS
+                .onEnded {
+                    contextMenuChart = chart
+                    showingContextMenu = true
+                }
+        )
         .frame(minHeight: 320)
     }
 

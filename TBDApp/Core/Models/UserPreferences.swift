@@ -19,6 +19,7 @@ struct UserPreferences: Codable, Equatable {
     var allowDashboardEditing: Bool
     var defaultAnalyticsRange: String
     var defaultAnalyticsInterval: String
+    var hasCustomizedAnalytics: Bool
 
     // Data Management Settings
     var backupLocationPath: String
@@ -34,6 +35,7 @@ struct UserPreferences: Codable, Equatable {
         compactMode: Bool = false,
         accentColor: String = "Blue",
         sidebarCollapseBehavior: String = "Collapsible",
+        hasCustomizedAnalytics: Bool = false,
         dashboardInitialLayout: String = "Recommended KPIs",
         allowDashboardEditing: Bool = true,
         defaultAnalyticsRange: String = "Last 30 Days",
@@ -50,6 +52,7 @@ struct UserPreferences: Codable, Equatable {
         self.compactMode = compactMode
         self.accentColor = accentColor
         self.sidebarCollapseBehavior = sidebarCollapseBehavior
+        self.hasCustomizedAnalytics = hasCustomizedAnalytics
         self.dashboardInitialLayout = dashboardInitialLayout
         self.allowDashboardEditing = allowDashboardEditing
         self.defaultAnalyticsRange = defaultAnalyticsRange
