@@ -75,7 +75,7 @@ struct AppColors {
     init(mode: ThemeMode = .dark) {
         switch mode {
         case .dark, .system:
-            // Dark Mode Colors (Vinted Notify style)
+            // Dark Mode Colors (Professional macOS style)
             self.backgroundPrimary = Color(hex: "050506")
             self.backgroundSecondary = Color(hex: "080808")
             self.backgroundElevated = Color(hex: "101010")

@@ -77,9 +77,3 @@ struct TotalItemsCard: View {
         .frame(minHeight: 260)
     }
 }
-
-struct ItemCountDataPoint: Identifiable {
-    let id = UUID()
-    let date: Date
-    let count: Int
-}

@@ -4,7 +4,7 @@ struct AppSidebarContainer<Sidebar: View, Content: View>: View {
     let sidebar: (Bool) -> Sidebar
     let content: Content
 
-    @State private var isCollapsed = false
+    @AppStorage("sidebarIsCollapsed") private var isCollapsed = false
 
     init(@ViewBuilder sidebar: @escaping (Bool) -> Sidebar, @ViewBuilder content: () -> Content) {
         self.sidebar = sidebar

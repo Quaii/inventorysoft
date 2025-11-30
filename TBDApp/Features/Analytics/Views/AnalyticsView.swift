@@ -2,13 +2,23 @@ import Charts
 import SwiftUI
 
 struct AnalyticsView: View {
+    @StateObject var viewModel: AnalyticsViewModel
     @Environment(\.theme) var theme
     @State private var timeRange: String = "Last 30 Days"
 
-    // TODO: Connect to AnalyticsViewModel for real data
-    @State private var salesData: [SalesDataPoint] = []
-    @State private var categoryData: [CategoryDataPoint] = []
-    @State private var topProducts: [TopProductInfo] = []
+    // Configuration sheets
+    @State private var editingChart: ChartDefinition?
+    @State private var showingMetricConfig = false
+    @State private var showingFormulaConfig = false
+    @State private var showingColorConfig = false
+    @State private var showingDeleteConfirmation = false
+    @State private var chartToDelete: ChartDefinition?
+    @State private var showingAddChartSheet = false
+
+    // Grid layout
+    let columns = [
+        GridItem(.adaptive(minimum: 300, maximum: 500), spacing: 24)
+    ]
 
     var body: some View {
         AppScreenContainer {
@@ -19,194 +29,248 @@ struct AnalyticsView: View {
                     title: "Analytics",
                     subtitle: "Deep dive into your business metrics"
                 ) {
-                    AppDropdown(
-                        options: ["Last 7 Days", "Last 30 Days", "This Year"],
-                        selection: $timeRange
-                    )
-                    .frame(width: 160)
+                    HStack(spacing: theme.spacing.s) {
+                        AppDropdown(
+                            options: ["Last 7 Days", "Last 30 Days", "This Year"],
+                            selection: $timeRange
+                        )
+                        .frame(width: 160)
+
+                        AppButton(title: "Add Chart", icon: "plus", style: .primary) {
+                            showingAddChartSheet = true
+                        }
+                    }
                 }
 
                 // Content
-                VStack(alignment: .leading, spacing: theme.spacing.xl) {
-                    // Revenue Trend
-                    AppCard {
-                        VStack(alignment: .leading, spacing: theme.spacing.m) {
-                            HStack {
-                                Text("Revenue Trend")
-                                    .font(theme.typography.cardTitle)
-                                    .foregroundColor(theme.colors.textPrimary)
-
-                                Spacer()
-                            }
-
-                            if salesData.isEmpty {
-                                // Empty State
-                                VStack(spacing: theme.spacing.m) {
-                                    Image(systemName: "chart.bar")
-                                        .font(.system(size: 48))
-                                        .foregroundColor(theme.colors.textSecondary)
-
-                                    Text("No sales data yet")
-                                        .font(theme.typography.sectionTitle)
-                                        .foregroundColor(theme.colors.textPrimary)
-
-                                    Text("Record your first sale to see revenue trends here.")
-                                        .font(theme.typography.body)
-                                        .foregroundColor(theme.colors.textSecondary)
-                                        .multilineTextAlignment(.center)
-                                }
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 250)
-                            } else {
-                                Chart(salesData) { point in
-                                    BarMark(
-                                        x: .value("Date", point.date, unit: .day),
-                                        y: .value("Sales", point.amount)
-                                    )
-                                    .foregroundStyle(theme.colors.accentPrimary)
-                                    .cornerRadius(4)
-                                }
-                                .chartXAxis {
-                                    AxisMarks(values: .stride(by: .day)) { value in
-                                        AxisValueLabel(format: .dateTime.weekday(.abbreviated))
-                                            .foregroundStyle(theme.colors.textSecondary)
-                                    }
-                                }
-                                .chartYAxis {
-                                    AxisMarks { value in
-                                        AxisGridLine()
-                                            .foregroundStyle(theme.colors.borderSubtle)
-                                        AxisValueLabel()
-                                            .foregroundStyle(theme.colors.textSecondary)
-                                    }
-                                }
-                                .frame(height: 250)
-                            }
+                if viewModel.isLoading {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, minHeight: 200)
+                } else if let error = viewModel.errorMessage {
+                    AppEmptyStateView(
+                        title: "Error Loading Charts",
+                        message: error,
+                        icon: "exclamationmark.triangle",
+                        actionTitle: "Retry",
+                        action: {
+                            Task { await viewModel.loadCharts() }
                         }
-                    }
-                    .frame(minHeight: 280)
-
-                    // Bottom Row: Category Breakdown + Top Products
-                    HStack(alignment: .top, spacing: theme.spacing.xl) {
-                        // Sales by Category
-                        AppCard {
-                            VStack(alignment: .leading, spacing: theme.spacing.m) {
-                                Text("Sales by Category")
-                                    .font(theme.typography.cardTitle)
-                                    .foregroundColor(theme.colors.textPrimary)
-
-                                if categoryData.isEmpty {
-                                    // Empty State
-                                    VStack(spacing: theme.spacing.m) {
-                                        Image(systemName: "chart.pie")
-                                            .font(.system(size: 48))
-                                            .foregroundColor(theme.colors.textSecondary)
-
-                                        Text("No category data")
-                                            .font(theme.typography.body)
-                                            .foregroundColor(theme.colors.textPrimary)
-
-                                        Text("Sales will be categorized here.")
-                                            .font(theme.typography.caption)
-                                            .foregroundColor(theme.colors.textSecondary)
-                                            .multilineTextAlignment(.center)
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 250)
-                                } else {
-                                    Chart(categoryData) { point in
-                                        SectorMark(
-                                            angle: .value("Sales", point.value),
-                                            innerRadius: .ratio(0.6),
-                                            angularInset: 2
-                                        )
-                                        .foregroundStyle(by: .value("Category", point.category))
-                                        .cornerRadius(4)
-                                    }
-                                    .frame(height: 250)
-                                    .chartLegend(position: .bottom, spacing: 16)
-                                }
-                            }
+                    )
+                } else if viewModel.charts.isEmpty {
+                    AppEmptyStateView(
+                        title: "No Charts Configured",
+                        message: "Add your first chart to start tracking metrics.",
+                        icon: "chart.bar.xaxis",
+                        actionTitle: "Add Chart",
+                        action: {
+                            showingAddChartSheet = true
                         }
-                        .frame(maxWidth: .infinity)
-                        .frame(minHeight: 320)
-
-                        // Top Products List
-                        AppCard {
-                            VStack(alignment: .leading, spacing: theme.spacing.m) {
-                                Text("Top Products")
-                                    .font(theme.typography.cardTitle)
-                                    .foregroundColor(theme.colors.textPrimary)
-
-                                if topProducts.isEmpty {
-                                    // Empty State
-                                    VStack(spacing: theme.spacing.m) {
-                                        Image(systemName: "star")
-                                            .font(.system(size: 48))
-                                            .foregroundColor(theme.colors.textSecondary)
-
-                                        Text("No products yet")
-                                            .font(theme.typography.body)
-                                            .foregroundColor(theme.colors.textPrimary)
-
-                                        Text("Top-selling products will appear here.")
-                                            .font(theme.typography.caption)
-                                            .foregroundColor(theme.colors.textSecondary)
-                                            .multilineTextAlignment(.center)
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 250)
-                                } else {
-                                    VStack(spacing: theme.spacing.s) {
-                                        ForEach(Array(topProducts.enumerated()), id: \.element.id) {
-                                            index, product in
-                                            HStack {
-                                                Text("#\(index + 1)")
-                                                    .font(theme.typography.caption)
-                                                    .foregroundColor(theme.colors.textSecondary)
-                                                    .frame(width: 24)
-
-                                                Text(product.name)
-                                                    .font(theme.typography.body)
-                                                    .foregroundColor(theme.colors.textPrimary)
-
-                                                Spacer()
-
-                                                Text(
-                                                    product.revenue.formatted(
-                                                        .currency(code: "USD"))
-                                                )
-                                                .font(theme.typography.body)
-                                                .foregroundColor(theme.colors.textPrimary)
-                                            }
-                                            .padding(.vertical, 4)
-
-                                            if index < topProducts.count - 1 {
-                                                Divider().overlay(theme.colors.borderSubtle)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                    )
+                } else {
+                    LazyVGrid(columns: columns, spacing: theme.spacing.xl) {
+                        ForEach(viewModel.charts) { chart in
+                            chartCard(for: chart)
                         }
-                        .frame(maxWidth: .infinity)
-                        .frame(minHeight: 320)
                     }
                 }
             }
             .frame(maxHeight: .infinity, alignment: .top)
         }
+        .task {
+            await viewModel.loadCharts()
+        }
+        .sheet(isPresented: $showingMetricConfig) {
+            if let chartIndex = viewModel.charts.firstIndex(where: { $0.id == editingChart?.id }),
+                editingChart != nil
+            {
+                ChartMetricConfigView(chartDefinition: $viewModel.charts[chartIndex])
+                    .onDisappear {
+                        if let updatedChart = viewModel.charts.first(where: {
+                            $0.id == editingChart?.id
+                        }) {
+                            viewModel.updateChart(updatedChart)
+                        }
+                    }
+            }
+        }
+        .sheet(isPresented: $showingFormulaConfig) {
+            if let chartIndex = viewModel.charts.firstIndex(where: { $0.id == editingChart?.id }),
+                editingChart != nil
+            {
+                ChartFormulaConfigView(formula: $viewModel.charts[chartIndex].formula)
+                    .onDisappear {
+                        if let updatedChart = viewModel.charts.first(where: {
+                            $0.id == editingChart?.id
+                        }) {
+                            viewModel.updateChart(updatedChart)
+                        }
+                    }
+            }
+        }
+        .sheet(isPresented: $showingColorConfig) {
+            if let chartIndex = viewModel.charts.firstIndex(where: { $0.id == editingChart?.id }),
+                editingChart != nil
+            {
+                ChartColorConfigView(colorPalette: $viewModel.charts[chartIndex].colorPalette)
+                    .onDisappear {
+                        if let updatedChart = viewModel.charts.first(where: {
+                            $0.id == editingChart?.id
+                        }) {
+                            viewModel.updateChart(updatedChart)
+                        }
+                    }
+            }
+        }
+        .alert("Delete Chart", isPresented: $showingDeleteConfirmation, presenting: chartToDelete) {
+            chart in
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                viewModel.deleteChart(chart)
+            }
+        } message: { chart in
+            Text("Are you sure you want to delete '\(chart.title)'? This action cannot be undone.")
+        }
+        .sheet(isPresented: $showingAddChartSheet) {
+            // Simple sheet to choose a starting point
+            VStack(spacing: theme.spacing.l) {
+                Text("Add New Chart")
+                    .font(theme.typography.sectionTitle)
+
+                Button("Revenue Trend") {
+                    viewModel.addChart(.revenueTrend)
+                    showingAddChartSheet = false
+                }
+
+                Button("Sales by Category") {
+                    viewModel.addChart(.salesByCategory)
+                    showingAddChartSheet = false
+                }
+
+                Button("Top Products") {
+                    viewModel.addChart(.topProducts)
+                    showingAddChartSheet = false
+                }
+
+                Button("Cancel", role: .cancel) {
+                    showingAddChartSheet = false
+                }
+                .padding(.top)
+            }
+            .padding()
+            .presentationDetents([.medium])
+        }
     }
-}
 
-struct CategoryDataPoint: Identifiable {
-    let id = UUID()
-    let category: String
-    let value: Double
-}
+    @ViewBuilder
+    private func chartCard(for chart: ChartDefinition) -> some View {
+        AppCard {
+            VStack(alignment: .leading, spacing: theme.spacing.m) {
+                HStack {
+                    Text(chart.title)
+                        .font(theme.typography.cardTitle)
+                        .foregroundColor(theme.colors.textPrimary)
 
-struct TopProductInfo: Identifiable {
-    let id = UUID()
-    let name: String
-    let revenue: Double
+                    Spacer()
+
+                    // Chart type indicator
+                    Image(systemName: chart.chartType.icon)
+                        .font(.system(size: 14))
+                        .foregroundColor(theme.colors.textSecondary)
+                }
+
+                // Chart content based on type and data
+                chartContent(for: chart)
+            }
+        }
+        .contextMenu {
+            // Change Chart Type submenu
+            Menu("Change Chart Type") {
+                ForEach([ChartType.bar, .line, .area, .donut, .table], id: \.self) { type in
+                    Button(action: {
+                        var updatedChart = chart
+                        updatedChart.chartType = type
+                        viewModel.updateChart(updatedChart)
+                    }) {
+                        Label(type.displayName, systemImage: type.icon)
+                    }
+                }
+            }
+
+            Divider()
+
+            Button(action: {
+                editingChart = chart
+                showingMetricConfig = true
+            }) {
+                Label("Change Metric…", systemImage: "slider.horizontal.3")
+            }
+
+            Button(action: {
+                editingChart = chart
+                showingFormulaConfig = true
+            }) {
+                Label("Custom Formula…", systemImage: "function")
+            }
+
+            Button(action: {
+                editingChart = chart
+                showingColorConfig = true
+            }) {
+                Label("Change Colors…", systemImage: "paintpalette")
+            }
+
+            Divider()
+
+            Button(action: {
+                viewModel.duplicateChart(chart)
+            }) {
+                Label("Duplicate Chart", systemImage: "doc.on.doc")
+            }
+
+            Button(
+                role: .destructive,
+                action: {
+                    chartToDelete = chart
+                    showingDeleteConfirmation = true
+                }
+            ) {
+                Label("Remove Chart", systemImage: "trash")
+            }
+        }
+        .frame(minHeight: 320)
+    }
+
+    @ViewBuilder
+    private func chartContent(for chart: ChartDefinition) -> some View {
+        // For now, show empty states since we don't have real data yet
+        // In production, this would check actual data arrays based on chart.dataSource
+        let hasData = false
+
+        if hasData {
+            // Real chart rendering would go here
+            Text("Chart rendering placeholder")
+                .font(theme.typography.body)
+                .foregroundColor(theme.colors.textSecondary)
+                .frame(maxWidth: .infinity)
+                .frame(height: 250)
+        } else {
+            // Empty State
+            VStack(spacing: theme.spacing.m) {
+                Image(systemName: chart.chartType.icon)
+                    .font(.system(size: 48))
+                    .foregroundColor(theme.colors.textSecondary)
+
+                Text("No data for this configuration yet")
+                    .font(theme.typography.body)
+                    .foregroundColor(theme.colors.textPrimary)
+
+                Text("Configure the chart or add data to see results.")
+                    .font(theme.typography.caption)
+                    .foregroundColor(theme.colors.textSecondary)
+                    .multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 250)
+        }
+    }
 }

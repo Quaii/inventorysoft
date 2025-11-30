@@ -8,21 +8,19 @@ struct TBDApp: App {
         WindowGroup {
             let themeMode =
                 ThemeMode(rawValue: appEnvironment.userPreferences.themeMode.lowercased()) ?? .dark
-            let compactMode = appEnvironment.userPreferences.compactMode
-            let currentTheme = Theme.from(mode: themeMode, compactMode: compactMode)
 
             if appEnvironment.hasCompletedOnboarding {
                 MainShellView()
                     .environmentObject(appEnvironment)
-                    .environment(\.theme, currentTheme)
+                    .environment(\.theme, appEnvironment.currentTheme)
                     .preferredColorScheme(preferredColorScheme(for: themeMode))
-                    .tint(currentTheme.colors.accentPrimary)
+                    .tint(appEnvironment.currentTheme.colors.accentPrimary)
             } else {
                 OnboardingView()
                     .environmentObject(appEnvironment)
-                    .environment(\.theme, currentTheme)
+                    .environment(\.theme, appEnvironment.currentTheme)
                     .preferredColorScheme(preferredColorScheme(for: themeMode))
-                    .tint(currentTheme.colors.accentPrimary)
+                    .tint(appEnvironment.currentTheme.colors.accentPrimary)
             }
         }
         #if os(macOS)

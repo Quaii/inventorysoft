@@ -8,40 +8,34 @@ struct SettingsView: View {
 
     @State private var isImporting = false
     @State private var isExportingJSON = false
-    @State private var showingColumnConfigFor: TableType?
 
     var body: some View {
         AppScreenContainer {
-            VStack(alignment: .leading, spacing: theme.spacing.xl) {
-                // Page Header
-                PageHeader(
-                    breadcrumbPage: "Settings",
-                    title: "Settings",
-                    subtitle: "Configure application preferences"
-                )
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    // Page Header with extra bottom spacing
+                    PageHeader(
+                        breadcrumbPage: "Settings",
+                        title: "Settings",
+                        subtitle: "Configure application preferences"
+                    )
+                    .padding(.bottom, 8)
 
-                // Content - Two rows of cards
-                VStack(alignment: .leading, spacing: theme.spacing.xl) {
-                    // Row 1: General, Data Management, Dashboard & Layout
-                    HStack(alignment: .top, spacing: theme.spacing.xl) {
-                        generalCard
-                        dataManagementCard
-                        dashboardLayoutCard
+                    // Settings Content
+                    VStack(spacing: 18) {
+                        generalSection
+                        appearanceSection
+                        dashboardAnalyticsSection
+                        dataManagementSection
+                        dangerZoneSection
                     }
-
-                    // Row 2: Appearance, Danger Zone
-                    HStack(alignment: .top, spacing: theme.spacing.xl) {
-                        appearanceCard
-                        dangerZoneCard
-                        Spacer()  // Third column placeholder
-                            .frame(maxWidth: .infinity)
-                    }
+                    .frame(maxWidth: 1000)
+                    .frame(maxWidth: .infinity)
                 }
+                .padding(.bottom, theme.spacing.xxl)
             }
+            .scrollIndicators(.hidden)
             .frame(maxHeight: .infinity, alignment: .top)
-        }
-        .sheet(isPresented: $viewModel.showingCustomFieldManagement) {
-            CustomFieldManagementView(customFieldRepository: viewModel.customFieldRepository)
         }
         .sheet(isPresented: $viewModel.showingImportMapping) {
             if let url = viewModel.importURL {
@@ -52,12 +46,6 @@ struct SettingsView: View {
                     importProfileRepository: viewModel.importProfileRepository
                 )
             }
-        }
-        .sheet(item: $showingColumnConfigFor) { tableType in
-            ColumnConfigurationView(
-                tableType: tableType,
-                columnConfigService: appEnvironment.columnConfigService
-            )
         }
         .fileImporter(
             isPresented: $isImporting,
@@ -80,341 +68,331 @@ struct SettingsView: View {
         ) { result in
             // Handle export result
         }
+        .overlay {
+            if viewModel.showingResetConfirmation {
+                ResetDatabaseConfirmationView(
+                    isPresented: $viewModel.showingResetConfirmation,
+                    confirmationText: $viewModel.resetConfirmationText,
+                    onConfirm: {
+                        // Reset database action
+                        print("Database reset confirmed")
+                    }
+                )
+            }
+        }
     }
 
-    // MARK: - General Card
+    // MARK: - General Section
 
-    private var generalCard: some View {
-        AppCard {
-            VStack(alignment: .leading, spacing: theme.spacing.l) {
-                Text("General")
-                    .font(theme.typography.cardTitle)
-                    .foregroundColor(theme.colors.textPrimary)
-
-                VStack(spacing: theme.spacing.m) {
-                    VStack(alignment: .leading, spacing: theme.spacing.s) {
-                        Text("Store Name")
-                            .font(theme.typography.caption)
-                            .foregroundColor(theme.colors.textSecondary)
-                        AppTextField(
-                            placeholder: "My Store",
-                            text: .constant("Inventory Soft")
-                        )
+    private var generalSection: some View {
+        SettingsSectionCard(
+            title: "General",
+            description: "Global app behavior that is not visual, and not per-page."
+        ) {
+            SettingsRowView(label: "Default Currency", showDivider: true) {
+                SettingsPickerPill(
+                    selectedValue: viewModel.userPreferences.baseCurrency,
+                    options: UserPreferences.availableCurrencies
+                ) { newValue in
+                    Task {
+                        await viewModel.updateCurrency(newValue)
                     }
+                }
+            }
 
-                    VStack(alignment: .leading, spacing: theme.spacing.s) {
-                        Text("Currency")
-                            .font(theme.typography.caption)
-                            .foregroundColor(theme.colors.textSecondary)
-                        AppDropdown(
-                            options: UserPreferences.availableCurrencies.map { "\($0)" },
-                            selection: Binding(
-                                get: { viewModel.userPreferences.baseCurrency },
-                                set: { newValue in
-                                    Task {
-                                        await viewModel.updateCurrency(newValue)
-                                    }
+            SettingsRowView(label: "Date Format", showDivider: true) {
+                SettingsPickerPill(
+                    selectedValue: viewModel.userPreferences.dateFormat,
+                    options: UserPreferences.availableDateFormats
+                ) { newValue in
+                    Task {
+                        await viewModel.updateDateFormat(newValue)
+                    }
+                }
+            }
+
+            SettingsRowView(label: "Number Format", showDivider: false) {
+                SettingsPickerPill(
+                    selectedValue: viewModel.userPreferences.numberFormattingLocale,
+                    options: UserPreferences.availableNumberFormats
+                ) { newValue in
+                    Task {
+                        await viewModel.updateNumberFormat(newValue)
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Appearance Section
+
+    private var appearanceSection: some View {
+        SettingsSectionCard(
+            title: "Appearance",
+            description: "Visual style of the entire app."
+        ) {
+            SettingsRowView(label: "Theme", showDivider: true) {
+                SettingsPickerPill(
+                    selectedValue: viewModel.userPreferences.themeMode,
+                    options: UserPreferences.availableThemeModes
+                ) { newValue in
+                    Task {
+                        await viewModel.updateThemeMode(newValue)
+                        do {
+                            try await appEnvironment.savePreferences(viewModel.userPreferences)
+                        } catch {
+                            print("Failed to save preferences: \(error)")
+                        }
+                    }
+                }
+            }
+
+            SettingsRowView(label: "Accent Color", showDivider: true) {
+                SettingsPickerPill(
+                    selectedValue: viewModel.userPreferences.accentColor,
+                    options: UserPreferences.availableAccentColors
+                ) { newValue in
+                    Task {
+                        await viewModel.updateAccentColor(newValue)
+                        do {
+                            try await appEnvironment.savePreferences(viewModel.userPreferences)
+                        } catch {
+                            print("Failed to save preferences: \(error)")
+                        }
+                    }
+                }
+            }
+
+            SettingsRowView(
+                label: "Compact Mode",
+                helpText: "Reduces vertical spacing in tables and lists for denser information.",
+                showDivider: true
+            ) {
+                Toggle(
+                    "",
+                    isOn: Binding(
+                        get: { viewModel.userPreferences.compactMode },
+                        set: { newValue in
+                            Task {
+                                await viewModel.updateCompactMode(newValue)
+                                do {
+                                    try await appEnvironment.savePreferences(
+                                        viewModel.userPreferences)
+                                } catch {
+                                    print("Failed to save preferences: \(error)")
                                 }
-                            )
-                        )
-                    }
+                            }
+                        }
+                    )
+                )
+                .labelsHidden()
+            }
 
-                    VStack(alignment: .leading, spacing: theme.spacing.s) {
-                        Text("Date Format")
-                            .font(theme.typography.caption)
-                            .foregroundColor(theme.colors.textSecondary)
-                        AppDropdown(
-                            options: UserPreferences.availableDateFormats,
-                            selection: Binding(
-                                get: { viewModel.userPreferences.dateFormat },
-                                set: { newValue in
-                                    Task {
-                                        await viewModel.updateDateFormat(newValue)
-                                    }
-                                }
-                            )
-                        )
+            SettingsRowView(label: "Sidebar", showDivider: false) {
+                SettingsPickerPill(
+                    selectedValue: viewModel.userPreferences.sidebarCollapseBehavior,
+                    options: UserPreferences.availableSidebarBehaviors
+                ) { newValue in
+                    Task {
+                        await viewModel.updateSidebarBehavior(newValue)
                     }
                 }
             }
         }
-        .frame(maxWidth: .infinity)
-        .frame(minHeight: 280)
     }
 
-    // MARK: - Data Management Card
+    // MARK: - Dashboard & Analytics Section
 
-    private var dataManagementCard: some View {
-        AppCard {
-            VStack(alignment: .leading, spacing: theme.spacing.l) {
-                Text("Data Management")
-                    .font(theme.typography.cardTitle)
-                    .foregroundColor(theme.colors.textPrimary)
-
-                VStack(spacing: theme.spacing.m) {
-                    // Export Section
-                    VStack(alignment: .leading, spacing: theme.spacing.s) {
-                        Text("EXPORT")
-                            .font(theme.typography.tableHeader)
-                            .foregroundColor(theme.colors.textSecondary)
-
-                        VStack(spacing: theme.spacing.s) {
-                            AppButton(
-                                title: "Export JSON",
-                                icon: "square.and.arrow.up",
-                                style: .secondary
-                            ) {
-                                isExportingJSON = true
-                            }
-
-                            AppButton(
-                                title: "Export CSV",
-                                icon: "doc.text",
-                                style: .secondary
-                            ) {
-                                // CSV Export
-                            }
-
-                            AppButton(
-                                title: "Export SQL",
-                                icon: "database",
-                                style: .secondary
-                            ) {
-                                // SQL Export
-                            }
-                        }
+    private var dashboardAnalyticsSection: some View {
+        SettingsSectionCard(
+            title: "Dashboard & Analytics",
+            description: "How the dashboard and analytics behave by default."
+        ) {
+            SettingsRowView(
+                label: "Dashboard Layout on First Launch",
+                helpText:
+                    "'Empty' means no widgets by default. 'Recommended KPIs' initializes with helpful cards.",
+                showDivider: true
+            ) {
+                SettingsPickerPill(
+                    selectedValue: viewModel.userPreferences.dashboardInitialLayout,
+                    options: UserPreferences.availableDashboardLayouts
+                ) { newValue in
+                    Task {
+                        await viewModel.updateDashboardInitialLayout(newValue)
                     }
+                }
+            }
 
-                    Divider().overlay(theme.colors.divider)
-
-                    // Import Section
-                    VStack(alignment: .leading, spacing: theme.spacing.s) {
-                        Text("IMPORT")
-                            .font(theme.typography.tableHeader)
-                            .foregroundColor(theme.colors.textSecondary)
-
-                        VStack(spacing: theme.spacing.s) {
-                            AppButton(
-                                title: "Import JSON",
-                                icon: "square.and.arrow.down",
-                                style: .secondary
-                            ) {
-                                isImporting = true
-                            }
-
-                            AppButton(
-                                title: "Import CSV",
-                                icon: "doc.text",
-                                style: .secondary
-                            ) {
-                                // CSV Import
-                            }
-
-                            AppButton(
-                                title: "Import SQL",
-                                icon: "database",
-                                style: .secondary
-                            ) {
-                                // SQL Import
+            SettingsRowView(
+                label: "Allow Card Editing Mode",
+                helpText:
+                    "Enables 'edit mode' where dashboard cards can be rearranged and resized.",
+                showDivider: true
+            ) {
+                Toggle(
+                    "",
+                    isOn: Binding(
+                        get: { viewModel.userPreferences.allowDashboardEditing },
+                        set: { newValue in
+                            Task {
+                                await viewModel.updateAllowDashboardEditing(newValue)
                             }
                         }
+                    )
+                )
+                .labelsHidden()
+            }
+
+            SettingsRowView(label: "Default Analytics Date Range", showDivider: true) {
+                SettingsPickerPill(
+                    selectedValue: viewModel.userPreferences.defaultAnalyticsRange,
+                    options: UserPreferences.availableAnalyticsRanges
+                ) { newValue in
+                    Task {
+                        await viewModel.updateDefaultAnalyticsRange(newValue)
+                    }
+                }
+            }
+
+            SettingsRowView(label: "Default Time Interval", showDivider: false) {
+                SettingsPickerPill(
+                    selectedValue: viewModel.userPreferences.defaultAnalyticsInterval,
+                    options: UserPreferences.availableAnalyticsIntervals
+                ) { newValue in
+                    Task {
+                        await viewModel.updateDefaultAnalyticsInterval(newValue)
                     }
                 }
             }
         }
-        .frame(maxWidth: .infinity)
-        .frame(minHeight: 280)
     }
 
-    // MARK: - Dashboard & Layout Card
+    // MARK: - Data Management Section
 
-    private var dashboardLayoutCard: some View {
-        AppCard {
-            VStack(alignment: .leading, spacing: theme.spacing.l) {
-                Text("Dashboard & Layout")
-                    .font(theme.typography.cardTitle)
-                    .foregroundColor(theme.colors.textPrimary)
+    private var dataManagementSection: some View {
+        SettingsSectionCard(
+            title: "Data Management",
+            description: "Import, export, backup of local data."
+        ) {
+            // Export Section
+            VStack(alignment: .leading, spacing: 10) {
+                Text("EXPORT")
+                    .font(theme.typography.tableHeader)
+                    .foregroundColor(theme.colors.textSecondary)
 
-                VStack(spacing: theme.spacing.m) {
-                    // Custom Fields
-                    HStack(alignment: .center) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Custom Fields")
-                                .font(theme.typography.body)
-                                .foregroundColor(theme.colors.textPrimary)
-                            Text("Add custom fields to items, sales, and purchases")
-                                .font(theme.typography.caption)
-                                .foregroundColor(theme.colors.textSecondary)
-                        }
-
-                        Spacer()
-
-                        AppButton(
-                            title: "Manage",
-                            icon: "square.grid.3x3.square",
-                            style: .secondary
-                        ) {
-                            viewModel.showingCustomFieldManagement = true
-                        }
+                HStack(spacing: 10) {
+                    AppButton(
+                        title: "Export CSV",
+                        icon: "doc.text",
+                        style: .secondary
+                    ) {
+                        // CSV Export
                     }
 
-                    Divider().overlay(theme.colors.divider)
-
-                    // Column Configuration
-                    HStack(alignment: .center) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Table Columns")
-                                .font(theme.typography.body)
-                                .foregroundColor(theme.colors.textPrimary)
-                            Text("Configure visible columns for each table")
-                                .font(theme.typography.caption)
-                                .foregroundColor(theme.colors.textSecondary)
-                        }
-
-                        Spacer()
-
-                        Menu {
-                            Button("Inventory Columns") {
-                                showingColumnConfigFor = .inventory
-                            }
-                            Button("Sales Columns") {
-                                showingColumnConfigFor = .sales
-                            }
-                            Button("Purchases Columns") {
-                                showingColumnConfigFor = .purchases
-                            }
-                        } label: {
-                            HStack(spacing: theme.spacing.s) {
-                                Text("Configure")
-                                Image(systemName: "chevron.down")
-                            }
-                            .font(theme.typography.body)
-                            .foregroundColor(theme.colors.textPrimary)
-                            .padding(.horizontal, theme.spacing.m)
-                            .padding(.vertical, theme.spacing.s)
-                            .background(theme.colors.surfaceElevated)
-                            .cornerRadius(theme.radii.small)
-                        }
+                    AppButton(
+                        title: "Export JSON",
+                        icon: "square.and.arrow.up",
+                        style: .secondary
+                    ) {
+                        isExportingJSON = true
                     }
                 }
             }
+            .padding(.vertical, 12)
+
+            Divider()
+                .background(theme.colors.borderSubtle)
+
+            // Import Section
+            VStack(alignment: .leading, spacing: 10) {
+                Text("IMPORT")
+                    .font(theme.typography.tableHeader)
+                    .foregroundColor(theme.colors.textSecondary)
+
+                HStack(spacing: 10) {
+                    AppButton(
+                        title: "Import CSV",
+                        icon: "doc.text",
+                        style: .secondary
+                    ) {
+                        // CSV Import
+                    }
+
+                    AppButton(
+                        title: "Import JSON",
+                        icon: "square.and.arrow.down",
+                        style: .secondary
+                    ) {
+                        isImporting = true
+                    }
+                }
+            }
+            .padding(.vertical, 12)
+
+            Divider()
+                .background(theme.colors.borderSubtle)
+
+            SettingsRowView(
+                label: "Backup Frequency",
+                helpText: "Automatic backups of your complete database.",
+                showDivider: true
+            ) {
+                SettingsPickerPill(
+                    selectedValue: viewModel.userPreferences.backupFrequency,
+                    options: UserPreferences.availableBackupFrequencies
+                ) { newValue in
+                    Task {
+                        await viewModel.updateBackupFrequency(newValue)
+                    }
+                }
+            }
+
+            HStack {
+                AppButton(
+                    title: "Create Backup Now",
+                    icon: "square.and.arrow.down.on.square",
+                    style: .secondary
+                ) {
+                    // Manual backup
+                }
+            }
+            .padding(.top, 4)
         }
-        .frame(maxWidth: .infinity)
-        .frame(minHeight: 280)
     }
 
-    // MARK: - Appearance Card
+    // MARK: - Danger Zone Section
 
-    private var appearanceCard: some View {
-        AppCard {
-            VStack(alignment: .leading, spacing: theme.spacing.l) {
-                Text("Appearance")
-                    .font(theme.typography.cardTitle)
-                    .foregroundColor(theme.colors.textPrimary)
+    private var dangerZoneSection: some View {
+        SettingsSectionCard(
+            title: "Danger Zone",
+            isDangerZone: true
+        ) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Reset Database")
+                        .font(theme.typography.body)
+                        .fontWeight(.semibold)
+                        .foregroundColor(theme.colors.textPrimary)
+                    Text(
+                        "Deletes all items, sales, purchases, images and settings. Requires explicit confirmation."
+                    )
+                    .font(theme.typography.caption)
+                    .foregroundColor(theme.colors.textSecondary)
+                }
 
-                VStack(spacing: theme.spacing.m) {
-                    VStack(alignment: .leading, spacing: theme.spacing.s) {
-                        Text("Theme Mode")
-                            .font(theme.typography.caption)
-                            .foregroundColor(theme.colors.textSecondary)
-                        AppDropdown(
-                            options: ["Dark", "Light", "System"],
-                            selection: Binding(
-                                get: { viewModel.userPreferences.themeMode },
-                                set: { newValue in
-                                    Task {
-                                        await viewModel.updateThemeMode(newValue)
-                                        // Trigger app environment update
-                                        do {
-                                            try await appEnvironment.savePreferences(
-                                                viewModel.userPreferences)
-                                        } catch {
-                                            print("Failed to save preferences: \(error)")
-                                        }
-                                    }
-                                }
-                            )
-                        )
-                    }
+                Spacer()
 
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Compact Mode")
-                                .font(theme.typography.body).foregroundColor(
-                                    theme.colors.textPrimary)
-                            Text("Reduces vertical spacing throughout the app")
-                                .font(theme.typography.caption)
-                                .foregroundColor(theme.colors.textSecondary)
-                        }
-
-                        Spacer()
-
-                        Toggle(
-                            "",
-                            isOn: Binding(
-                                get: { viewModel.userPreferences.compactMode },
-                                set: { newValue in
-                                    Task {
-                                        await viewModel.updateCompactMode(newValue)
-                                        do {
-                                            try await appEnvironment.savePreferences(
-                                                viewModel.userPreferences)
-                                        } catch {
-                                            print("Failed to save preferences: \(error)")
-                                        }
-                                    }
-                                }
-                            )
-                        )
-                        .labelsHidden()
-                    }
+                AppButton(
+                    title: "Reset",
+                    icon: "trash",
+                    style: .destructive
+                ) {
+                    viewModel.showingResetConfirmation = true
                 }
             }
+            .padding(.vertical, 12)
         }
-        .frame(maxWidth: .infinity)
-        .frame(minHeight: 180)
-    }
-
-    // MARK: - Danger Zone Card
-
-    private var dangerZoneCard: some View {
-        AppCard {
-            VStack(alignment: .leading, spacing: theme.spacing.l) {
-                Text("Danger Zone")
-                    .font(theme.typography.cardTitle)
-                    .foregroundColor(theme.colors.error)
-
-                VStack(alignment: .leading, spacing: theme.spacing.m) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Reset Database")
-                            .font(theme.typography.body)
-                            .foregroundColor(theme.colors.textPrimary)
-                        Text("Delete all items and sales history. This action cannot be undone.")
-                            .font(theme.typography.caption)
-                            .foregroundColor(theme.colors.textSecondary)
-                    }
-
-                    Spacer()
-
-                    HStack {
-                        Spacer()
-                        AppButton(
-                            title: "Reset",
-                            icon: "trash",
-                            style: .destructive
-                        ) {
-                            // Reset action with confirmation
-                        }
-                    }
-                }
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .frame(minHeight: 180)
-        .overlay(
-            RoundedRectangle(cornerRadius: theme.radii.card)
-                .stroke(theme.colors.error.opacity(0.5), lineWidth: 1)
-        )
     }
 }
 
@@ -440,9 +418,4 @@ struct JSONDocument: FileDocument {
         let data = text.data(using: .utf8)!
         return FileWrapper(regularFileWithContents: data)
     }
-}
-
-// Identifiable extension for TableType
-extension TableType: Identifiable {
-    var id: String { rawValue }
 }

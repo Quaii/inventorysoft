@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct ProcessesCard: View {
-    let processes: [ProcessInfo]
+    let alerts: [StockAlert]
     let onViewAll: () -> Void
-    let onToggleProcess: (ProcessInfo) -> Void
+    let onViewAlert: (StockAlert) -> Void
 
     @Environment(\.theme) var theme
 
@@ -12,7 +12,7 @@ struct ProcessesCard: View {
             VStack(alignment: .leading, spacing: theme.spacing.m) {
                 // Header
                 HStack {
-                    Text("Processes")
+                    Text("Stock Alerts")
                         .font(theme.typography.cardTitle)
                         .foregroundColor(theme.colors.textPrimary)
 
@@ -27,20 +27,20 @@ struct ProcessesCard: View {
                 }
 
                 // Content
-                if processes.isEmpty {
+                if alerts.isEmpty {
                     // Empty State
                     VStack(spacing: theme.spacing.s) {
                         Spacer()
 
-                        Image(systemName: "gear.badge.questionmark")
+                        Image(systemName: "checkmark.shield")
                             .font(.system(size: 32))
-                            .foregroundColor(theme.colors.textSecondary)
+                            .foregroundColor(theme.colors.accentPositive)
 
-                        Text("No processes configured yet")
+                        Text("All stock levels healthy")
                             .font(theme.typography.body)
                             .foregroundColor(theme.colors.textPrimary)
 
-                        Text("Add a Telegram bot, RSS feed, or webhook.")
+                        Text("No low stock warnings at this time.")
                             .font(theme.typography.caption)
                             .foregroundColor(theme.colors.textSecondary)
                             .multilineTextAlignment(.center)
@@ -49,41 +49,39 @@ struct ProcessesCard: View {
                     }
                     .frame(maxWidth: .infinity)
                 } else {
-                    // Process List
+                    // Alert List
                     VStack(spacing: theme.spacing.s) {
-                        ForEach(processes) { process in
+                        ForEach(alerts) { alert in
                             HStack(spacing: theme.spacing.m) {
                                 // Icon
-                                Image(systemName: process.icon)
+                                Image(systemName: alert.icon)
                                     .font(.system(size: 16))
-                                    .foregroundColor(theme.colors.accentPrimary)
+                                    .foregroundColor(alert.severityColor(theme: theme))
                                     .frame(width: 32, height: 32)
                                     .background(theme.colors.surfaceElevated)
                                     .clipShape(Circle())
 
                                 // Info
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text(process.name)
+                                    Text(alert.title)
                                         .font(theme.typography.body)
                                         .foregroundColor(theme.colors.textPrimary)
 
-                                    Text(process.status)
+                                    Text(alert.message)
                                         .font(theme.typography.caption)
                                         .foregroundColor(theme.colors.textSecondary)
                                 }
 
                                 Spacer()
 
-                                // Toggle Button
-                                Button(action: { onToggleProcess(process) }) {
-                                    Image(
-                                        systemName: process.isRunning ? "pause.fill" : "play.fill"
-                                    )
-                                    .font(.system(size: 12))
-                                    .foregroundColor(theme.colors.textPrimary)
-                                    .frame(width: 28, height: 28)
-                                    .background(theme.colors.surfaceElevated)
-                                    .clipShape(Circle())
+                                // Action Button
+                                Button(action: { onViewAlert(alert) }) {
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(theme.colors.textSecondary)
+                                        .frame(width: 28, height: 28)
+                                        .background(theme.colors.surfaceElevated)
+                                        .clipShape(Circle())
                                 }
                                 .buttonStyle(.plain)
                             }
@@ -97,12 +95,4 @@ struct ProcessesCard: View {
         }
         .frame(minHeight: 260)
     }
-}
-
-struct ProcessInfo: Identifiable {
-    let id = UUID()
-    let name: String
-    let status: String
-    let icon: String
-    let isRunning: Bool
 }

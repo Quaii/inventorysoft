@@ -260,5 +260,134 @@ struct Migrations {
                 }
             }
         }
+
+        // Migration v5: Analytics Charts
+        migrator.registerMigration("v5_analytics_charts") { db in
+            try db.create(table: SchemaDefinitions.ChartDefinitionTable.databaseTableName) { t in
+                t.column(SchemaDefinitions.ChartDefinitionTable.id, .text).primaryKey()
+                t.column(SchemaDefinitions.ChartDefinitionTable.title, .text).notNull()
+                t.column(SchemaDefinitions.ChartDefinitionTable.chartType, .text).notNull()
+                t.column(SchemaDefinitions.ChartDefinitionTable.dataSource, .text).notNull()
+                t.column(SchemaDefinitions.ChartDefinitionTable.xField, .text).notNull()
+                t.column(SchemaDefinitions.ChartDefinitionTable.yField, .text).notNull()
+                t.column(SchemaDefinitions.ChartDefinitionTable.aggregation, .text).notNull()
+                t.column(SchemaDefinitions.ChartDefinitionTable.groupBy, .text)
+                t.column(SchemaDefinitions.ChartDefinitionTable.colorPalette, .text).notNull()
+                    .defaults(to: "default")
+                t.column(SchemaDefinitions.ChartDefinitionTable.formula, .text)  // JSON
+                t.column(SchemaDefinitions.ChartDefinitionTable.sortOrder, .integer).notNull()
+                    .defaults(to: 0)
+            }
+        }
+
+        // Migration v6: Settings Refactor - Add new preference fields
+        migrator.registerMigration("v6_settings_refactor") { db in
+            let tableExists = try db.tableExists(
+                SchemaDefinitions.UserPreferencesTable.databaseTableName)
+
+            if tableExists {
+                let columns = try db.columns(
+                    in: SchemaDefinitions.UserPreferencesTable.databaseTableName)
+                let columnNames = columns.map { $0.name }
+
+                // Add new columns if they don't exist
+                if !columnNames.contains(
+                    SchemaDefinitions.UserPreferencesTable.numberFormattingLocale)
+                {
+                    try db.alter(table: SchemaDefinitions.UserPreferencesTable.databaseTableName) {
+                        t in
+                        t.add(
+                            column: SchemaDefinitions.UserPreferencesTable.numberFormattingLocale,
+                            .text
+                        )
+                        .notNull().defaults(to: "System")
+                    }
+                }
+
+                if !columnNames.contains(
+                    SchemaDefinitions.UserPreferencesTable.sidebarCollapseBehavior)
+                {
+                    try db.alter(table: SchemaDefinitions.UserPreferencesTable.databaseTableName) {
+                        t in
+                        t.add(
+                            column: SchemaDefinitions.UserPreferencesTable.sidebarCollapseBehavior,
+                            .text
+                        )
+                        .notNull().defaults(to: "Collapsible")
+                    }
+                }
+
+                if !columnNames.contains(
+                    SchemaDefinitions.UserPreferencesTable.dashboardInitialLayout)
+                {
+                    try db.alter(table: SchemaDefinitions.UserPreferencesTable.databaseTableName) {
+                        t in
+                        t.add(
+                            column: SchemaDefinitions.UserPreferencesTable.dashboardInitialLayout,
+                            .text
+                        )
+                        .notNull().defaults(to: "Recommended KPIs")
+                    }
+                }
+
+                if !columnNames.contains(
+                    SchemaDefinitions.UserPreferencesTable.allowDashboardEditing)
+                {
+                    try db.alter(table: SchemaDefinitions.UserPreferencesTable.databaseTableName) {
+                        t in
+                        t.add(
+                            column: SchemaDefinitions.UserPreferencesTable.allowDashboardEditing,
+                            .boolean
+                        )
+                        .notNull().defaults(to: true)
+                    }
+                }
+
+                if !columnNames.contains(
+                    SchemaDefinitions.UserPreferencesTable.defaultAnalyticsRange)
+                {
+                    try db.alter(table: SchemaDefinitions.UserPreferencesTable.databaseTableName) {
+                        t in
+                        t.add(
+                            column: SchemaDefinitions.UserPreferencesTable.defaultAnalyticsRange,
+                            .text
+                        )
+                        .notNull().defaults(to: "Last 30 Days")
+                    }
+                }
+
+                if !columnNames.contains(
+                    SchemaDefinitions.UserPreferencesTable.defaultAnalyticsInterval)
+                {
+                    try db.alter(table: SchemaDefinitions.UserPreferencesTable.databaseTableName) {
+                        t in
+                        t.add(
+                            column: SchemaDefinitions.UserPreferencesTable.defaultAnalyticsInterval,
+                            .text
+                        )
+                        .notNull().defaults(to: "Daily")
+                    }
+                }
+
+                if !columnNames.contains(SchemaDefinitions.UserPreferencesTable.backupLocationPath)
+                {
+                    try db.alter(table: SchemaDefinitions.UserPreferencesTable.databaseTableName) {
+                        t in
+                        t.add(
+                            column: SchemaDefinitions.UserPreferencesTable.backupLocationPath, .text
+                        )
+                        .notNull().defaults(to: "")
+                    }
+                }
+
+                if !columnNames.contains(SchemaDefinitions.UserPreferencesTable.backupFrequency) {
+                    try db.alter(table: SchemaDefinitions.UserPreferencesTable.databaseTableName) {
+                        t in
+                        t.add(column: SchemaDefinitions.UserPreferencesTable.backupFrequency, .text)
+                            .notNull().defaults(to: "Off")
+                    }
+                }
+            }
+        }
     }
 }

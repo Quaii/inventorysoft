@@ -31,58 +31,6 @@ class DashboardConfigService: DashboardConfigServiceProtocol {
         try await repository.saveAllWidgets(widgets)
     }
 
-    func getDefaultWidgets() -> [DashboardWidget] {
-        [
-            // Row 0
-            DashboardWidget(
-                type: .kpi,
-                metric: .inventoryValue,
-                size: .small,
-                position: WidgetPosition(row: 0, col: 0),
-                chartType: .none,
-                isVisible: true,
-                sortOrder: 0
-            ),
-            DashboardWidget(
-                type: .kpi,
-                metric: .itemsInStock,
-                size: .small,
-                position: WidgetPosition(row: 0, col: 1),
-                chartType: .none,
-                isVisible: true,
-                sortOrder: 1
-            ),
-            DashboardWidget(
-                type: .kpi,
-                metric: .itemsSoldThisWeek,
-                size: .small,
-                position: WidgetPosition(row: 0, col: 2),
-                chartType: .none,
-                isVisible: true,
-                sortOrder: 2
-            ),
-            // Row 1
-            DashboardWidget(
-                type: .list,
-                metric: .recentActivity,
-                size: .medium,
-                position: WidgetPosition(row: 1, col: 0),
-                chartType: .none,
-                isVisible: true,
-                sortOrder: 3
-            ),
-            DashboardWidget(
-                type: .chart,
-                metric: .salesOverview,
-                size: .medium,
-                position: WidgetPosition(row: 1, col: 1),
-                chartType: .bar,
-                isVisible: true,
-                sortOrder: 4
-            ),
-        ]
-    }
-
     func initializeDefaultLayout() async throws {
         let defaultWidgets = getDefaultWidgets()
         try await repository.saveAllWidgets(defaultWidgets)
@@ -92,5 +40,54 @@ class DashboardConfigService: DashboardConfigServiceProtocol {
         // Clear existing widgets and re-initialize with defaults
         try await repository.saveAllWidgets([])
         try await initializeDefaultLayout()
+    }
+    func getDefaultWidgets() -> [DashboardWidget] {
+        return [
+            DashboardWidget(
+                metric: .inventoryValue,
+                type: .stat,
+                size: .small,
+                isVisible: true,
+                sortOrder: 0,
+                chartType: nil,
+                position: WidgetPosition(row: 0, col: 0)
+            ),
+            DashboardWidget(
+                metric: .totalItems,
+                type: .stat,
+                size: .small,
+                isVisible: true,
+                sortOrder: 1,
+                chartType: nil,
+                position: WidgetPosition(row: 0, col: 1)
+            ),
+            DashboardWidget(
+                metric: .lowStock,
+                type: .stat,
+                size: .small,
+                isVisible: true,
+                sortOrder: 2,
+                chartType: nil,
+                position: WidgetPosition(row: 0, col: 2)
+            ),
+            DashboardWidget(
+                metric: .topSellingItems,
+                type: .chart,
+                size: .large,
+                isVisible: true,
+                sortOrder: 3,
+                chartType: .bar,
+                position: WidgetPosition(row: 1, col: 0)
+            ),
+            DashboardWidget(
+                metric: .recentActivity,
+                type: .list,
+                size: .medium,
+                isVisible: true,
+                sortOrder: 4,
+                chartType: nil,
+                position: WidgetPosition(row: 2, col: 0)
+            ),
+        ]
     }
 }

@@ -117,12 +117,39 @@ struct SchemaDefinitions {
     struct UserPreferencesTable {
         static let databaseTableName = "userPreferences"
         static let id = "id"
+        // General
         static let baseCurrency = "baseCurrency"
         static let displayCurrency = "displayCurrency"
         static let dateFormat = "dateFormat"
+        static let numberFormattingLocale = "numberFormattingLocale"
         static let firstDayOfWeek = "firstDayOfWeek"
+        // Appearance
         static let themeMode = "themeMode"
         static let compactMode = "compactMode"
         static let accentColor = "accentColor"
+        static let sidebarCollapseBehavior = "sidebarCollapseBehavior"
+        // Dashboard & Analytics
+        static let dashboardInitialLayout = "dashboardInitialLayout"
+        static let allowDashboardEditing = "allowDashboardEditing"
+        static let defaultAnalyticsRange = "defaultAnalyticsRange"
+        static let defaultAnalyticsInterval = "defaultAnalyticsInterval"
+        // Data Management
+        static let backupLocationPath = "backupLocationPath"
+        static let backupFrequency = "backupFrequency"
+    }
+
+    struct ChartDefinitionTable {
+        static let databaseTableName = "chartDefinition"
+        static let id = "id"
+        static let title = "title"
+        static let chartType = "chartType"
+        static let dataSource = "dataSource"
+        static let xField = "xField"
+        static let yField = "yField"
+        static let aggregation = "aggregation"
+        static let groupBy = "groupBy"
+        static let colorPalette = "colorPalette"
+        static let formula = "formula"  // JSON encoded
+        static let sortOrder = "sortOrder"
     }
 }

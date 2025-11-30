@@ -18,7 +18,7 @@ struct AppScreenContainer<Content: View>: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(theme.spacing.xl)
         }
-        .scrollIndicators(.hidden)
+        .inventorySoftScrollStyle()
         .background(theme.colors.backgroundPrimary.ignoresSafeArea())
     }
 }

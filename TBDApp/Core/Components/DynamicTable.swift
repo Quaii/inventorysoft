@@ -59,6 +59,7 @@ struct DynamicTable<RowData: Identifiable>: View {
                 }
             }
         }
+        .inventorySoftScrollStyle()
     }
 
     private func rowView(for row: RowData) -> some View {

@@ -9,6 +9,9 @@ protocol AnalyticsServiceProtocol {
     func getRecentActivity() async throws -> [ActivityItem]
     func getLowStockItems() async throws -> [Item]
     func getSalesChartData() async throws -> [SalesDataPoint]
+    func itemsAddedLast24Hours() async throws -> Int
+    func itemCountHistory(days: Int) async throws -> [Date: Int]
+    func recentItems(limit: Int) async throws -> [Item]
 }
 
 class AnalyticsService: AnalyticsServiceProtocol {
@@ -133,5 +136,37 @@ class AnalyticsService: AnalyticsServiceProtocol {
         }
 
         return dataPoints.sorted(by: { $0.date < $1.date })
+    }
+    func itemsAddedLast24Hours() async throws -> Int {
+        let items = try await itemRepository.fetchAllItems(
+            search: nil, statusFilter: nil, sort: .byDateAddedDescending)
+        let calendar = Calendar.current
+        let oneDayAgo = calendar.date(byAdding: .hour, value: -24, to: Date())!
+        return items.filter { $0.dateAdded >= oneDayAgo }.count
+    }
+
+    func itemCountHistory(days: Int) async throws -> [Date: Int] {
+        let items = try await itemRepository.fetchAllItems(
+            search: nil, statusFilter: nil, sort: .byDateAddedDescending)
+        let calendar = Calendar.current
+        let today = Date()
+        var history: [Date: Int] = [:]
+
+        for i in 0..<days {
+            if let date = calendar.date(byAdding: .day, value: -i, to: today) {
+                let day = calendar.startOfDay(for: date)
+                let nextDay = calendar.date(byAdding: .day, value: 1, to: day)!
+
+                let count = items.filter { $0.dateAdded >= day && $0.dateAdded < nextDay }.count
+                history[day] = count
+            }
+        }
+        return history
+    }
+
+    func recentItems(limit: Int) async throws -> [Item] {
+        let items = try await itemRepository.fetchAllItems(
+            search: nil, statusFilter: nil, sort: .byDateAddedDescending)
+        return Array(items.prefix(limit))
     }
 }

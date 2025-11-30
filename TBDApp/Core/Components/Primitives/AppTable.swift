@@ -60,7 +60,7 @@ where Data.Element: Identifiable {
                     }
                 }
             }
-            .scrollIndicators(.hidden)
+            .inventorySoftScrollStyle()
         }
         .background(theme.colors.surfacePrimary)
         .cornerRadius(theme.radii.medium)

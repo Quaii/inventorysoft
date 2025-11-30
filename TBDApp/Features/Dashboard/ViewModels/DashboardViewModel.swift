@@ -1,25 +1,6 @@
 import Combine
 import Foundation
 
-struct ActivityItem: Identifiable, Equatable {
-    let id: UUID
-    let title: String
-    let description: String
-    let type: ActivityType
-    let date: Date
-
-    enum ActivityType {
-        case sale
-        case purchase
-    }
-}
-
-struct SalesDataPoint: Identifiable {
-    let id = UUID()
-    let date: Date
-    let amount: Double
-}
-
 @MainActor
 class DashboardViewModel: ObservableObject {
     private let analyticsService: AnalyticsServiceProtocol
@@ -33,13 +14,13 @@ class DashboardViewModel: ObservableObject {
     // Widget data
     @Published var totalInventoryValue: Double = 0
     @Published var totalItems: Int = 0
-    @Published var stockAlerts: [String] = []
+
     @Published var recentActivity: [ActivityItem] = []
     @Published var salesChartData: [SalesDataPoint] = []
 
     // New dashboard card properties
     @Published var itemsPerDay: Int? = nil
-    @Published var processes: [ProcessInfo] = []
+    @Published var stockAlerts: [StockAlert] = []
     @Published var recentItems: [RecentItemInfo] = []
     @Published var itemCountHistory: [ItemCountDataPoint] = []
 
@@ -70,9 +51,8 @@ class DashboardViewModel: ObservableObject {
 
             // Log technical details to console
             print("Dashboard load error: \(error)")
-            if let technicalError = error as? NSError {
-                print("Technical details: \(technicalError.userInfo)")
-            }
+            let technicalError = error as NSError
+            print("Technical details: \(technicalError.userInfo)")
         }
     }
 
@@ -139,8 +119,8 @@ class DashboardViewModel: ObservableObject {
         // Load item count history for chart
         itemCountHistory = try await loadItemCountHistory()
 
-        // Load processes (empty for now - can be populated from app configuration)
-        processes = []
+        // Load stock alerts (empty for now - can be populated from low stock queries)
+        stockAlerts = []
 
         // Load recent items
         recentItems = try await loadRecentItems()
@@ -157,32 +137,37 @@ class DashboardViewModel: ObservableObject {
     }
 
     private func calculateItemsPerDay() async throws -> Int? {
-        // TODO: Implement actual query to count items added in last 24 hours
-        // For now, return nil to show "—" in UI
-        return nil
+        return try await analyticsService.itemsAddedLast24Hours()
     }
 
     private func loadItemCountHistory() async throws -> [ItemCountDataPoint] {
-        // TODO: Implement actual query to get item count by day for last 7 days
-        // For now, return empty array to show "No data yet" placeholder
-        return []
+        let history = try await analyticsService.itemCountHistory(days: 7)
+        return history.map { date, count in
+            ItemCountDataPoint(date: date, count: count)
+        }.sorted(by: { $0.date < $1.date })
     }
 
     private func loadRecentItems() async throws -> [RecentItemInfo] {
-        // TODO: Implement actual query to fetch last 5-10 items from inventory
-        // For now, return empty array to show empty state
-        return []
+        let items = try await analyticsService.recentItems(limit: 10)
+        return items.map { item in
+            RecentItemInfo(
+                title: item.title,
+                brand: "Unknown",  // Placeholder as Item doesn't have brand name directly
+                size: "-",  // Placeholder as Item doesn't have size directly
+                condition: item.condition,  // condition is already a String
+                price: item.purchasePrice.formatted(.currency(code: "USD")),
+                query: "-",
+                timestamp: item.dateAdded.formatted(date: .abbreviated, time: .shortened),
+                imageURL: nil
+            )
+        }
     }
 
     private func loadRecentActivity() async throws -> [ActivityItem] {
-        // TODO: Implement actual query to fetch recent sales and purchases
-        // For now, return empty array
-        return []
+        return try await analyticsService.getRecentActivity()
     }
 
     private func loadSalesChartData() async throws -> [SalesDataPoint] {
-        // TODO: Implement actual query using analytics service
-        // For now, return empty array
-        return []
+        return try await analyticsService.getSalesChartData()
     }
 }

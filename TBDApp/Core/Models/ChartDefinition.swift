@@ -75,6 +75,39 @@ struct FormulaConfig: Codable, Equatable {
     }
 }
 
+// MARK: - Chart Type
+
+enum ChartType: String, Codable, CaseIterable {
+    case none
+    case bar
+    case line
+    case area
+    case donut
+    case table
+
+    var displayName: String {
+        switch self {
+        case .none: return "None"
+        case .bar: return "Bar Chart"
+        case .line: return "Line Chart"
+        case .area: return "Area Chart"
+        case .donut: return "Donut Chart"
+        case .table: return "Table"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .none: return "minus.circle"
+        case .bar: return "chart.bar"
+        case .line: return "chart.xyaxis.line"
+        case .area: return "chart.line.uptrend.xyaxis"
+        case .donut: return "chart.pie"
+        case .table: return "tablecells"
+        }
+    }
+}
+
 // MARK: - Chart Definition
 
 struct ChartDefinition: Identifiable, Codable, Equatable {
@@ -149,6 +182,21 @@ struct ChartDefinition: Identifiable, Codable, Equatable {
         groupBy: nil,
         sortOrder: 2
     )
+    func duplicated() -> ChartDefinition {
+        ChartDefinition(
+            id: UUID(),
+            title: "\(title) (Copy)",
+            chartType: chartType,
+            dataSource: dataSource,
+            xField: xField,
+            yField: yField,
+            aggregation: aggregation,
+            groupBy: groupBy,
+            colorPalette: colorPalette,
+            formula: formula,
+            sortOrder: sortOrder
+        )
+    }
 }
 
 // MARK: - Color Palettes

@@ -199,15 +199,3 @@ struct RecentItemsCard: View {
         }
     }
 }
-
-struct RecentItemInfo: Identifiable {
-    let id = UUID()
-    let title: String
-    let brand: String
-    let size: String
-    let condition: String
-    let price: String
-    let query: String
-    let timestamp: String
-    let imageURL: String?
-}

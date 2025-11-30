@@ -30,12 +30,12 @@ struct AppSidebarItem: View {
             .padding(.vertical, theme.spacing.s)
             .frame(maxWidth: .infinity, alignment: isCollapsed ? .center : .leading)
             .background(backgroundColor)
-            .clipShape(Capsule())
+            .cornerRadius(theme.radii.small)
             .shadow(
-                color: isSelected ? Color.white.opacity(0.1) : .clear,
-                radius: 8,
+                color: isSelected ? theme.colors.accentPrimary.opacity(0.1) : .clear,
+                radius: 4,
                 x: 0,
-                y: 0
+                y: 2
             )
         }
         .buttonStyle(.plain)

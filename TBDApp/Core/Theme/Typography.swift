@@ -4,7 +4,7 @@ struct AppTypography {
     // Using SF Pro Display/Text via system fonts
 
     // Page Titles (e.g. "Dashboard")
-    // "Welcome to Vinted Notify" style
+    // Professional page title style
     let pageTitle = Font.system(size: 28, weight: .bold)
 
     // Section Titles (e.g. "Inventory Overview")

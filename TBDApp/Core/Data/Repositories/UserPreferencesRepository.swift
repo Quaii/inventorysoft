@@ -33,18 +33,31 @@ class UserPreferencesRepository: UserPreferencesRepositoryProtocol {
         try await self.dbWriter.write { [self] db in
             try db.execute(
                 sql: """
-                    INSERT OR REPLACE INTO userPreferences (id, baseCurrency, displayCurrency, dateFormat, firstDayOfWeek, themeMode, compactMode, accentColor)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT OR REPLACE INTO userPreferences (
+                        id, baseCurrency, displayCurrency, dateFormat, numberFormattingLocale, firstDayOfWeek,
+                        themeMode, compactMode, accentColor, sidebarCollapseBehavior,
+                        dashboardInitialLayout, allowDashboardEditing, defaultAnalyticsRange, defaultAnalyticsInterval,
+                        backupLocationPath, backupFrequency
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                 arguments: [
                     preferencesId,
                     preferences.baseCurrency,
                     preferences.displayCurrency,
                     preferences.dateFormat,
+                    preferences.numberFormattingLocale,
                     preferences.firstDayOfWeek,
                     preferences.themeMode,
                     preferences.compactMode,
                     preferences.accentColor,
+                    preferences.sidebarCollapseBehavior,
+                    preferences.dashboardInitialLayout,
+                    preferences.allowDashboardEditing,
+                    preferences.defaultAnalyticsRange,
+                    preferences.defaultAnalyticsInterval,
+                    preferences.backupLocationPath,
+                    preferences.backupFrequency,
                 ]
             )
         }
@@ -57,10 +70,26 @@ class UserPreferencesRepository: UserPreferencesRepositoryProtocol {
             baseCurrency: row[SchemaDefinitions.UserPreferencesTable.baseCurrency],
             displayCurrency: row[SchemaDefinitions.UserPreferencesTable.displayCurrency],
             dateFormat: row[SchemaDefinitions.UserPreferencesTable.dateFormat],
+            numberFormattingLocale: row[
+                SchemaDefinitions.UserPreferencesTable.numberFormattingLocale] ?? "System",
             firstDayOfWeek: row[SchemaDefinitions.UserPreferencesTable.firstDayOfWeek],
             themeMode: row[SchemaDefinitions.UserPreferencesTable.themeMode],
             compactMode: row[SchemaDefinitions.UserPreferencesTable.compactMode],
-            accentColor: row[SchemaDefinitions.UserPreferencesTable.accentColor]
+            accentColor: row[SchemaDefinitions.UserPreferencesTable.accentColor],
+            sidebarCollapseBehavior: row[
+                SchemaDefinitions.UserPreferencesTable.sidebarCollapseBehavior] ?? "Collapsible",
+            dashboardInitialLayout: row[
+                SchemaDefinitions.UserPreferencesTable.dashboardInitialLayout]
+                ?? "Recommended KPIs",
+            allowDashboardEditing: row[SchemaDefinitions.UserPreferencesTable.allowDashboardEditing]
+                ?? true,
+            defaultAnalyticsRange: row[SchemaDefinitions.UserPreferencesTable.defaultAnalyticsRange]
+                ?? "Last 30 Days",
+            defaultAnalyticsInterval: row[
+                SchemaDefinitions.UserPreferencesTable.defaultAnalyticsInterval] ?? "Daily",
+            backupLocationPath: row[SchemaDefinitions.UserPreferencesTable.backupLocationPath]
+                ?? "",
+            backupFrequency: row[SchemaDefinitions.UserPreferencesTable.backupFrequency] ?? "Off"
         )
     }
 }

@@ -24,13 +24,13 @@ struct WidgetCard: View {
 
                 // Content based on widget type
                 switch widget.type {
-                case .kpi:
+                case .stat:
                     kpiContent
                 case .chart:
                     chartContent
                 case .list:
                     listContent
-                case .text:
+                case .text, .alert:
                     textContent
                 }
             }
@@ -68,7 +68,7 @@ struct WidgetCard: View {
     private var chartContent: some View {
         if let chartData = data.chartData {
             Chart(chartData) { point in
-                switch widget.chartType {
+                switch widget.chartType ?? .none {
                 case .bar:
                     BarMark(
                         x: .value("Date", point.date, unit: .day),
@@ -88,7 +88,7 @@ struct WidgetCard: View {
                         y: .value("Value", point.value)
                     )
                     .foregroundStyle(theme.colors.accentPrimary.opacity(0.3))
-                case .donut, .none:
+                case .donut, .table, .none:
                     BarMark(
                         x: .value("Date", point.date, unit: .day),
                         y: .value("Value", point.value)

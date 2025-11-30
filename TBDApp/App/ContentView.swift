@@ -60,7 +60,7 @@ struct MainShellView: View {
                     .foregroundColor(theme.colors.accentPrimary)
 
                 if !isCollapsed {
-                    Text("TBDApp")
+                    Text("Inventory Soft")
                         .font(theme.typography.headingM)
                         .foregroundColor(theme.colors.textPrimary)
                 }
@@ -104,7 +104,7 @@ struct MainShellView: View {
         case .purchases:
             PurchasesListView(viewModel: appEnvironment.makePurchasesViewModel())
         case .analytics:
-            AnalyticsView()
+            AnalyticsView(viewModel: appEnvironment.makeAnalyticsViewModel())
         case .settings:
             SettingsView(viewModel: appEnvironment.makeSettingsViewModel())
         }
@@ -199,7 +199,7 @@ struct OnboardingView: View {
 
     private var welcomeStep: some View {
         VStack(spacing: theme.spacing.m) {
-            Text("Welcome to TBDApp")
+            Text("Welcome to Inventory Soft")
                 .font(theme.typography.headingXL)
                 .foregroundColor(theme.colors.textPrimary)
                 .multilineTextAlignment(.center)

@@ -24,7 +24,7 @@ class DashboardConfigRepository: DashboardConfigRepositoryProtocol {
                     SELECT * FROM \(SchemaDefinitions.DashboardWidgetTable.databaseTableName)
                     ORDER BY \(SchemaDefinitions.DashboardWidgetTable.sortOrder)
                     """
-            ).map(widgetFromRow)
+            ).map(mapRowToWidget)
         }
     }
 
@@ -38,7 +38,7 @@ class DashboardConfigRepository: DashboardConfigRepositoryProtocol {
                     """,
                 arguments: [id.uuidString]
             ) {
-                return self.widgetFromRow(row)
+                return self.mapRowToWidget(row)
             }
             return nil
         }
@@ -65,9 +65,8 @@ class DashboardConfigRepository: DashboardConfigRepositoryProtocol {
                     widget.type.rawValue,
                     widget.metric.rawValue,
                     widget.size.rawValue,
-                    widget.position.row,
                     widget.position.col,
-                    widget.chartType.rawValue,
+                    widget.chartType?.rawValue,
                     widget.isVisible,
                     widget.sortOrder,
                 ]
@@ -117,7 +116,7 @@ class DashboardConfigRepository: DashboardConfigRepositoryProtocol {
                         widget.size.rawValue,
                         widget.position.row,
                         widget.position.col,
-                        widget.chartType.rawValue,
+                        widget.chartType?.rawValue,
                         widget.isVisible,
                         widget.sortOrder,
                     ]
@@ -128,19 +127,28 @@ class DashboardConfigRepository: DashboardConfigRepositoryProtocol {
 
     // MARK: - Row Mapping
 
-    private func widgetFromRow(_ row: Row) -> DashboardWidget {
-        DashboardWidget(
-            id: UUID(uuidString: row[SchemaDefinitions.DashboardWidgetTable.id])!,
-            type: WidgetType(rawValue: row[SchemaDefinitions.DashboardWidgetTable.type])!,
-            metric: WidgetMetric(rawValue: row[SchemaDefinitions.DashboardWidgetTable.metric])!,
-            size: WidgetSize(rawValue: row[SchemaDefinitions.DashboardWidgetTable.size])!,
+    private func mapRowToWidget(_ row: Row) -> DashboardWidget {
+        // Safely unwrap enums with defaults to handle potential database mismatches (e.g. "kpi" vs "stat")
+        let metricRaw: String = row[SchemaDefinitions.DashboardWidgetTable.metric]
+        let typeRaw: String = row[SchemaDefinitions.DashboardWidgetTable.type]
+        let sizeRaw: String = row[SchemaDefinitions.DashboardWidgetTable.size]
+
+        // Handle legacy "kpi" type by mapping it to "stat"
+        let effectiveTypeRaw = typeRaw == "kpi" ? "stat" : typeRaw
+
+        return DashboardWidget(
+            id: UUID(uuidString: row[SchemaDefinitions.DashboardWidgetTable.id]) ?? UUID(),
+            metric: DashboardMetric(rawValue: metricRaw) ?? .totalItems,
+            type: WidgetType(rawValue: effectiveTypeRaw) ?? .stat,
+            size: WidgetSize(rawValue: sizeRaw) ?? .medium,
+            isVisible: row[SchemaDefinitions.DashboardWidgetTable.isVisible],
+            sortOrder: row[SchemaDefinitions.DashboardWidgetTable.sortOrder],
+            chartType: row[SchemaDefinitions.DashboardWidgetTable.chartType] != nil
+                ? ChartType(rawValue: row[SchemaDefinitions.DashboardWidgetTable.chartType]) : nil,
             position: WidgetPosition(
                 row: row[SchemaDefinitions.DashboardWidgetTable.positionRow],
                 col: row[SchemaDefinitions.DashboardWidgetTable.positionCol]
-            ),
-            chartType: ChartType(rawValue: row[SchemaDefinitions.DashboardWidgetTable.chartType])!,
-            isVisible: row[SchemaDefinitions.DashboardWidgetTable.isVisible],
-            sortOrder: row[SchemaDefinitions.DashboardWidgetTable.sortOrder]
+            )
         )
     }
 }

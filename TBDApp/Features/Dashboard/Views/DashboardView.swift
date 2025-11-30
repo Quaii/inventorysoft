@@ -72,25 +72,26 @@ struct DashboardView: View {
                                     showingConfiguration = true
                                 }
                             )
-                            .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
                             TotalItemsCard(
                                 totalItems: viewModel.totalItems,
                                 historicData: viewModel.itemCountHistory
                             )
-                            .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
                             ProcessesCard(
-                                processes: viewModel.processes,
+                                alerts: viewModel.stockAlerts,
                                 onViewAll: {
-                                    // Navigate to processes management
+                                    // Navigate to inventory with low stock filter
                                 },
-                                onToggleProcess: { process in
-                                    // Toggle process
+                                onViewAlert: { alert in
+                                    // Navigate to specific alert item
                                 }
                             )
-                            .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
+                        .frame(height: 320)
 
                         // Row 2: Recent Items (full width)
                         RecentItemsCard(
@@ -107,8 +108,9 @@ struct DashboardView: View {
             }
             .frame(maxHeight: .infinity, alignment: .top)
         }
-        .sheet(isPresented: $showingConfiguration) {
-            DashboardConfigurationView(widgets: $viewModel.widgets)
+        .inventorySoftModal(isPresented: $showingConfiguration, title: "Configure Dashboard") {
+            DashboardConfigurationView(
+                isPresented: $showingConfiguration, widgets: $viewModel.widgets)
         }
         .task {
             await viewModel.loadMetrics()
