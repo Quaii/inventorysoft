@@ -15,12 +15,15 @@ struct InventoryFlowApp: App {
                     .environment(\.theme, appEnvironment.currentTheme)
                     .preferredColorScheme(preferredColorScheme(for: themeMode))
                     .tint(appEnvironment.currentTheme.colors.accentPrimary)
+                    .frame(minWidth: 900, minHeight: 600)  // Enforce minimum resolution
+                    .inventorySoftScrollStyle()  // Global scrollbar hiding
             } else {
                 OnboardingView()
                     .environmentObject(appEnvironment)
                     .environment(\.theme, appEnvironment.currentTheme)
                     .preferredColorScheme(preferredColorScheme(for: themeMode))
                     .tint(appEnvironment.currentTheme.colors.accentPrimary)
+                    .frame(minWidth: 900, minHeight: 600)
             }
         }
         .windowStyle(.hiddenTitleBar)

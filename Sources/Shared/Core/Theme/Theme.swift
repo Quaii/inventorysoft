@@ -31,6 +31,7 @@ struct Theme {
     let radii: AppCornerRadius
     let shadows: AppShadows
     let layout: AppLayoutConstants
+    let zIndex: AppZIndex
 
     init(mode: ThemeMode = .dark, compactMode: Bool = false) {
         self.colors = AppColors(mode: mode)
@@ -39,6 +40,7 @@ struct Theme {
         self.radii = AppCornerRadius()
         self.shadows = AppShadows()
         self.layout = AppLayoutConstants()
+        self.zIndex = AppZIndex()
     }
 
     static let standard = Theme(mode: .dark, compactMode: false)

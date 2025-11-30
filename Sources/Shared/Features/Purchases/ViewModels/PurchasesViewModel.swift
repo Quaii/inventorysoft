@@ -5,6 +5,7 @@ class PurchasesViewModel: ObservableObject {
     @Published var purchases: [Purchase] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
+    @Published var searchText: String = ""
 
     private let purchaseRepository: PurchaseRepositoryProtocol
     let columnConfigService: ColumnConfigServiceProtocol

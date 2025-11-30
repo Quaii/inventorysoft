@@ -6,36 +6,52 @@ struct PurchasesListView: View {
     @State private var columns: [TableColumnConfig] = []
     @State private var isLoadingColumns = true
     @State private var columnError: String?
+    @State private var showingColumnConfig = false
 
     var body: some View {
-        AppScreenContainer {
+        ZStack {
+            // Background
+            theme.colors.backgroundPrimary
+                .ignoresSafeArea()
+
+            // Glow Blobs
+            Circle()
+                .fill(theme.colors.accentTertiary.opacity(0.1))
+                .frame(width: 600, height: 600)
+                .blur(radius: 120)
+                .offset(x: 300, y: -200)
+
             VStack(alignment: .leading, spacing: theme.spacing.xl) {
                 // Page Header
                 PageHeader(
                     breadcrumbPage: "Purchases",
-                    title: "Purchases",
-                    subtitle: "Track inventory purchases and costs"
+                    title: "Purchase Orders",
+                    subtitle: "Manage your supplier orders"
                 ) {
-                    AppButton(title: "Record Purchase", icon: "plus", style: .primary) {
-                        // Navigate to record purchase
+                    AppButton(title: "New Order", icon: "plus", style: .primary) {
+                        // Navigate to add order
                     }
                 }
 
-                // Search Bar
+                // Search/Filter Row
                 HStack(spacing: theme.spacing.m) {
                     AppTextField(
-                        placeholder: "Search purchases...",
-                        text: .constant(""),
+                        placeholder: "Search orders...", text: $viewModel.searchText,
                         icon: "magnifyingglass"
                     )
                     .frame(maxWidth: 320)
 
                     Spacer()
+
+                    AppButton(icon: "slider.horizontal.3", style: .secondary) {
+                        showingColumnConfig = true
+                    }
                 }
 
                 // Content
                 contentView
             }
+            .padding(theme.spacing.xl)
             .frame(maxHeight: .infinity, alignment: .top)
         }
         .task {

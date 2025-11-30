@@ -7,7 +7,7 @@ struct WidgetCard: View {
     @Environment(\.theme) var theme
 
     var body: some View {
-        AppCard {
+        GlassCard {
             VStack(alignment: .leading, spacing: theme.spacing.m) {
                 // Header
                 HStack {
@@ -34,6 +34,7 @@ struct WidgetCard: View {
                     textContent
                 }
             }
+            .padding(theme.spacing.m)
         }
         .frame(height: heightForSize(widget.size))
     }

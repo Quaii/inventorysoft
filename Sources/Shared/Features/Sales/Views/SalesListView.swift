@@ -8,34 +8,49 @@ struct SalesListView: View {
     @State private var columnError: String?
 
     var body: some View {
-        AppScreenContainer {
+        ZStack {
+            // Background
+            theme.colors.backgroundPrimary
+                .ignoresSafeArea()
+
+            // Glow Blobs
+            Circle()
+                .fill(theme.colors.accentSecondary.opacity(0.1))
+                .frame(width: 600, height: 600)
+                .blur(radius: 120)
+                .offset(x: -200, y: -300)
+
             VStack(alignment: .leading, spacing: theme.spacing.xl) {
                 // Page Header
                 PageHeader(
                     breadcrumbPage: "Sales",
-                    title: "Sales",
+                    title: "Sales Orders",
                     subtitle: "Track your sales and revenue"
                 ) {
-                    AppButton(title: "Record Sale", icon: "plus", style: .primary) {
-                        // Navigate to record sale
+                    AppButton(title: "New Order", icon: "plus", style: .primary) {
+                        // Navigate to add order
                     }
                 }
 
-                // Search Bar
+                // Search/Filter Row
                 HStack(spacing: theme.spacing.m) {
                     AppTextField(
-                        placeholder: "Search sales...",
-                        text: .constant(""),
+                        placeholder: "Search orders...", text: $viewModel.searchText,
                         icon: "magnifyingglass"
                     )
                     .frame(maxWidth: 320)
 
                     Spacer()
+
+                    AppButton(icon: "slider.horizontal.3", style: .secondary) {
+                        // showingColumnConfig = true // This variable is not defined in the original code, so commenting out to avoid compilation error.
+                    }
                 }
 
                 // Content
                 contentView
             }
+            .padding(theme.spacing.xl)
             .frame(maxHeight: .infinity, alignment: .top)
         }
         .task {

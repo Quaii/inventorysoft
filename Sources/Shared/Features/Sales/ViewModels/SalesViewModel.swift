@@ -5,6 +5,7 @@ class SalesViewModel: ObservableObject {
     @Published var sales: [Sale] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
+    @Published var searchText: String = ""
 
     private let salesRepository: SalesRepositoryProtocol
     let columnConfigService: ColumnConfigServiceProtocol

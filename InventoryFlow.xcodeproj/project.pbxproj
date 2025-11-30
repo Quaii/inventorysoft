@@ -18,15 +18,18 @@
 		064D1868B8B02F951D951F07 /* AppScreenContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8202587158F06224710ABD5F /* AppScreenContainer.swift */; };
 		066774190DB87B6F223917E2 /* AnalyticsConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36914B836A71C4F6004249A /* AnalyticsConfigRepository.swift */; };
 		07AF2D6B53EC200A1B35635B /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE974B527E5C1174E473328 /* SettingsViewModel.swift */; };
+		087A62C82E4D6ADC3020D7EA /* TextureModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4CB32070E5D0F33EA4584F /* TextureModifiers.swift */; };
 		0A2090F94140D026EAF822DD /* ImportMappingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51B2727E922BBF87151F425 /* ImportMappingService.swift */; };
 		0B9E9E6AD26FB1100BAA174A /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D560A799888943875609DDC7 /* ExportService.swift */; };
 		0DE5D320AFFC33B0C67741C6 /* WidgetTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72BCAAB0429D46FB2AEBDD2 /* WidgetTileView.swift */; };
 		0E415C1A6445303C5675C845 /* AnalyticsWidgetRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07CE3004EC9FD64F4BF628C2 /* AnalyticsWidgetRepository.swift */; };
 		106D458FFD5D4C6BB1C753F7 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10A7D34155D3183914C9016 /* Typography.swift */; };
 		10F9AACF584D5D76EDE57468 /* StockAlertsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9EBD2659317572ACDF900A /* StockAlertsView.swift */; };
+		114ECBA1B36ACE59D573A6DF /* TextureModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4CB32070E5D0F33EA4584F /* TextureModifiers.swift */; };
 		11B6022BB2BFA6EA0FFBDC45 /* ItemDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C679B93D7C63D4EEFE2D5763 /* ItemDetailViewModel.swift */; };
 		13BE03B87BFCDA84550AB60A /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE974B527E5C1174E473328 /* SettingsViewModel.swift */; };
 		14C1F38734227CD8CDD800FC /* Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BD190569FD167E6D34713E /* Shadows.swift */; };
+		1518C2342445115898B1BDB8 /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9846A968F4B827E39173F9 /* ViewModifiers.swift */; };
 		1570C62949E4EF810DA8F18C /* QuickListCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA272916E46D0B628FD6CA39 /* QuickListCard.swift */; };
 		15C6016BBCF7050E21172835 /* PageHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80ADE766FB03897D92047E76 /* PageHeader.swift */; };
 		168DF6C935ACCFB25F64E954 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8503F2949FA2DCB8BCDF9CEF /* Item.swift */; };
@@ -43,7 +46,6 @@
 		1C9F88F83725C2CF09E023AA /* DashboardSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3F3B226ED2BC4AD8FA54C3 /* DashboardSectionHeader.swift */; };
 		1D18FB5313FF74F6495F0A71 /* Migrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1E6D1201DAEC723AB089BF /* Migrations.swift */; };
 		1DB742D0BFB517E373F7457C /* ImportProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABBE6877171B59A5D77A9FE /* ImportProfile.swift */; };
-		1DF82941895522C107821899 /* View+InventorySoftScrollStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31059A30871326121919CF5C /* View+InventorySoftScrollStyle.swift */; };
 		2903E60589018ED88C2FEDE1 /* InventorySoftContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685F28D682EDF92CC742D09 /* InventorySoftContextMenu.swift */; };
 		29612462FE77520DA1402821 /* AppHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7BD4CD95735DF8EBD6BB00 /* AppHeader.swift */; };
 		2A1B5A3678C614A7735ED791 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C1A0FB6C907BE6D19B7E8D /* DashboardView.swift */; };
@@ -56,11 +58,13 @@
 		2FA5B780CFE751F82EF55B81 /* CustomFieldDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0ACADF5663EA0938BAE8B5 /* CustomFieldDefinition.swift */; };
 		3280D3EDD4479C5B8D5136A7 /* BrandRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00E7E18310D47ACC25A3CE6 /* BrandRepository.swift */; };
 		335488D6B71FCD3801AD3DA4 /* EditWidgetModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F09BA470FB2A580FD7288F /* EditWidgetModal.swift */; };
+		33DD16591DBAC88AB0F6F9F5 /* GlowModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3DEE38F4E4CB36D36D8765 /* GlowModifiers.swift */; };
 		35635AE967F9A4ED4D815504 /* AppTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB131E7349A69B57C3F11AA1 /* AppTable.swift */; };
 		35C7CE135BD7F4AD5CDF6F13 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C981E52FF8679E850B07F369 /* DashboardViewModel.swift */; };
 		3604E6A97C6EC62D26CFE5AB /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C8514138B9C7032EB8CE31 /* SettingsRowView.swift */; };
 		36769204A4DF3665F22CE59D /* QuickListWidgetContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22333BDC4D176EF778D807E7 /* QuickListWidgetContent.swift */; };
 		38DD7C8DAC8D1222F20C062B /* ImportMappingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A6946BD6B81D75B96D40F7 /* ImportMappingView.swift */; };
+		3924E1F48822E99A4332D0F4 /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9846A968F4B827E39173F9 /* ViewModifiers.swift */; };
 		39C9B097BCEF716FC3ADD8FE /* RecentItemsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E23187FBDB71C84A78155 /* RecentItemsCard.swift */; };
 		3A89912F2F99B7EAB59D90B5 /* PurchasesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1AC494045BADEA380BB53 /* PurchasesListView.swift */; };
 		3B6F65036427004A10049BEE /* ChartMetricConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DDFE0C2BEDD0FF01482D7 /* ChartMetricConfigView.swift */; };
@@ -77,6 +81,7 @@
 		4832E888B600D2D0B5BB9052 /* AnalyticsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D484E273283BFAE259D90 /* AnalyticsModels.swift */; };
 		4863C9E40F6AB10E1FB92372 /* AppTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB131E7349A69B57C3F11AA1 /* AppTable.swift */; };
 		48AFED5D174408D531FA5DC3 /* AlertChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2B29D3E9B501158068F51 /* AlertChip.swift */; };
+		4A41F85499F9D6CD02DA8A09 /* AppComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71EEECF1678BD7A2E3422D6 /* AppComponents.swift */; };
 		4BBF6FD22B6631089F0FBD4F /* WidgetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8577F00DF7E0F4BB1A8A77 /* WidgetType.swift */; };
 		4C52AFC5CF7C9497CC9E2C80 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 130E9D120958EDF2E4E16178 /* GRDB */; };
 		4CD6C8D8A5CEA1EA626E3A08 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AD734F9EEA6E3E875453CD /* InventoryView.swift */; };
@@ -102,7 +107,9 @@
 		571928B8843D121B78656BA5 /* AddWidgetModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC5D453044C9BB2F1A81147 /* AddWidgetModal.swift */; };
 		58FB60345EF2C9DC322E6A5E /* AddWidgetModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC5D453044C9BB2F1A81147 /* AddWidgetModal.swift */; };
 		5B1FF38710BDD16C8E3A7046 /* ResetDatabaseConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDE0245CC88E452F5B81585 /* ResetDatabaseConfirmationView.swift */; };
+		5B745EC99DA0C599913AA185 /* IconModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9814FE5BA385110FC738405B /* IconModifiers.swift */; };
 		5DE69FBE114736C02A08ABF1 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2BCB670C09F723372F279B /* DatabaseManager.swift */; };
+		5E268FBFA336E888309B37ED /* IconModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9814FE5BA385110FC738405B /* IconModifiers.swift */; };
 		5FADB77BFBFE52735F8590B6 /* AppButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF26BD8398190B83FD81853 /* AppButton.swift */; };
 		64800F8EC8B4CA5C8020DF84 /* KPIWidgetRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44217AEC2E696FC6A9E6577E /* KPIWidgetRowView.swift */; };
 		65FD64787C6780CC171080C7 /* ChartContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9226AFEF623490C7729AB56 /* ChartContextMenu.swift */; };
@@ -113,6 +120,7 @@
 		6947ABB7F1D9549AE758C0EA /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C1A0FB6C907BE6D19B7E8D /* DashboardView.swift */; };
 		6B56C9E8BB579CCBC2445DBF /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EC1C5A1554259E653E51C5 /* ItemDetailView.swift */; };
 		6C31EBA10207245CD545D224 /* InventoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33F97CBF4F9116BF4E30F348 /* InventoryViewModel.swift */; };
+		6CBF6B12FBD3E83E41102475 /* ZIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B13793411AAD3C6770151E /* ZIndex.swift */; };
 		6D846E7F3DCA0A480B2E7C6D /* ChartDeleteConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC075AD7187E21FAE34F66B /* ChartDeleteConfirmationView.swift */; };
 		6D8901557697BC384DF2CB7A /* DashboardConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4E40589381F3119B3F36DF /* DashboardConfigService.swift */; };
 		6EE01BB65A03432AF4E4AFC1 /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5725E456DB1FA939B7BFC3FE /* UserPreferences.swift */; };
@@ -206,6 +214,7 @@
 		C23EB89E2108FA5117425D47 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CDA2A620645EFE8EF902B8 /* AppEnvironment.swift */; };
 		C39963EB1250A666A975C118 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2BCB670C09F723372F279B /* DatabaseManager.swift */; };
 		C4CF04D9E0FA28AEA3C1C223 /* ProcessesCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FE5FBA3118C0B60E005B0B /* ProcessesCard.swift */; };
+		C523194587AE92E7E8713728 /* GlowModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3DEE38F4E4CB36D36D8765 /* GlowModifiers.swift */; };
 		C565E5354CCF88DD1592F6F4 /* ResetDatabaseConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDE0245CC88E452F5B81585 /* ResetDatabaseConfirmationView.swift */; };
 		C567E0B7BDDA081EECD27FBB /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EC1C5A1554259E653E51C5 /* ItemDetailView.swift */; };
 		C5C40A235E94BA8D6A45C717 /* ChartEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202826ED2896373A3133DFA2 /* ChartEditorView.swift */; };
@@ -246,7 +255,6 @@
 		DE7CE52F968F48FF57A34B35 /* AnalyticsConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D2C3AF1EDAEEBAB1858FA67 /* AnalyticsConfigService.swift */; };
 		DEEE0887844D3565864189AC /* DashboardAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FFB4C380E5EC861417C1C8 /* DashboardAlert.swift */; };
 		DFEF4208379B2ABE9C1D8042 /* ItemRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAD9E9C642651EB6441F3AA /* ItemRepository.swift */; };
-		DFF776AD797300B29CF53711 /* View+InventorySoftScrollStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31059A30871326121919CF5C /* View+InventorySoftScrollStyle.swift */; };
 		E023225A4B324153A373546A /* DashboardSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3F3B226ED2BC4AD8FA54C3 /* DashboardSectionHeader.swift */; };
 		E034C4DBA8E31D23EA935C9E /* DashboardModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5CD3BB986DCD751D328DD4 /* DashboardModels.swift */; };
 		E14B5465CF5163DC4A81D274 /* MainShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D986EFA3EBE5B87507E33F8 /* MainShellView.swift */; };
@@ -269,6 +277,7 @@
 		ED82D3BCFFDC17892A613155 /* AppScreenContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8202587158F06224710ABD5F /* AppScreenContainer.swift */; };
 		EDCEEABBD3E861996D24B4F6 /* UserWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCFBE206187F6F51423FCF7D /* UserWidget.swift */; };
 		EDD1B80944D7E19F9A2ECC93 /* WidgetGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = C398BAF1207D2280232FD684 /* WidgetGrid.swift */; };
+		EE4457059E128C6A9378AC93 /* ZIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B13793411AAD3C6770151E /* ZIndex.swift */; };
 		EF2BFEC73FBADE4DEC346ABA /* ImageAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05687149CC1F6487E4EEB979 /* ImageAttachment.swift */; };
 		EF8E42CBD3997944D4D0F5BC /* AppStatusPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = C174FAE09F3905930BBA5925 /* AppStatusPill.swift */; };
 		F02B7DCF8F8385580BC41FDE /* ChartColorConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8FEB41623C7971C74D64F8 /* ChartColorConfigView.swift */; };
@@ -276,6 +285,7 @@
 		F286A0B797F3A320BE026188 /* ImportProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABBE6877171B59A5D77A9FE /* ImportProfile.swift */; };
 		F3300AC0B2E910BB3D06D8B9 /* SchemaDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E21C5071D2D149BC7D7AF2E /* SchemaDefinitions.swift */; };
 		F3C9497BBFAF7E9194017D22 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 559A953305DF9F93875C3678 /* Assets.xcassets */; };
+		F410B1C39D53A142503378D9 /* AppComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71EEECF1678BD7A2E3422D6 /* AppComponents.swift */; };
 		F4711F36E5635A75C4AC8B11 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1E7CEDADA75D3B722435D4 /* OnboardingView.swift */; };
 		F91DD7B11DB34A432228E3F8 /* AlertsWidgetContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB6822D2235A89C18E5CB0F /* AlertsWidgetContent.swift */; };
 		F9572914CF241B4D6E469006 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 3E4B599B6CAD89D4643B1E36 /* GRDB */; };
@@ -311,7 +321,6 @@
 		293AEA14DCBFB5C0C1ECC589 /* DashboardConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardConfigRepository.swift; sourceTree = "<group>"; };
 		2AAD9E9C642651EB6441F3AA /* ItemRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemRepository.swift; sourceTree = "<group>"; };
 		2F127073E496BE25A0B5FEFB /* Purchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Purchase.swift; sourceTree = "<group>"; };
-		31059A30871326121919CF5C /* View+InventorySoftScrollStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+InventorySoftScrollStyle.swift"; sourceTree = "<group>"; };
 		32BD190569FD167E6D34713E /* Shadows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shadows.swift; sourceTree = "<group>"; };
 		32E818F9C6428310944632A5 /* AppCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCard.swift; sourceTree = "<group>"; };
 		33F97CBF4F9116BF4E30F348 /* InventoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryViewModel.swift; sourceTree = "<group>"; };
@@ -323,9 +332,11 @@
 		429BE01EC3D6F09E2CA23529 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		44217AEC2E696FC6A9E6577E /* KPIWidgetRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KPIWidgetRowView.swift; sourceTree = "<group>"; };
 		45A9717CEED17A51479DB69D /* ColumnConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnConfigurationView.swift; sourceTree = "<group>"; };
+		47B13793411AAD3C6770151E /* ZIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZIndex.swift; sourceTree = "<group>"; };
 		4941CE2D2E6BA378724F22E0 /* QuickListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickListRow.swift; sourceTree = "<group>"; };
 		4A81255E797B156DD099FC59 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		4B8577F00DF7E0F4BB1A8A77 /* WidgetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetType.swift; sourceTree = "<group>"; };
+		4B9846A968F4B827E39173F9 /* ViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifiers.swift; sourceTree = "<group>"; };
 		4C7BD4CD95735DF8EBD6BB00 /* AppHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHeader.swift; sourceTree = "<group>"; };
 		4D586B65E6475CE6E9E5AC4A /* AppSidebarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarItem.swift; sourceTree = "<group>"; };
 		51A6946BD6B81D75B96D40F7 /* ImportMappingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportMappingView.swift; sourceTree = "<group>"; };
@@ -351,6 +362,7 @@
 		7AF26BD8398190B83FD81853 /* AppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButton.swift; sourceTree = "<group>"; };
 		7D3AD33E6F193503FB252237 /* InventoryFlow_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = InventoryFlow_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DAEB6DBD57F66B9CB2525A9 /* AppTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTextField.swift; sourceTree = "<group>"; };
+		7E3DEE38F4E4CB36D36D8765 /* GlowModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlowModifiers.swift; sourceTree = "<group>"; };
 		80ADE766FB03897D92047E76 /* PageHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageHeader.swift; sourceTree = "<group>"; };
 		8202587158F06224710ABD5F /* AppScreenContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppScreenContainer.swift; sourceTree = "<group>"; };
 		829AEDD77B90AE5B4C44C907 /* AppDropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDropdown.swift; sourceTree = "<group>"; };
@@ -364,12 +376,14 @@
 		8D0DDFE0C2BEDD0FF01482D7 /* ChartMetricConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartMetricConfigView.swift; sourceTree = "<group>"; };
 		8D2C3AF1EDAEEBAB1858FA67 /* AnalyticsConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsConfigService.swift; sourceTree = "<group>"; };
 		8D986EFA3EBE5B87507E33F8 /* MainShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainShellView.swift; sourceTree = "<group>"; };
+		8F4CB32070E5D0F33EA4584F /* TextureModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureModifiers.swift; sourceTree = "<group>"; };
 		8F9EBD2659317572ACDF900A /* StockAlertsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAlertsView.swift; sourceTree = "<group>"; };
 		90C8514138B9C7032EB8CE31 /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
 		91EC1C5A1554259E653E51C5 /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
 		9527E4AD0E1D15F6D4126A97 /* ImportProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportProfileRepository.swift; sourceTree = "<group>"; };
 		9541B5443D8E71E9388A9E6C /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		96C2B29D3E9B501158068F51 /* AlertChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertChip.swift; sourceTree = "<group>"; };
+		9814FE5BA385110FC738405B /* IconModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconModifiers.swift; sourceTree = "<group>"; };
 		99FE5FBA3118C0B60E005B0B /* ProcessesCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessesCard.swift; sourceTree = "<group>"; };
 		9D30F95323F370042E37ACF6 /* DataTransferService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferService.swift; sourceTree = "<group>"; };
 		A2F09BA470FB2A580FD7288F /* EditWidgetModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditWidgetModal.swift; sourceTree = "<group>"; };
@@ -409,6 +423,7 @@
 		D24400393A7DB7EB1DE3EC30 /* SystemOverviewCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemOverviewCard.swift; sourceTree = "<group>"; };
 		D36914B836A71C4F6004249A /* AnalyticsConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsConfigRepository.swift; sourceTree = "<group>"; };
 		D560A799888943875609DDC7 /* ExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportService.swift; sourceTree = "<group>"; };
+		D71EEECF1678BD7A2E3422D6 /* AppComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppComponents.swift; sourceTree = "<group>"; };
 		D8F1557F3D74D2BE3FB77B69 /* SalesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesListView.swift; sourceTree = "<group>"; };
 		D910000850664B4A0F52559E /* AppEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEntry.swift; sourceTree = "<group>"; };
 		D93EFF4BDAD81FA0A441C0A7 /* ChartDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDefinition.swift; sourceTree = "<group>"; };
@@ -537,7 +552,6 @@
 				B54D4F7CB9778EFDA6DFE250 /* Components */,
 				A2D047B5128BE82DE90C6B70 /* Data */,
 				903A3417A2A98E3845BBC363 /* Design */,
-				B4DE6D1E23AEADB45FCA0B64 /* Extensions */,
 				E1E815F0B3AE3ACC3FE938D6 /* Models */,
 				EA9A95AB0E34D02AED9C8C76 /* Services */,
 				D0864FB7CA4FF0CA709DC353 /* Theme */,
@@ -729,17 +743,10 @@
 			path = Repositories;
 			sourceTree = "<group>";
 		};
-		B4DE6D1E23AEADB45FCA0B64 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				31059A30871326121919CF5C /* View+InventorySoftScrollStyle.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		B54D4F7CB9778EFDA6DFE250 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				D71EEECF1678BD7A2E3422D6 /* AppComponents.swift */,
 				EDF117EDB93AF4D371AC32BF /* DynamicTable.swift */,
 				A9C52305E606AEF46059958A /* Feedback */,
 				DD69DBD63C9645688ED7A06D /* Layout */,
@@ -855,12 +862,17 @@
 			children = (
 				F167AE733843AC389398F550 /* ColorPalette.swift */,
 				6A1096DB20C194C192B887E6 /* CornerRadius.swift */,
+				7E3DEE38F4E4CB36D36D8765 /* GlowModifiers.swift */,
 				E692679794717DD74A6510E7 /* GridLayoutConfig.swift */,
+				9814FE5BA385110FC738405B /* IconModifiers.swift */,
 				32BD190569FD167E6D34713E /* Shadows.swift */,
 				E97ACCE08D5807409D2D7C70 /* Spacing.swift */,
+				8F4CB32070E5D0F33EA4584F /* TextureModifiers.swift */,
 				4A81255E797B156DD099FC59 /* Theme.swift */,
 				0B4C6398A37FE2E4FC2C3218 /* ThemeConfigurator.swift */,
 				F10A7D34155D3183914C9016 /* Typography.swift */,
+				4B9846A968F4B827E39173F9 /* ViewModifiers.swift */,
+				47B13793411AAD3C6770151E /* ZIndex.swift */,
 			);
 			path = Theme;
 			sourceTree = "<group>";
@@ -1041,7 +1053,7 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		"TEMP_AEEB28AA-B452-4802-AC82-4160E7B722D2" /* Onboarding */ = {
+		"TEMP_E0834BC3-3112-4B16-B631-18AA1D9542A7" /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
 			);
@@ -1160,6 +1172,7 @@
 				5FADB77BFBFE52735F8590B6 /* AppButton.swift in Sources */,
 				4E6C15C9B95B03D88877C22F /* AppCard.swift in Sources */,
 				C9B8EC64D0DE7C27C46E84F2 /* AppChart.swift in Sources */,
+				F410B1C39D53A142503378D9 /* AppComponents.swift in Sources */,
 				A5D41ED9E5C336C537CCF759 /* AppDropdown.swift in Sources */,
 				BE670BEC211BFC8AB9A1CFFB /* AppEmptyStateView.swift in Sources */,
 				7BFB0747536BCF908B79E577 /* AppEntry.swift in Sources */,
@@ -1212,7 +1225,9 @@
 				55C579E8EE9463D598B7D1AF /* EditWidgetModal.swift in Sources */,
 				CA716739B391D80EFB0703DE /* Enums.swift in Sources */,
 				931C3298031267B1825607B1 /* ExportService.swift in Sources */,
+				C523194587AE92E7E8713728 /* GlowModifiers.swift in Sources */,
 				02B86B98499E398A05766BB0 /* GridLayoutConfig.swift in Sources */,
+				5B745EC99DA0C599913AA185 /* IconModifiers.swift in Sources */,
 				1A76CB92047D10889FE2D988 /* ImageAttachment.swift in Sources */,
 				43CA59DDAB27C73D5D96B9A2 /* ImageRepository.swift in Sources */,
 				5548C4F812B42FADE6ADDAE3 /* ImageService.swift in Sources */,
@@ -1269,6 +1284,7 @@
 				E9ED1F7EAE2FD269E18712B6 /* StockAlertsView.swift in Sources */,
 				3E26D09690665ECE79146C95 /* SystemOverviewCard.swift in Sources */,
 				3CA9E247254C1217FF2EDC72 /* TableColumnConfig.swift in Sources */,
+				114ECBA1B36ACE59D573A6DF /* TextureModifiers.swift in Sources */,
 				5664519C797F3F6668C186A5 /* Theme.swift in Sources */,
 				889F304BF0DFF282BA623926 /* ThemeConfigurator.swift in Sources */,
 				7E49B3FA3A3B3E92747D8A54 /* TotalItemsCard.swift in Sources */,
@@ -1277,13 +1293,14 @@
 				89CA752881F765B8D69831DF /* UserPreferencesRepository.swift in Sources */,
 				FF64A84BB8D6E253123CBB9A /* UserWidget.swift in Sources */,
 				8DEC172FE80728F388041C27 /* UserWidgetRepository.swift in Sources */,
-				1DF82941895522C107821899 /* View+InventorySoftScrollStyle.swift in Sources */,
+				1518C2342445115898B1BDB8 /* ViewModifiers.swift in Sources */,
 				EABAC864CD35741F87B8047D /* WidgetCard.swift in Sources */,
 				B4C484FBF422525D5BE80067 /* WidgetConfigurationModels.swift in Sources */,
 				C6BD94251CADE064D9ABB792 /* WidgetContextMenu.swift in Sources */,
 				9FBA09629CC48EF49E7F6707 /* WidgetGrid.swift in Sources */,
 				0DE5D320AFFC33B0C67741C6 /* WidgetTileView.swift in Sources */,
 				4BBF6FD22B6631089F0FBD4F /* WidgetType.swift in Sources */,
+				6CBF6B12FBD3E83E41102475 /* ZIndex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1304,6 +1321,7 @@
 				CC9EB26D2BAAFE0832A60266 /* AppButton.swift in Sources */,
 				8B333B88F05604B98BCFBC19 /* AppCard.swift in Sources */,
 				9E60F92995D8EFD3E8D6DDF4 /* AppChart.swift in Sources */,
+				4A41F85499F9D6CD02DA8A09 /* AppComponents.swift in Sources */,
 				CD75FA3E0226F47DA603346A /* AppDropdown.swift in Sources */,
 				8C8591F3AD471728FFA632DD /* AppEmptyStateView.swift in Sources */,
 				E1E7B8592DF0A5C028B5A738 /* AppEntry.swift in Sources */,
@@ -1356,7 +1374,9 @@
 				335488D6B71FCD3801AD3DA4 /* EditWidgetModal.swift in Sources */,
 				66DAE34CE1D956A64D454DBA /* Enums.swift in Sources */,
 				0B9E9E6AD26FB1100BAA174A /* ExportService.swift in Sources */,
+				33DD16591DBAC88AB0F6F9F5 /* GlowModifiers.swift in Sources */,
 				46FCA63C23DCF165499005C9 /* GridLayoutConfig.swift in Sources */,
+				5E268FBFA336E888309B37ED /* IconModifiers.swift in Sources */,
 				EF2BFEC73FBADE4DEC346ABA /* ImageAttachment.swift in Sources */,
 				6F791337D2264DE68414A41F /* ImageRepository.swift in Sources */,
 				FD7337C9CC95EE11AC4F33EE /* ImageService.swift in Sources */,
@@ -1413,6 +1433,7 @@
 				10F9AACF584D5D76EDE57468 /* StockAlertsView.swift in Sources */,
 				D1261144409A82E5579C4F2E /* SystemOverviewCard.swift in Sources */,
 				931B787218F94F288ADB748C /* TableColumnConfig.swift in Sources */,
+				087A62C82E4D6ADC3020D7EA /* TextureModifiers.swift in Sources */,
 				D6429FFE4FB601CE13239947 /* Theme.swift in Sources */,
 				708E2EF4F32B3825943DD5D2 /* ThemeConfigurator.swift in Sources */,
 				C84C626848E6AD37B2691111 /* TotalItemsCard.swift in Sources */,
@@ -1421,13 +1442,14 @@
 				545129E3883079B40B9B3EB9 /* UserPreferencesRepository.swift in Sources */,
 				EDCEEABBD3E861996D24B4F6 /* UserWidget.swift in Sources */,
 				44BE60E7CA0BFAF0892BB3F3 /* UserWidgetRepository.swift in Sources */,
-				DFF776AD797300B29CF53711 /* View+InventorySoftScrollStyle.swift in Sources */,
+				3924E1F48822E99A4332D0F4 /* ViewModifiers.swift in Sources */,
 				D0D6917AD48E85DD29534AE6 /* WidgetCard.swift in Sources */,
 				168E40762725408C56244189 /* WidgetConfigurationModels.swift in Sources */,
 				E5DE77B749C23A6A87FDD400 /* WidgetContextMenu.swift in Sources */,
 				EDD1B80944D7E19F9A2ECC93 /* WidgetGrid.swift in Sources */,
 				68D983CCC95E6369DA0BC077 /* WidgetTileView.swift in Sources */,
 				ED6A504B6747F21E657A0844 /* WidgetType.swift in Sources */,
+				EE4457059E128C6A9378AC93 /* ZIndex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -22,36 +22,36 @@ struct SettingsSectionCard<Content: View>: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: theme.spacing.m) {
-            // Section Header
-            VStack(alignment: .leading, spacing: 6) {
-                Text(title)
-                    .font(theme.typography.sectionTitle)
-                    .foregroundColor(isDangerZone ? theme.colors.error : theme.colors.textPrimary)
+        GlassCard {
+            VStack(alignment: .leading, spacing: theme.spacing.m) {
+                // Section Header
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(title)
+                        .font(theme.typography.sectionTitle)
+                        .foregroundColor(
+                            isDangerZone ? theme.colors.error : theme.colors.textPrimary)
 
-                if let description = description {
-                    Text(description)
-                        .font(theme.typography.caption)
-                        .foregroundColor(theme.colors.textSecondary)
-                        .multilineTextAlignment(.leading)
+                    if let description = description {
+                        Text(description)
+                            .font(theme.typography.caption)
+                            .foregroundColor(theme.colors.textSecondary)
+                            .multilineTextAlignment(.leading)
+                    }
                 }
-            }
-            .padding(.horizontal, 28)
-            .padding(.top, 24)
+                .padding(.horizontal, 28)
+                .padding(.top, 24)
 
-            // Section Content
-            VStack(spacing: 0) {
-                content
+                // Section Content
+                VStack(spacing: 0) {
+                    content
+                }
+                .padding(.horizontal, 28)
+                .padding(.bottom, 24)
             }
-            .padding(.horizontal, 28)
-            .padding(.bottom, 24)
+            .overlay(
+                RoundedRectangle(cornerRadius: theme.radii.card)
+                    .stroke(isDangerZone ? theme.colors.error.opacity(0.5) : .clear, lineWidth: 1)
+            )
         }
-        .background(theme.colors.surfaceElevated)
-        .cornerRadius(theme.radii.card)
-        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-        .overlay(
-            RoundedRectangle(cornerRadius: theme.radii.card)
-                .stroke(isDangerZone ? theme.colors.error.opacity(0.5) : .clear, lineWidth: 1)
-        )
     }
 }

@@ -22,17 +22,10 @@ struct DynamicTable<RowData: Identifiable>: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: theme.spacing.m) {
             headerView
-            Divider().overlay(theme.colors.divider)
             rowsView
         }
-        .background(theme.colors.surfacePrimary)
-        .cornerRadius(theme.radii.medium)
-        .overlay(
-            RoundedRectangle(cornerRadius: theme.radii.medium)
-                .stroke(theme.colors.borderSubtle, lineWidth: 1)
-        )
     }
 
     private var headerView: some View {
@@ -44,16 +37,15 @@ struct DynamicTable<RowData: Identifiable>: View {
                     .fontWeight(.semibold)
                     .frame(width: column.width ?? 100, alignment: .leading)
                     .padding(.horizontal, theme.spacing.s)
-                    .padding(.vertical, theme.spacing.m)
             }
             Spacer()
         }
-        .background(theme.colors.surfaceSecondary)
+        .padding(.horizontal, theme.spacing.m)
     }
 
     private var rowsView: some View {
         ScrollView {
-            LazyVStack(spacing: 0) {
+            LazyVStack(spacing: theme.spacing.s) {
                 ForEach(rows) { row in
                     rowView(for: row)
                 }
@@ -63,24 +55,22 @@ struct DynamicTable<RowData: Identifiable>: View {
     }
 
     private func rowView(for row: RowData) -> some View {
-        HStack(spacing: 0) {
-            ForEach(columns) { column in
-                Text(rowContent(row, column))
-                    .font(theme.typography.body)
-                    .foregroundColor(theme.colors.textPrimary)
-                    .frame(width: column.width ?? 100, alignment: .leading)
-                    .padding(.horizontal, theme.spacing.s)
-                    .padding(.vertical, theme.spacing.m)
+        GlassCard {
+            HStack(spacing: 0) {
+                ForEach(columns) { column in
+                    Text(rowContent(row, column))
+                        .font(theme.typography.body)
+                        .foregroundColor(theme.colors.textPrimary)
+                        .frame(width: column.width ?? 100, alignment: .leading)
+                        .padding(.horizontal, theme.spacing.s)
+                        .padding(.vertical, theme.spacing.m)
+                }
+                Spacer()
             }
-            Spacer()
-        }
-        .contentShape(Rectangle())
-        .onTapGesture {
-            onRowTap?(row)
-        }
-        .background(theme.colors.surfacePrimary)
-        .overlay(alignment: .bottom) {
-            Divider().overlay(theme.colors.borderSubtle)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                onRowTap?(row)
+            }
         }
     }
 }
