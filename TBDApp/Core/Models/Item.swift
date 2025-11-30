@@ -21,6 +21,7 @@ struct Item: Identifiable, Codable, Equatable {
     var notes: String?
     var status: ItemStatus
     var sku: String?
+    var category: String?  // Added for UI display
 
     // In-memory convenience, not persisted directly in Item table
     var images: [ImageAttachment] = []
@@ -37,6 +38,7 @@ struct Item: Identifiable, Codable, Equatable {
         notes: String? = nil,
         status: ItemStatus = .draft,
         sku: String? = nil,
+        category: String? = nil,
         images: [ImageAttachment] = []
     ) {
         self.id = id
@@ -50,6 +52,7 @@ struct Item: Identifiable, Codable, Equatable {
         self.notes = notes
         self.status = status
         self.sku = sku
+        self.category = category
         self.images = images
     }
 }

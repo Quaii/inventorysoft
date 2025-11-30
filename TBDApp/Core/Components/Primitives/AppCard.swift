@@ -14,39 +14,16 @@ struct AppCard<Content: View>: View {
     var body: some View {
         content
             .padding(padding ?? theme.spacing.l)
-            .background(
-                ZStack {
-                    // Base Layer
-                    theme.colors.surfacePrimary
-
-                    // Subtle Top Highlight (simulating light source)
-                    VStack {
-                        Rectangle()
-                            .fill(
-                                LinearGradient(
-                                    colors: [
-                                        Color.white.opacity(0.08),
-                                        Color.white.opacity(0.0),
-                                    ],
-                                    startPoint: .top,
-                                    endPoint: .bottom
-                                )
-                            )
-                            .frame(height: 1)
-                        Spacer()
-                    }
-                    .clipShape(RoundedRectangle(cornerRadius: theme.radii.medium))
-                }
-            )
-            .cornerRadius(theme.radii.medium)
+            .background(theme.colors.surfacePrimary)
+            .cornerRadius(theme.radii.card)
             .shadow(
-                color: Color.black.opacity(0.3),
-                radius: 8,
-                x: 0,
-                y: 4
+                color: theme.shadows.card.color,
+                radius: theme.shadows.card.radius,
+                x: theme.shadows.card.x,
+                y: theme.shadows.card.y
             )
             .overlay(
-                RoundedRectangle(cornerRadius: theme.radii.medium)
+                RoundedRectangle(cornerRadius: theme.radii.card)
                     .strokeBorder(theme.colors.borderSubtle, lineWidth: 1)
             )
     }

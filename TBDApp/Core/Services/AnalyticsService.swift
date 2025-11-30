@@ -80,8 +80,8 @@ class AnalyticsService: AnalyticsServiceProtocol {
                     id: sale.id,
                     title: "Item Sold",
                     description: "Sold for \(sale.soldPrice.formatted(.currency(code: "USD")))",
-                    date: sale.dateSold,
-                    type: .sale
+                    type: .sale,
+                    date: sale.dateSold
                 ))
         }
 
@@ -91,8 +91,8 @@ class AnalyticsService: AnalyticsServiceProtocol {
                     id: item.id,
                     title: "New Item Added",
                     description: item.title,
-                    date: item.dateAdded,
-                    type: .inventory
+                    type: .purchase,
+                    date: item.dateAdded
                 ))
         }
 
@@ -125,29 +125,13 @@ class AnalyticsService: AnalyticsServiceProtocol {
         for i in 0..<7 {
             if let date = calendar.date(byAdding: .day, value: -i, to: today) {
                 let day = calendar.startOfDay(for: date)
-                dataPoints.append(SalesDataPoint(date: day, amount: dailyTotals[day] ?? 0))
+                dataPoints.append(
+                    SalesDataPoint(
+                        date: day,
+                        amount: Double(truncating: (dailyTotals[day] ?? 0) as NSDecimalNumber)))
             }
         }
 
         return dataPoints.sorted(by: { $0.date < $1.date })
     }
-}
-
-struct ActivityItem: Identifiable {
-    let id: UUID
-    let title: String
-    let description: String
-    let date: Date
-    let type: ActivityType
-
-    enum ActivityType {
-        case sale
-        case inventory
-    }
-}
-
-struct SalesDataPoint: Identifiable {
-    let id = UUID()
-    let date: Date
-    let amount: Decimal
 }

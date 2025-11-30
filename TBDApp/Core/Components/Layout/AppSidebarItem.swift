@@ -4,6 +4,7 @@ struct AppSidebarItem: View {
     let icon: String
     let label: String
     let isSelected: Bool
+    let isCollapsed: Bool
     let action: () -> Void
 
     @Environment(\.theme) var theme
@@ -13,57 +14,51 @@ struct AppSidebarItem: View {
         Button(action: action) {
             HStack(spacing: theme.spacing.m) {
                 Image(systemName: icon)
-                    .font(.system(size: 16, weight: .medium))
-                    .frame(width: 20, height: 20)
+                    .font(.system(size: 16, weight: .regular))
+                    .foregroundColor(iconColor)
+                    .frame(width: 20)
 
-                Text(label)
-                    .font(theme.typography.body)
-                    .fontWeight(isSelected ? .semibold : .medium)
+                if !isCollapsed {
+                    Text(label)
+                        .font(.system(size: 14, weight: isSelected ? .semibold : .regular))
+                        .foregroundColor(textColor)
 
-                Spacer()
-
-                if isSelected {
-                    Circle()
-                        .fill(theme.colors.accentPrimary)
-                        .frame(width: 6, height: 6)
-                        .shadow(
-                            color: theme.colors.accentPrimary.opacity(0.5), radius: 4, x: 0, y: 0)
+                    Spacer()
                 }
             }
-            .padding(.horizontal, theme.spacing.l)
+            .padding(.horizontal, isCollapsed ? theme.spacing.s : theme.spacing.m)
             .padding(.vertical, theme.spacing.s)
-            .background(
-                RoundedRectangle(cornerRadius: theme.radii.medium)
-                    .fill(backgroundColor)
+            .frame(maxWidth: .infinity, alignment: isCollapsed ? .center : .leading)
+            .background(backgroundColor)
+            .clipShape(Capsule())
+            .shadow(
+                color: isSelected ? Color.white.opacity(0.1) : .clear,
+                radius: 8,
+                x: 0,
+                y: 0
             )
-            .foregroundColor(foregroundColor)
-            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .onHover { hovering in
-            withAnimation(.easeInOut(duration: 0.2)) {
-                isHovering = hovering
-            }
+            isHovering = hovering
         }
     }
 
     private var backgroundColor: Color {
         if isSelected {
-            return theme.colors.accentPrimary.opacity(0.15)
+            return theme.colors.sidebarActiveBackground
         } else if isHovering {
-            return theme.colors.surfaceSecondary
+            return theme.colors.highlight
         } else {
             return .clear
         }
     }
 
-    private var foregroundColor: Color {
-        if isSelected {
-            return theme.colors.accentPrimary
-        } else if isHovering {
-            return theme.colors.textPrimary
-        } else {
-            return theme.colors.textSecondary
-        }
+    private var iconColor: Color {
+        isSelected ? theme.colors.accentPrimary : theme.colors.textSecondary
+    }
+
+    private var textColor: Color {
+        isSelected ? theme.colors.textPrimary : theme.colors.textSecondary
     }
 }

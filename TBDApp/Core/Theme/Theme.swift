@@ -7,13 +7,19 @@ struct Theme {
     let radii: AppCornerRadius
     let shadows: AppShadows
 
-    static let standard = Theme(
-        colors: AppColors(),
-        typography: AppTypography(),
-        spacing: AppSpacing(),
-        radii: AppCornerRadius(),
-        shadows: AppShadows()
-    )
+    init(mode: ThemeMode = .dark, compactMode: Bool = false) {
+        self.colors = AppColors(mode: mode)
+        self.typography = AppTypography()
+        self.spacing = AppSpacing(compactMode: compactMode)
+        self.radii = AppCornerRadius()
+        self.shadows = AppShadows()
+    }
+
+    static let standard = Theme(mode: .dark, compactMode: false)
+
+    static func from(mode: ThemeMode, compactMode: Bool) -> Theme {
+        return Theme(mode: mode, compactMode: compactMode)
+    }
 }
 
 struct AppThemeKey: EnvironmentKey {

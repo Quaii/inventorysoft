@@ -10,29 +10,15 @@ struct AppScreenContainer<Content: View>: View {
     }
 
     var body: some View {
-        ZStack {
-            ZStack {
-                theme.colors.backgroundPrimary
-                    .ignoresSafeArea()
-
-                // Ambient Glow 1 (Top Left)
-                Circle()
-                    .fill(theme.colors.accentPrimary.opacity(0.15))
-                    .frame(width: 600, height: 600)
-                    .blur(radius: 120)
-                    .offset(x: -200, y: -200)
-
-                // Ambient Glow 2 (Bottom Right)
-                Circle()
-                    .fill(theme.colors.accentSecondary.opacity(0.1))
-                    .frame(width: 500, height: 500)
-                    .blur(radius: 100)
-                    .offset(x: 200, y: 200)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                content
             }
-            .ignoresSafeArea()
-
-            content
-                .padding(theme.spacing.xl)
+            .frame(maxWidth: 1400, alignment: .topLeading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(theme.spacing.xl)
         }
+        .scrollIndicators(.hidden)
+        .background(theme.colors.backgroundPrimary.ignoresSafeArea())
     }
 }

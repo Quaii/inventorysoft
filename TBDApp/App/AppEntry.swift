@@ -4,22 +4,25 @@ import SwiftUI
 struct TBDApp: App {
     @StateObject private var appEnvironment = AppEnvironment()
 
-    init() {
-        ThemeConfigurator.configure(Theme.standard)
-    }
-
     var body: some Scene {
         WindowGroup {
+            let themeMode =
+                ThemeMode(rawValue: appEnvironment.userPreferences.themeMode.lowercased()) ?? .dark
+            let compactMode = appEnvironment.userPreferences.compactMode
+            let currentTheme = Theme.from(mode: themeMode, compactMode: compactMode)
+
             if appEnvironment.hasCompletedOnboarding {
                 MainShellView()
                     .environmentObject(appEnvironment)
-                    .preferredColorScheme(.dark)
-                    .tint(Theme.standard.colors.accentPrimary)
+                    .environment(\.theme, currentTheme)
+                    .preferredColorScheme(preferredColorScheme(for: themeMode))
+                    .tint(currentTheme.colors.accentPrimary)
             } else {
                 OnboardingView()
                     .environmentObject(appEnvironment)
-                    .preferredColorScheme(.dark)
-                    .tint(Theme.standard.colors.accentPrimary)
+                    .environment(\.theme, currentTheme)
+                    .preferredColorScheme(preferredColorScheme(for: themeMode))
+                    .tint(currentTheme.colors.accentPrimary)
             }
         }
         #if os(macOS)
@@ -28,6 +31,17 @@ struct TBDApp: App {
                 SidebarCommands()
             }
         #endif
+    }
+
+    private func preferredColorScheme(for mode: ThemeMode) -> ColorScheme? {
+        switch mode {
+        case .dark:
+            return .dark
+        case .light:
+            return .light
+        case .system:
+            return nil
+        }
     }
 }
 

@@ -5,7 +5,7 @@ enum AppButtonStyle {
     case secondary
     case destructive
     case ghost
-    case accent  // New style for the "warm" accent if needed
+    case accent
 }
 
 struct AppButton<Label: View>: View {
@@ -29,34 +29,33 @@ struct AppButton<Label: View>: View {
     var body: some View {
         Button(action: action) {
             label
-                .font(theme.typography.bodyM.weight(.semibold))
+                .font(.system(size: 14, weight: .semibold))
                 .padding(.vertical, theme.spacing.s)
                 .padding(.horizontal, theme.spacing.l)
                 .background(backgroundColor)
                 .foregroundColor(foregroundColor)
-                .clipShape(Capsule())  // Enforce pill shape
+                .clipShape(Capsule())
                 .overlay(
                     Capsule()
                         .stroke(borderColor, lineWidth: 1)
                 )
-                .shadow(color: shadowColor, radius: isHovering ? 8 : 4, x: 0, y: isHovering ? 4 : 2)
                 .scaleEffect(isHovering ? 1.02 : 1.0)
                 .animation(.easeInOut(duration: 0.2), value: isHovering)
         }
         .buttonStyle(.plain)
-        .onHover { isHovering in
-            self.isHovering = isHovering
+        .onHover { hovering in
+            self.isHovering = hovering
         }
     }
 
     private var backgroundColor: Color {
         switch style {
         case .primary:
-            return theme.colors.accentPrimary.opacity(isHovering ? 0.9 : 1.0)
+            return theme.colors.accentPrimary  // White pill
         case .accent:
-            return theme.colors.accentTertiary.opacity(isHovering ? 0.9 : 1.0)
+            return theme.colors.accentTertiary
         case .secondary:
-            return theme.colors.surfaceElevated.opacity(isHovering ? 1.0 : 0.8)
+            return Color.clear  // Outline style
         case .ghost:
             return isHovering ? theme.colors.surfaceElevated : Color.clear
         case .destructive:
@@ -66,10 +65,12 @@ struct AppButton<Label: View>: View {
 
     private var foregroundColor: Color {
         switch style {
-        case .primary, .accent, .destructive:
+        case .primary:
+            return theme.colors.textInversePrimary  // Black text on white
+        case .accent, .destructive:
             return theme.colors.textInversePrimary
         case .secondary:
-            return theme.colors.textPrimary
+            return theme.colors.textPrimary  // White text on outline
         case .ghost:
             return theme.colors.textSecondary
         }
@@ -78,25 +79,14 @@ struct AppButton<Label: View>: View {
     private var borderColor: Color {
         switch style {
         case .secondary:
-            return theme.colors.borderSubtle
-        case .ghost:
+            return theme.colors.buttonBorder
+        case .ghost, .primary, .accent, .destructive:
             return .clear
-        default:
-            return .white.opacity(0.1)  // Subtle inner border for primary/accent
         }
     }
 
     private var shadowColor: Color {
-        switch style {
-        case .primary:
-            return theme.colors.accentPrimary.opacity(0.4)
-        case .accent:
-            return theme.colors.accentTertiary.opacity(0.4)
-        case .destructive:
-            return theme.colors.error.opacity(0.4)
-        default:
-            return .clear
-        }
+        return .clear  // Removed glow shadows
     }
 }
 

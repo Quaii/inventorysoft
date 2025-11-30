@@ -5,6 +5,7 @@ struct ImageAttachment: Identifiable, Codable, Equatable {
     var itemId: UUID
     var fileName: String
     var relativePath: String
+    var isPrimary: Bool
     var createdAt: Date
 
     init(
@@ -12,12 +13,14 @@ struct ImageAttachment: Identifiable, Codable, Equatable {
         itemId: UUID,
         fileName: String,
         relativePath: String,
+        isPrimary: Bool = false,
         createdAt: Date = Date()
     ) {
         self.id = id
         self.itemId = itemId
         self.fileName = fileName
         self.relativePath = relativePath
+        self.isPrimary = isPrimary
         self.createdAt = createdAt
     }
 }

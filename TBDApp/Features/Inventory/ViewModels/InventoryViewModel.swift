@@ -14,9 +14,17 @@ class InventoryViewModel: ObservableObject {
     let categories = ["Electronics", "Clothing", "Home", "Sports", "Other"]
 
     private let itemRepository: ItemRepositoryProtocol
+    let columnConfigService: ColumnConfigServiceProtocol
+    private let customFieldRepository: CustomFieldRepositoryProtocol
 
-    init(itemRepository: ItemRepositoryProtocol) {
+    init(
+        itemRepository: ItemRepositoryProtocol,
+        columnConfigService: ColumnConfigServiceProtocol,
+        customFieldRepository: CustomFieldRepositoryProtocol
+    ) {
         self.itemRepository = itemRepository
+        self.columnConfigService = columnConfigService
+        self.customFieldRepository = customFieldRepository
     }
 
     @MainActor

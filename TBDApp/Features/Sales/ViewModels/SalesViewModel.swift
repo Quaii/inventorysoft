@@ -7,9 +7,17 @@ class SalesViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     private let salesRepository: SalesRepositoryProtocol
+    let columnConfigService: ColumnConfigServiceProtocol
+    private let customFieldRepository: CustomFieldRepositoryProtocol
 
-    init(salesRepository: SalesRepositoryProtocol) {
+    init(
+        salesRepository: SalesRepositoryProtocol,
+        columnConfigService: ColumnConfigServiceProtocol,
+        customFieldRepository: CustomFieldRepositoryProtocol
+    ) {
         self.salesRepository = salesRepository
+        self.columnConfigService = columnConfigService
+        self.customFieldRepository = customFieldRepository
     }
 
     @MainActor

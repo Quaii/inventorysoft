@@ -145,8 +145,17 @@ struct ItemDetailView: View {
                                         AppDropdown(
                                             label: "Status",
                                             placeholder: "Select Status",
-                                            options: ItemStatus.allCases,
-                                            selection: $viewModel.status
+                                            options: ItemStatus.allCases.map { $0.rawValue },
+                                            selection: Binding(
+                                                get: { viewModel.status.rawValue },
+                                                set: { newValue in
+                                                    if let newStatus = ItemStatus(
+                                                        rawValue: newValue)
+                                                    {
+                                                        viewModel.status = newStatus
+                                                    }
+                                                }
+                                            )
                                         )
                                     }
                                 }

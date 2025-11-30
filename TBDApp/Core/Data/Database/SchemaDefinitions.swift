@@ -56,5 +56,73 @@ struct SchemaDefinitions {
         static let fileName = "fileName"
         static let relativePath = "relativePath"
         static let createdAt = "createdAt"
+        static let isPrimary = "isPrimary"
+    }
+
+    struct CustomFieldDefinitionTable {
+        static let databaseTableName = "customFieldDefinition"
+        static let id = "id"
+        static let name = "name"
+        static let type = "type"
+        static let appliesTo = "appliesTo"
+        static let selectOptions = "selectOptions"
+        static let isRequired = "isRequired"
+        static let sortOrder = "sortOrder"
+        static let createdAt = "createdAt"
+    }
+
+    struct CustomFieldValueTable {
+        static let databaseTableName = "customFieldValue"
+        static let id = "id"
+        static let customFieldId = "customFieldId"
+        static let entityId = "entityId"
+        static let value = "value"
+    }
+
+    struct TableColumnConfigTable {
+        static let databaseTableName = "tableColumnConfig"
+        static let id = "id"
+        static let tableType = "tableType"
+        static let field = "field"
+        static let label = "label"
+        static let width = "width"
+        static let sortOrder = "sortOrder"
+        static let isVisible = "isVisible"
+        static let isCustomField = "isCustomField"
+    }
+
+    struct DashboardWidgetTable {
+        static let databaseTableName = "dashboardWidget"
+        static let id = "id"
+        static let type = "type"
+        static let metric = "metric"
+        static let size = "size"
+        static let positionRow = "positionRow"
+        static let positionCol = "positionCol"
+        static let chartType = "chartType"
+        static let isVisible = "isVisible"
+        static let sortOrder = "sortOrder"
+    }
+
+    struct ImportProfileTable {
+        static let databaseTableName = "importProfile"
+        static let id = "id"
+        static let name = "name"
+        static let targetType = "targetType"
+        static let mappings = "mappings"
+        static let createdAt = "createdAt"
+        static let updatedAt = "updatedAt"
+    }
+
+    struct UserPreferencesTable {
+        static let databaseTableName = "userPreferences"
+        static let id = "id"
+        static let baseCurrency = "baseCurrency"
+        static let displayCurrency = "displayCurrency"
+        static let dateFormat = "dateFormat"
+        static let firstDayOfWeek = "firstDayOfWeek"
+        static let themeMode = "themeMode"
+        static let compactMode = "compactMode"
+        static let accentColor = "accentColor"
     }
 }

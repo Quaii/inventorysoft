@@ -1,30 +1,54 @@
 import SwiftUI
 
 struct AppTypography {
-    // Using standard system fonts (SF Pro) to ensure clean, professional look.
-    // Avoid custom tracking or widths unless specifically needed for numeric data.
+    // Using SF Pro Display/Text via system fonts
 
-    let headingXL = Font.system(size: 28, weight: .bold, design: .default)
-    let headingL = Font.system(size: 24, weight: .semibold, design: .default)
-    let headingM = Font.system(size: 18, weight: .semibold, design: .default)
-    let headingS = Font.system(size: 16, weight: .semibold, design: .default)
+    // Page Titles (e.g. "Dashboard")
+    // "Welcome to Vinted Notify" style
+    let pageTitle = Font.system(size: 28, weight: .bold)
 
-    let bodyL = Font.system(size: 16, weight: .regular, design: .default)
-    let bodyM = Font.system(size: 14, weight: .regular, design: .default)
-    let bodyS = Font.system(size: 13, weight: .regular, design: .default)
+    // Section Titles (e.g. "Inventory Overview")
+    let sectionTitle = Font.system(size: 18, weight: .semibold)
 
-    var body: Font { bodyM }
+    // Card Titles / Important Labels
+    let cardTitle = Font.system(size: 16, weight: .semibold)
 
-    // Caption for labels, timestamps, etc.
-    let caption = Font.system(size: 12, weight: .medium, design: .default)
+    // Card Subtitles
+    let cardSubtitle = Font.system(size: 13, weight: .regular)
 
-    // Numeric emphasis for KPIs - using rounded design can look good for numbers,
-    // but keeping default for consistency with the "clean" requirement unless requested.
-    let numericEmphasis = Font.system(size: 24, weight: .bold, design: .default)
-    let numericLarge = Font.system(size: 32, weight: .bold, design: .default)
+    // Table Headers (Caps)
+    let tableHeader = Font.system(size: 11, weight: .semibold).smallCaps()
 
-    // Aliases
-    var h1: Font { headingXL }
-    var h2: Font { headingL }
-    var h3: Font { headingM }
+    // Body Text
+    let body = Font.system(size: 13, weight: .regular)
+
+    // Captions / Small Labels
+    let caption = Font.system(size: 11, weight: .regular)
+
+    // Meta (dates, breadcrumbs, small info)
+    let meta = Font.system(size: 11, weight: .regular)
+
+    // Button Labels
+    let buttonLabel = Font.system(size: 13, weight: .semibold)
+
+    // Numeric Emphasis (KPIs)
+    let numericLarge = Font.system(size: 36, weight: .bold)
+    let numericMedium = Font.system(size: 24, weight: .bold)
+
+    // Legacy mapping for compatibility
+    var headingXL: Font { pageTitle }
+    var headingL: Font { sectionTitle }
+    var headingM: Font { cardTitle }
+    var headingS: Font { cardSubtitle }
+
+    var bodyL: Font { body }
+    var bodyM: Font { body }
+    var bodyS: Font { caption }
+
+    var numericEmphasis: Font { numericMedium }
+    var numericBody: Font { body }
+
+    var h1: Font { pageTitle }
+    var h2: Font { sectionTitle }
+    var h3: Font { cardTitle }
 }

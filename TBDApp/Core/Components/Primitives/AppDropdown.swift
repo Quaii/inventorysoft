@@ -1,18 +1,19 @@
 import SwiftUI
 
-struct AppDropdown<T: Hashable>: View {
+struct AppDropdown: View {
     let label: String?
     let placeholder: String
-    let options: [T]
-    @Binding var selection: T
+    let options: [String]
+    @Binding var selection: String
 
     @Environment(\.theme) var theme
+    @State private var isExpanded = false
 
     init(
         label: String? = nil,
-        placeholder: String = "Select",
-        options: [T],
-        selection: Binding<T>
+        placeholder: String = "Select...",
+        options: [String],
+        selection: Binding<String>
     ) {
         self.label = label
         self.placeholder = placeholder
@@ -21,7 +22,7 @@ struct AppDropdown<T: Hashable>: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: theme.spacing.xs) {
+        VStack(alignment: .leading, spacing: 8) {
             if let label = label {
                 Text(label)
                     .font(theme.typography.caption)
@@ -30,9 +31,11 @@ struct AppDropdown<T: Hashable>: View {
 
             Menu {
                 ForEach(options, id: \.self) { option in
-                    Button(action: { selection = option }) {
+                    Button(action: {
+                        selection = option
+                    }) {
                         HStack {
-                            Text(String(describing: option))
+                            Text(option)
                             if selection == option {
                                 Image(systemName: "checkmark")
                             }
@@ -41,22 +44,29 @@ struct AppDropdown<T: Hashable>: View {
                 }
             } label: {
                 HStack {
-                    Text(String(describing: selection))
-                        .font(theme.typography.bodyM)
-                        .foregroundColor(theme.colors.textPrimary)
+                    Text(selection.isEmpty ? placeholder : selection)
+                        .font(theme.typography.body)
+                        .foregroundColor(
+                            selection.isEmpty
+                                ? theme.colors.textSecondary : theme.colors.textPrimary)
+
                     Spacer()
+
                     Image(systemName: "chevron.down")
-                        .font(theme.typography.caption)
+                        .font(.system(size: 12))
                         .foregroundColor(theme.colors.textSecondary)
                 }
-                .padding(theme.spacing.m)
+                .padding(.horizontal, theme.spacing.m)
+                .padding(.vertical, theme.spacing.s + 2)
                 .background(theme.colors.surfaceSecondary)
-                .cornerRadius(theme.radii.medium)
+                .clipShape(Capsule())
                 .overlay(
-                    RoundedRectangle(cornerRadius: theme.radii.medium)
+                    Capsule()
                         .stroke(theme.colors.borderSubtle, lineWidth: 1)
                 )
             }
+            .menuStyle(.borderlessButton)
+            .frame(maxWidth: .infinity)
         }
     }
 }

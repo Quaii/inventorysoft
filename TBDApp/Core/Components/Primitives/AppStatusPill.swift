@@ -8,36 +8,36 @@ struct AppStatusPill: View {
     var body: some View {
         Text(status.rawValue.capitalized)
             .font(theme.typography.caption)
-            .fontWeight(.semibold)
+            .fontWeight(.medium)
             .padding(.vertical, 4)
-            .padding(.horizontal, theme.spacing.s)
+            .padding(.horizontal, 8)
             .background(backgroundColor)
             .foregroundColor(foregroundColor)
-            .cornerRadius(theme.radii.pill)
+            .clipShape(Capsule())
             .overlay(
-                RoundedRectangle(cornerRadius: theme.radii.pill)
-                    .stroke(foregroundColor.opacity(0.3), lineWidth: 1)
+                Capsule()
+                    .stroke(foregroundColor.opacity(0.2), lineWidth: 1)
             )
     }
 
     private var backgroundColor: Color {
         switch status {
-        case .inStock: return theme.colors.success.opacity(0.15)
-        case .listed: return theme.colors.accentSecondary.opacity(0.15)  // Assuming .listed should map to something, using the new sold color
-        case .sold: return theme.colors.accentSecondary.opacity(0.15)
-        case .reserved: return theme.colors.warning.opacity(0.15)
+        case .inStock: return theme.colors.success.opacity(0.1)
+        case .listed: return theme.colors.info.opacity(0.1)
+        case .sold: return theme.colors.accentSecondary.opacity(0.1)
+        case .reserved: return theme.colors.warning.opacity(0.1)
         case .archived: return theme.colors.surfaceMuted
-        case .draft: return theme.colors.surfaceMuted
+        case .draft: return theme.colors.surfaceElevated
         }
     }
 
     private var foregroundColor: Color {
         switch status {
         case .inStock: return theme.colors.success
-        case .listed: return theme.colors.accentSecondary  // Assuming .listed should map to something, using the new sold color
+        case .listed: return theme.colors.info
         case .sold: return theme.colors.accentSecondary
         case .reserved: return theme.colors.warning
-        case .draft: return theme.colors.textMuted
+        case .draft: return theme.colors.textSecondary
         case .archived: return theme.colors.textMuted
         }
     }

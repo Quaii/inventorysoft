@@ -3,60 +3,172 @@ import SwiftUI
 struct PurchasesListView: View {
     @StateObject var viewModel: PurchasesViewModel
     @Environment(\.theme) var theme
+    @State private var columns: [TableColumnConfig] = []
+    @State private var isLoadingColumns = true
+    @State private var columnError: String?
 
     var body: some View {
         AppScreenContainer {
-            VStack(spacing: theme.spacing.xl) {
-                // Header
-                HStack {
-                    Text("Purchases")
-                        .font(theme.typography.headingXL)
-                        .foregroundColor(theme.colors.textPrimary)
-                    Spacer()
-                    AppButton(title: "New Purchase", icon: "plus", style: .primary) {
-                        // Navigate to new purchase
+            VStack(alignment: .leading, spacing: theme.spacing.xl) {
+                // Page Header
+                PageHeader(
+                    breadcrumbPage: "Purchases",
+                    title: "Purchases",
+                    subtitle: "Track inventory purchases and costs"
+                ) {
+                    AppButton(title: "Record Purchase", icon: "plus", style: .primary) {
+                        // Navigate to record purchase
                     }
+                }
+
+                // Search Bar
+                HStack(spacing: theme.spacing.m) {
+                    AppTextField(
+                        placeholder: "Search purchases...",
+                        text: .constant(""),
+                        icon: "magnifyingglass"
+                    )
+                    .frame(maxWidth: 320)
+
+                    Spacer()
                 }
 
                 // Content
-                if viewModel.isLoading {
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else {
-                    AppTable(viewModel.purchases) { purchase in
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(purchase.supplier)
-                                    .font(theme.typography.bodyM)
-                                    .foregroundColor(theme.colors.textPrimary)
-                                Text(
-                                    purchase.datePurchased.formatted(
-                                        date: .abbreviated, time: .shortened)
-                                )
-                                .font(theme.typography.caption)
-                                .foregroundColor(theme.colors.textSecondary)
-                            }
-
-                            Spacer()
-
-                            Text("1 Item")  // Placeholder as Purchase doesn't have item count yet
-                                .font(theme.typography.bodyS)
-                                .foregroundColor(theme.colors.textSecondary)
-                                .frame(width: 80, alignment: .trailing)
-
-                            Text(purchase.cost.formatted(.currency(code: "USD")))
-                                .font(theme.typography.bodyM)
-                                .fontWeight(.medium)
-                                .foregroundColor(theme.colors.textPrimary)
-                                .frame(width: 100, alignment: .trailing)
-                        }
-                        .padding(.horizontal, theme.spacing.s)
-                    }
-                }
+                contentView
             }
+            .frame(maxHeight: .infinity, alignment: .top)
         }
         .task {
+            await loadColumns()
             await viewModel.loadPurchases()
         }
     }
+
+    @ViewBuilder
+    private var contentView: some View {
+        if isLoadingColumns || viewModel.isLoading {
+            VStack(spacing: theme.spacing.m) {
+                ProgressView()
+                Text(isLoadingColumns ? "Loading columns..." : "Loading purchases...")
+                    .font(theme.typography.body)
+                    .foregroundColor(theme.colors.textSecondary)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else if let error = columnError {
+            VStack(spacing: theme.spacing.l) {
+                AppEmptyStateView(
+                    title: "Column Configuration Error",
+                    message: error,
+                    icon: "tablecells.badge.ellipsis",
+                    actionTitle: "Retry",
+                    action: {
+                        Task {
+                            await loadColumns()
+                        }
+                    }
+                )
+
+                AppButton(
+                    title: "Reset Columns",
+                    icon: "arrow.counterclockwise",
+                    style: .secondary
+                ) {
+                    Task {
+                        do {
+                            try await viewModel.columnConfigService.resetToDefaults(
+                                for: .purchases)
+                            await loadColumns()
+                        } catch {
+                            print("Reset columns error: \(error)")
+                        }
+                    }
+                }
+                .frame(maxWidth: 300)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else if let error = viewModel.errorMessage {
+            AppEmptyStateView(
+                title: "Error Loading Purchases",
+                message: error,
+                icon: "exclamationmark.triangle",
+                actionTitle: "Retry",
+                action: {
+                    Task {
+                        await viewModel.loadPurchases()
+                    }
+                }
+            )
+        } else if viewModel.purchases.isEmpty {
+            VStack(spacing: theme.spacing.l) {
+                Image(systemName: "cart")
+                    .font(.system(size: 64))
+                    .foregroundColor(theme.colors.textSecondary)
+
+                VStack(spacing: theme.spacing.s) {
+                    Text("No Purchases Yet")
+                        .font(theme.typography.sectionTitle)
+                        .foregroundColor(theme.colors.textPrimary)
+
+                    Text("Start recording purchases to track your inventory costs.")
+                        .font(theme.typography.body)
+                        .foregroundColor(theme.colors.textSecondary)
+                        .multilineTextAlignment(.center)
+                }
+
+                AppButton(title: "Record First Purchase", icon: "plus", style: .primary) {
+                    // Navigate to record purchase
+                }
+                .frame(maxWidth: 200)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else {
+            DynamicTable(
+                columns: columns.filter { $0.isVisible },
+                rows: viewModel.purchases,
+                rowContent: { purchase, column in
+                    formatPurchaseField(purchase, field: column.field)
+                },
+                onRowTap: { purchase in
+                    // Navigate to purchase detail
+                }
+            )
+        }
+    }
+
+    private func loadColumns() async {
+        isLoadingColumns = true
+        columnError = nil
+
+        do {
+            columns = try await viewModel.columnConfigService.getColumns(for: .purchases)
+            isLoadingColumns = false
+        } catch {
+            // Sanitize error message
+            let errorString = error.localizedDescription.lowercased()
+            if errorString.contains("sql") || errorString.contains("database")
+                || errorString.contains("column") || errorString.contains("table")
+            {
+                columnError = "Unable to load column configuration."
+            } else {
+                columnError = "Failed to load columns."
+            }
+            isLoadingColumns = false
+            print("Column load error: \(error)")
+
+            // Even on error, try to use defaults
+            columns = viewModel.columnConfigService.getDefaultColumns(for: .purchases)
+        }
+    }
+
+    private func formatPurchaseField(_ purchase: Purchase, field: String) -> String {
+        switch field {
+        case "batchName": return purchase.batchName ?? "-"
+        case "supplier": return purchase.supplier
+        case "cost": return purchase.cost.formatted(.currency(code: "USD"))
+        case "datePurchased":
+            return purchase.datePurchased.formatted(date: .abbreviated, time: .omitted)
+        default: return "-"
+        }
+    }
+
 }

@@ -25,10 +25,9 @@ where Data.Element: Identifiable {
             HStack {
                 headerContent()
             }
-            .font(theme.typography.caption.weight(.bold))
-            .foregroundColor(theme.colors.textSecondary)
-            .textCase(.uppercase)
-            .padding(.vertical, theme.spacing.s)
+            .font(theme.typography.tableHeader)
+            .foregroundColor(theme.colors.tableHeader)
+            .padding(.vertical, theme.spacing.xs)
             .padding(.horizontal, theme.spacing.m)
             .background(theme.colors.surfaceElevated)
             .overlay(
@@ -39,26 +38,29 @@ where Data.Element: Identifiable {
             )
 
             // Rows
-            LazyVStack(spacing: 0) {
-                ForEach(Array(data.enumerated()), id: \.element.id) { index, item in
-                    rowContent(item)
-                        .padding(.vertical, theme.spacing.s)  // More compact
-                        .padding(.horizontal, theme.spacing.m)
-                        .background(
-                            rowBackground(for: item, at: index)
-                        )
-                        .contentShape(Rectangle())
-                        .onHover { isHovering in
-                            hoveredItemId = isHovering ? item.id : nil
-                        }
-                        .overlay(
-                            Rectangle()
-                                .frame(height: 1)
-                                .foregroundColor(theme.colors.borderSubtle.opacity(0.3)),
-                            alignment: .bottom
-                        )
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(Array(data.enumerated()), id: \.element.id) { index, item in
+                        rowContent(item)
+                            .frame(height: 46)
+                            .padding(.horizontal, theme.spacing.m)
+                            .background(
+                                rowBackground(for: item, at: index)
+                            )
+                            .contentShape(Rectangle())
+                            .onHover { isHovering in
+                                hoveredItemId = isHovering ? item.id : nil
+                            }
+                            .overlay(
+                                Rectangle()
+                                    .frame(height: 1)
+                                    .foregroundColor(theme.colors.divider),
+                                alignment: .bottom
+                            )
+                    }
                 }
             }
+            .scrollIndicators(.hidden)
         }
         .background(theme.colors.surfacePrimary)
         .cornerRadius(theme.radii.medium)
@@ -66,6 +68,8 @@ where Data.Element: Identifiable {
             RoundedRectangle(cornerRadius: theme.radii.medium)
                 .stroke(theme.colors.borderSubtle, lineWidth: 1)
         )
+        // Ensure top alignment in parent container
+        .frame(maxHeight: .infinity, alignment: .top)
     }
 
     private func rowBackground(for item: Data.Element, at index: Int) -> Color {

@@ -7,9 +7,17 @@ class PurchasesViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     private let purchaseRepository: PurchaseRepositoryProtocol
+    let columnConfigService: ColumnConfigServiceProtocol
+    private let customFieldRepository: CustomFieldRepositoryProtocol
 
-    init(purchaseRepository: PurchaseRepositoryProtocol) {
+    init(
+        purchaseRepository: PurchaseRepositoryProtocol,
+        columnConfigService: ColumnConfigServiceProtocol,
+        customFieldRepository: CustomFieldRepositoryProtocol
+    ) {
         self.purchaseRepository = purchaseRepository
+        self.columnConfigService = columnConfigService
+        self.customFieldRepository = customFieldRepository
     }
 
     @MainActor

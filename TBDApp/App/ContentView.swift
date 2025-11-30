@@ -42,8 +42,8 @@ struct MainShellView: View {
 
     var body: some View {
         AppSidebarContainer(
-            sidebar: {
-                sidebarContent
+            sidebar: { isCollapsed in
+                sidebarContent(isCollapsed: isCollapsed)
             },
             content: {
                 mainContent
@@ -51,7 +51,7 @@ struct MainShellView: View {
         )
     }
 
-    private var sidebarContent: some View {
+    private func sidebarContent(isCollapsed: Bool) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             // App Logo/Header
             HStack(spacing: theme.spacing.s) {
@@ -59,12 +59,15 @@ struct MainShellView: View {
                     .font(.system(size: 24))
                     .foregroundColor(theme.colors.accentPrimary)
 
-                Text("TBDApp")
-                    .font(theme.typography.headingM)
-                    .foregroundColor(theme.colors.textPrimary)
+                if !isCollapsed {
+                    Text("TBDApp")
+                        .font(theme.typography.headingM)
+                        .foregroundColor(theme.colors.textPrimary)
+                }
             }
-            .padding(.horizontal, theme.spacing.l)
+            .padding(.horizontal, isCollapsed ? theme.spacing.s : theme.spacing.l)
             .padding(.bottom, theme.spacing.xl)
+            .frame(maxWidth: .infinity, alignment: isCollapsed ? .center : .leading)
 
             // Navigation Items
             ScrollView {
@@ -73,7 +76,8 @@ struct MainShellView: View {
                         AppSidebarItem(
                             icon: tab.icon,
                             label: tab.title,
-                            isSelected: selectedTab == tab
+                            isSelected: selectedTab == tab,
+                            isCollapsed: isCollapsed
                         ) {
                             selectedTab = tab
                         }
@@ -81,6 +85,7 @@ struct MainShellView: View {
                 }
                 .padding(.horizontal, theme.spacing.s)
             }
+            .scrollIndicators(.hidden)
 
             Spacer()
         }
@@ -99,13 +104,7 @@ struct MainShellView: View {
         case .purchases:
             PurchasesListView(viewModel: appEnvironment.makePurchasesViewModel())
         case .analytics:
-            VStack {
-                AppHeader(title: "Analytics")
-                Spacer()
-                Text("Analytics Coming Soon")
-                    .foregroundColor(theme.colors.textSecondary)
-                Spacer()
-            }
+            AnalyticsView()
         case .settings:
             SettingsView(viewModel: appEnvironment.makeSettingsViewModel())
         }

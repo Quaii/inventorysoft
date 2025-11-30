@@ -7,11 +7,21 @@ class AppEnvironment: ObservableObject {
     let brandRepository: BrandRepositoryProtocol
     let categoryRepository: CategoryRepositoryProtocol
     let imageRepository: ImageRepositoryProtocol
+    let customFieldRepository: CustomFieldRepositoryProtocol
+    let userPreferencesRepository: UserPreferencesRepositoryProtocol
+    let dashboardConfigRepository: DashboardConfigRepositoryProtocol
+    let columnConfigRepository: ColumnConfigRepositoryProtocol
+    let importProfileRepository: ImportProfileRepositoryProtocol
 
     let analyticsService: AnalyticsServiceProtocol
     let imageService: ImageServiceProtocol
+    let dashboardConfigService: DashboardConfigServiceProtocol
+    let columnConfigService: ColumnConfigServiceProtocol
+    let importMappingService: ImportMappingServiceProtocol
+    let exportService: ExportService
 
     @Published var hasCompletedOnboarding: Bool
+    @Published var userPreferences: UserPreferences
 
     init() {
         self.hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
@@ -22,10 +32,33 @@ class AppEnvironment: ObservableObject {
         self.brandRepository = BrandRepository()
         self.categoryRepository = CategoryRepository()
         self.imageRepository = ImageRepository()
+        self.customFieldRepository = CustomFieldRepository()
+        self.userPreferencesRepository = UserPreferencesRepository()
+        self.dashboardConfigRepository = DashboardConfigRepository()
+        self.columnConfigRepository = ColumnConfigRepository()
+        self.importProfileRepository = ImportProfileRepository()
 
         self.analyticsService = AnalyticsService(
             itemRepository: itemRepository, salesRepository: salesRepository)
         self.imageService = ImageService()
+        self.dashboardConfigService = DashboardConfigService(repository: dashboardConfigRepository)
+        self.columnConfigService = ColumnConfigService(repository: columnConfigRepository)
+        self.importMappingService = ImportMappingService()
+        self.exportService = ExportService(
+            db: DatabaseManager.shared, columnConfigService: columnConfigService)
+
+        // Load user preferences
+        self.userPreferences = .default
+        Task {
+            do {
+                let prefs = try await userPreferencesRepository.getPreferences()
+                await MainActor.run {
+                    self.userPreferences = prefs
+                }
+            } catch {
+                print("Error loading user preferences: \(error)")
+            }
+        }
     }
 
     func completeOnboarding() {
@@ -33,23 +66,52 @@ class AppEnvironment: ObservableObject {
         self.hasCompletedOnboarding = true
     }
 
+    @MainActor
     func makeDashboardViewModel() -> DashboardViewModel {
-        DashboardViewModel(analyticsService: analyticsService)
+        DashboardViewModel(
+            analyticsService: analyticsService,
+            dashboardConfigService: dashboardConfigService
+        )
     }
 
     func makeInventoryViewModel() -> InventoryViewModel {
-        InventoryViewModel(itemRepository: itemRepository)
+        InventoryViewModel(
+            itemRepository: itemRepository,
+            columnConfigService: columnConfigService,
+            customFieldRepository: customFieldRepository
+        )
     }
 
     func makeSalesViewModel() -> SalesViewModel {
-        SalesViewModel(salesRepository: salesRepository)
+        SalesViewModel(
+            salesRepository: salesRepository,
+            columnConfigService: columnConfigService,
+            customFieldRepository: customFieldRepository
+        )
     }
 
     func makePurchasesViewModel() -> PurchasesViewModel {
-        PurchasesViewModel(purchaseRepository: purchaseRepository)
+        PurchasesViewModel(
+            purchaseRepository: purchaseRepository,
+            columnConfigService: columnConfigService,
+            customFieldRepository: customFieldRepository
+        )
     }
 
+    @MainActor
     func makeSettingsViewModel() -> SettingsViewModel {
-        SettingsViewModel()
+        SettingsViewModel(
+            userPreferencesRepository: userPreferencesRepository,
+            customFieldRepository: customFieldRepository,
+            importProfileRepository: importProfileRepository,
+            importMappingService: importMappingService
+        )
+    }
+
+    func savePreferences(_ preferences: UserPreferences) async throws {
+        try await userPreferencesRepository.savePreferences(preferences)
+        await MainActor.run {
+            self.userPreferences = preferences
+        }
     }
 }
