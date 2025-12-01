@@ -22,7 +22,7 @@ struct SettingsSectionCard<Content: View>: View {
     }
 
     var body: some View {
-        GlassCard {
+        Card {
             VStack(alignment: .leading, spacing: theme.spacing.m) {
                 // Section Header
                 VStack(alignment: .leading, spacing: 6) {

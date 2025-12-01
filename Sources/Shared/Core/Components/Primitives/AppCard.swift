@@ -13,18 +13,12 @@ struct AppCard<Content: View>: View {
 
     var body: some View {
         content
-            .padding(padding ?? theme.spacing.l)
-            .background(theme.colors.surfacePrimary)
-            .cornerRadius(theme.radii.card)
-            .shadow(
-                color: theme.shadows.card.color,
-                radius: theme.shadows.card.radius,
-                x: theme.shadows.card.x,
-                y: theme.shadows.card.y
-            )
+            .padding(padding ?? 16)
+            .background(Color.secondary.opacity(0.1))
+            .cornerRadius(12)
             .overlay(
-                RoundedRectangle(cornerRadius: theme.radii.card)
-                    .strokeBorder(theme.colors.borderSubtle, lineWidth: 1)
+                RoundedRectangle(cornerRadius: 12)
+                    .strokeBorder(Color.secondary.opacity(0.2), lineWidth: 1)
             )
     }
 }

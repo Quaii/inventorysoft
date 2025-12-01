@@ -9,8 +9,6 @@ struct NeonGlowModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .shadow(color: color.opacity(opacity), radius: radius, x: 0, y: 0)
-            .shadow(color: color.opacity(opacity * 0.6), radius: radius * 2, x: 0, y: 0)
     }
 }
 
@@ -23,12 +21,6 @@ struct GradientGlowModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .background(
-                LinearGradient(colors: colors, startPoint: startPoint, endPoint: endPoint)
-                    .mask(content)
-                    .blur(radius: radius)
-                    .opacity(opacity)
-            )
     }
 }
 
@@ -39,12 +31,14 @@ struct AmbientLightModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .background(
-                color
-                    .blur(radius: radius)
-                    .opacity(opacity)
-                    .scaleEffect(1.2)
-            )
+    }
+}
+
+struct GlassMorphismModifier: ViewModifier {
+    let cornerRadius: CGFloat
+
+    func body(content: Content) -> some View {
+        content
     }
 }
 
@@ -73,17 +67,15 @@ extension View {
     }
 
     /// Applies a "glass" edge light effect
-    func glassEdge(color: Color = .white, opacity: Double = 0.3) -> some View {
-        self.overlay(
-            RoundedRectangle(cornerRadius: 12)  // Default, should be overridden by shape if possible, but ViewModifier is generic
-                .strokeBorder(
-                    LinearGradient(
-                        colors: [color.opacity(opacity), color.opacity(0)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 1
-                )
-        )
+    /// Applies a "glass" edge light effect - Disabled
+    func glassEdge(color: Color = .white, opacity: Double = 0.3, cornerRadius: CGFloat = 12)
+        -> some View
+    {
+        self
+    }
+
+    /// Applies a glassmorphism effect with blur and shadow
+    func glass(cornerRadius: CGFloat = 12) -> some View {
+        modifier(GlassMorphismModifier(cornerRadius: cornerRadius))
     }
 }

@@ -41,6 +41,9 @@ struct CustomFieldManagementView: View {
                                     await viewModel.deleteField(field.id)
                                 }
                             }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(theme.colors.backgroundPrimary)
+                            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                         }
                         .onMove { indices, newOffset in
                             Task {
@@ -49,6 +52,8 @@ struct CustomFieldManagementView: View {
                         }
                     }
                     .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .background(theme.colors.backgroundPrimary)
                 }
             }
             .navigationTitle("Custom Fields")
@@ -85,25 +90,26 @@ struct CustomFieldRow: View {
     @Environment(\.theme) var theme
 
     var body: some View {
-        HStack(spacing: theme.spacing.m) {
-            Image(systemName: field.type.icon)
-                .foregroundColor(theme.colors.accentPrimary)
-                .frame(width: 32, height: 32)
-                .background(theme.colors.surfaceElevated)
-                .clipShape(Circle())
+        AppCard {
+            HStack(spacing: theme.spacing.m) {
+                Image(systemName: field.type.icon)
+                    .foregroundColor(theme.colors.accentPrimary)
+                    .frame(width: 32, height: 32)
+                    .background(theme.colors.surfaceElevated)
+                    .clipShape(Circle())
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text(field.name)
-                    .font(theme.typography.body)
-                    .foregroundColor(theme.colors.textPrimary)
-                Text(field.type.displayName + (field.isRequired ? " • Required" : ""))
-                    .font(theme.typography.caption)
-                    .foregroundColor(theme.colors.textSecondary)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(field.name)
+                        .font(theme.typography.body)
+                        .foregroundColor(theme.colors.textPrimary)
+                    Text(field.type.displayName + (field.isRequired ? " • Required" : ""))
+                        .font(theme.typography.caption)
+                        .foregroundColor(theme.colors.textSecondary)
+                }
+
+                Spacer()
             }
-
-            Spacer()
         }
-        .padding(.vertical, 8)
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             Button(role: .destructive) {
                 onDelete()

@@ -96,7 +96,7 @@ struct WidgetContextMenuItem: View {
             }
             .padding(.horizontal, theme.spacing.m)
             .padding(.vertical, theme.spacing.s)
-            .background(isHovered ? theme.colors.backgroundSecondary : Color.clear)
+            .background(isHovered ? theme.colors.backgroundSecondary : theme.colors.backgroundPrimary)
         }
         .buttonStyle(.plain)
         .onHover { hovering in
@@ -147,7 +147,7 @@ struct WidgetContextMenuSubmenu: View {
                 .padding(.horizontal, theme.spacing.m)
                 .padding(.vertical, theme.spacing.s)
                 .background(
-                    isHovered || showSubmenu ? theme.colors.backgroundSecondary : Color.clear)
+                    isHovered || showSubmenu ? theme.colors.backgroundSecondary : theme.colors.backgroundPrimary)
             }
             .buttonStyle(.plain)
             .onHover { hovering in
@@ -177,7 +177,7 @@ struct WidgetContextMenuSubmenu: View {
                             }
                             .padding(.horizontal, theme.spacing.m)
                             .padding(.vertical, theme.spacing.s)
-                            .background(Color.clear)
+                            .background(theme.colors.backgroundPrimary)
                         }
                         .buttonStyle(.plain)
 
@@ -211,7 +211,7 @@ struct WidgetContextMenuOverlay: View {
     var body: some View {
         ZStack {
             // Backdrop to dismiss
-            Color.clear
+            theme.colors.backgroundPrimary
                 .contentShape(Rectangle())
                 .onTapGesture {
                     isPresented = false

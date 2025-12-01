@@ -34,13 +34,11 @@ struct AppButton<Label: View>: View {
                 .padding(.horizontal, theme.spacing.l)
                 .background(backgroundColor)
                 .foregroundColor(foregroundColor)
-                .clipShape(Capsule())
+                .clipShape(RoundedRectangle(cornerRadius: theme.radii.button))
                 .overlay(
-                    Capsule()
+                    RoundedRectangle(cornerRadius: theme.radii.button)
                         .stroke(borderColor, lineWidth: 1)
                 )
-                .scaleEffect(isHovering ? 1.02 : 1.0)
-                .animation(.easeInOut(duration: 0.2), value: isHovering)
         }
         .buttonStyle(.plain)
         .onHover { hovering in

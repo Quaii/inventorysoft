@@ -128,6 +128,15 @@ final class AppEnvironment: ObservableObject {
         )
     }
 
+    func makeItemDetailViewModel() -> ItemDetailViewModel {
+        ItemDetailViewModel(
+            itemRepository: itemRepository,
+            imageRepository: imageRepository,
+            imageService: imageService,
+            salesRepository: salesRepository
+        )
+    }
+
     func savePreferences(_ preferences: UserPreferences) async throws {
         try await userPreferencesRepository.savePreferences(preferences)
         await MainActor.run {

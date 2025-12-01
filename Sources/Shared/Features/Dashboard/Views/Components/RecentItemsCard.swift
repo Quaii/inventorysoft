@@ -31,7 +31,7 @@ struct RecentItemsCard: View {
                                 .padding(.horizontal, theme.spacing.m)
                                 .padding(.vertical, theme.spacing.s)
                                 .background(
-                                    selectedTab == 0 ? theme.colors.surfaceElevated : Color.clear
+                                    selectedTab == 0 ? theme.colors.surfaceElevated : theme.colors.backgroundPrimary
                                 )
                                 .cornerRadius(theme.radii.small)
                         }

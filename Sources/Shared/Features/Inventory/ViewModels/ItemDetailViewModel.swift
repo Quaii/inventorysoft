@@ -22,6 +22,25 @@ class ItemDetailViewModel: ObservableObject {
     @Published var selectedImage: PlatformImage?
 
     let categories = ["Electronics", "Clothing", "Home", "Sports", "Other"]
+    @Published var sale: Sale?
+
+    // Analytics
+    var profit: Decimal? {
+        guard let sale = sale, let item = item else { return nil }
+        return sale.soldPrice - item.purchasePrice - sale.fees
+    }
+
+    var margin: Decimal? {
+        guard let profit = profit, let sale = sale, sale.soldPrice > 0 else { return nil }
+        return (profit / sale.soldPrice) * 100
+    }
+
+    var daysToSell: Int? {
+        guard let sale = sale, let item = item else { return nil }
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day], from: item.dateAdded, to: sale.dateSold)
+        return components.day
+    }
 
     var isNewItem: Bool {
         item == nil
@@ -30,15 +49,19 @@ class ItemDetailViewModel: ObservableObject {
     private let itemRepository: ItemRepositoryProtocol
     private let imageRepository: ImageRepositoryProtocol
     private let imageService: ImageServiceProtocol
+    private let salesRepository: SalesRepositoryProtocol
 
     init(
         itemRepository: ItemRepositoryProtocol, imageRepository: ImageRepositoryProtocol,
-        imageService: ImageServiceProtocol
+        imageService: ImageServiceProtocol, salesRepository: SalesRepositoryProtocol
     ) {
         self.itemRepository = itemRepository
         self.imageRepository = imageRepository
         self.imageService = imageService
+        self.salesRepository = salesRepository
     }
+
+    @Published var loadedImages: [UUID: PlatformImage] = [:]
 
     @MainActor
     func loadItem(id: UUID) async {
@@ -48,6 +71,26 @@ class ItemDetailViewModel: ObservableObject {
         do {
             self.item = try await itemRepository.fetchItem(id: id)
             self.images = try await imageRepository.fetchImages(forItemId: id)
+
+            // Load actual images
+            for attachment in images {
+                if let image = try await imageService.loadImage(attachment: attachment) {
+                    loadedImages[attachment.id] = image
+                    if attachment.isPrimary {
+                        selectedImage = image
+                    }
+                }
+            }
+            // If no primary, select first
+            if selectedImage == nil, let firstId = images.first?.id {
+                selectedImage = loadedImages[firstId]
+            }
+
+            // Fetch sale info if item is sold
+            if let item = self.item, item.status == .sold {
+                let sales = try await salesRepository.fetchSales(forItemId: id)
+                self.sale = sales.first
+            }
 
             if let item = self.item {
                 self.name = item.title

@@ -77,107 +77,108 @@ struct AppColors {
     init(mode: ThemeMode = .dark) {
         switch mode {
         case .dark, .system:
-            // Visual Overhaul 2.0 (True Black & Neon)
-            self.backgroundPrimary = Color(hex: "000000")  // True Black
-            self.backgroundSecondary = Color(hex: "050505")  // Deepest Gray
-            self.backgroundElevated = Color(hex: "0A0A0A")
-            self.backgroundGlass = Color(hex: "000000").opacity(0.6)  // More translucent
+            // Bare Bone Dark Mode
+            self.backgroundPrimary = .black
+            self.backgroundSecondary = .black
+            self.backgroundElevated = .black
+            self.backgroundGlass = .black
 
-            self.surfacePrimary = Color(hex: "0A0A0A")
-            self.surfaceSecondary = Color(hex: "121212")
-            self.surfaceMuted = Color(hex: "000000").opacity(0.8)
-            self.surfaceElevated = Color(hex: "141414")
-            self.surfaceGlass = Color(hex: "141414").opacity(0.5)  // High blur glass
+            self.surfacePrimary = .black
+            self.surfaceSecondary = .black
+            self.surfaceMuted = Color(white: 0.1)
+            self.surfaceElevated = .black
+            self.surfaceGlass = .black
 
-            self.textPrimary = Color(hex: "FFFFFF")
-            self.textSecondary = Color(hex: "B0B0B0")  // Slightly brighter for contrast
-            self.textMuted = Color(hex: "666666")
-            self.textInversePrimary = Color(hex: "000000")
+            self.textPrimary = .white
+            self.textSecondary = .gray
+            self.textMuted = .gray
+            self.textInversePrimary = .black
 
-            // Neon Accents
-            self.accentPrimary = Color(hex: "FFFFFF")  // Keep white for sharp contrast
-            self.accentSecondary = Color(hex: "00FF94")  // Cyber Green
-            self.accentTertiary = Color(hex: "FF00FF")  // Hot Pink
-            self.accentSoft = Color(hex: "FFFFFF").opacity(0.08)
+            // Standard Accents
+            self.accentPrimary = .blue
+            self.accentSecondary = .green
+            self.accentTertiary = .purple
+            self.accentSoft = .blue
 
-            self.accentPositive = Color(hex: "00FF94")  // Neon Green
-            self.accentNegative = Color(hex: "FF3B30")  // Bright Red
-            self.accentWarning = Color(hex: "FFCC00")  // Bright Yellow
-            self.accentInfo = Color(hex: "00A8FF")  // Electric Blue
+            self.accentPositive = .green
+            self.accentNegative = .red
+            self.accentWarning = .orange
+            self.accentInfo = .blue
 
-            self.success = Color(hex: "00FF94")
-            self.warning = Color(hex: "FFCC00")
-            self.error = Color(hex: "FF3B30")
-            self.info = Color(hex: "00A8FF")
+            self.success = .green
+            self.warning = .orange
+            self.error = .red
+            self.info = .blue
 
-            self.borderSubtle = Color(hex: "1A1A1A")
-            self.borderStrong = Color(hex: "333333")
-            self.borderHighlight = Color(hex: "FFFFFF").opacity(0.15)
-            self.divider = Color(hex: "111111")
-            self.buttonBorder = Color(hex: "222222")
+            self.borderSubtle = Color(white: 0.2)
+            self.borderStrong = .gray
+            self.borderHighlight = .blue
+            self.divider = Color(white: 0.2)
+            self.buttonBorder = .gray
 
-            self.highlight = Color(hex: "FFFFFF").opacity(0.1)
-            self.selection = Color(hex: "00FF94").opacity(0.15)
-            self.focusRing = Color(hex: "00FF94").opacity(0.5)
+            self.highlight = Color(white: 0.2)
+            self.selection = .blue
+            self.focusRing = .blue
 
-            self.tableHeader = Color(hex: "888888")
-            self.tableRow = Color(hex: "050505")
-            self.sidebarActiveBackground = Color(hex: "FFFFFF").opacity(0.1)
-            self.sidebarActiveIndicator = Color(hex: "00FF94")
+            self.tableHeader = .gray
+            self.tableRow = .black
+            self.sidebarActiveBackground = .blue
+            self.sidebarActiveIndicator = .blue
 
-            self.scrollbarTrack = Color.clear
-            self.scrollbarThumb = Color(hex: "333333")
+            self.scrollbarTrack = .clear
+            self.scrollbarThumb = .gray
 
         case .light:
-            // Clean Light Mode (Minimalist)
-            self.backgroundPrimary = Color(hex: "FFFFFF")
-            self.backgroundSecondary = Color(hex: "F9F9F9")
-            self.backgroundElevated = Color(hex: "FFFFFF")
-            self.backgroundGlass = Color(hex: "FFFFFF").opacity(0.9)
+            // Bare Bone Light Mode
+            self.backgroundPrimary = .white
+            self.backgroundSecondary = .white
+            self.backgroundElevated = .white
+            self.backgroundGlass = .white
 
-            self.surfacePrimary = Color(hex: "FFFFFF")
-            self.surfaceSecondary = Color(hex: "F5F5F5")
-            self.surfaceMuted = Color(hex: "F0F0F0")
-            self.surfaceElevated = Color(hex: "FFFFFF")
-            self.surfaceGlass = Color(hex: "FFFFFF").opacity(0.8)
+            self.surfacePrimary = .white
+            self.surfaceSecondary = .white
+            self.surfaceMuted = Color(white: 0.95)
+            self.surfaceElevated = .white
+            self.surfaceGlass = .white
 
-            self.textPrimary = Color(hex: "111111")
-            self.textSecondary = Color(hex: "666666")
-            self.textMuted = Color(hex: "999999")
-            self.textInversePrimary = Color(hex: "FFFFFF")
+            self.textPrimary = .black
+            self.textSecondary = .gray
+            self.textMuted = .gray
+            self.textInversePrimary = .white
 
-            self.accentPrimary = Color(hex: "111111")
-            self.accentSecondary = Color(hex: "2ECC71")
-            self.accentTertiary = Color(hex: "F1C40F")
-            self.accentSoft = Color(hex: "000000").opacity(0.05)
+            // Standard Accents
+            self.accentPrimary = .blue
+            self.accentSecondary = .green
+            self.accentTertiary = .purple
+            self.accentSoft = .blue
 
-            self.accentPositive = Color(hex: "27AE60")
-            self.accentNegative = Color(hex: "E74C3C")
-            self.accentWarning = Color(hex: "F39C12")
-            self.accentInfo = Color(hex: "3498DB")
+            self.accentPositive = .green
+            self.accentNegative = .red
+            self.accentWarning = .orange
+            self.accentInfo = .blue
 
-            self.success = Color(hex: "2ECC71")
-            self.warning = Color(hex: "F1C40F")
-            self.error = Color(hex: "E74C3C")
-            self.info = Color(hex: "3498DB")
+            self.success = .green
+            self.warning = .orange
+            self.error = .red
+            self.info = .blue
 
-            self.borderSubtle = Color(hex: "E5E5E5")
-            self.borderStrong = Color(hex: "DDDDDD")
-            self.borderHighlight = Color.clear
-            self.divider = Color(hex: "EEEEEE")
-            self.buttonBorder = Color(hex: "E0E0E0")
+            self.borderSubtle = Color(white: 0.9)
+            self.borderStrong = .gray
+            self.borderHighlight = .blue
+            self.divider = Color(white: 0.9)
+            self.buttonBorder = .gray
 
-            self.highlight = Color(hex: "000000").opacity(0.03)
-            self.selection = Color(hex: "000000").opacity(0.05)
-            self.focusRing = Color(hex: "000000").opacity(0.1)
+            self.highlight = Color(white: 0.9)
+            self.selection = .blue
+            self.focusRing = .blue
 
-            self.tableHeader = Color(hex: "666666")
-            self.tableRow = Color(hex: "FFFFFF")
-            self.sidebarActiveBackground = Color(hex: "000000").opacity(0.05)
-            self.sidebarActiveIndicator = Color(hex: "111111")
+            self.tableHeader = .gray
+            self.tableRow = .white
+            self.sidebarActiveBackground = .blue
+            self.sidebarActiveIndicator = .blue
 
-            self.scrollbarTrack = Color.clear
-            self.scrollbarThumb = Color(hex: "CCCCCC")
+            self.scrollbarTrack = .clear
+            self.scrollbarThumb = .gray
         }
     }
 }

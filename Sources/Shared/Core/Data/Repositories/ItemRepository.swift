@@ -51,7 +51,21 @@ class ItemRepository: ItemRepositoryProtocol {
                 request = request.order(Column(SchemaDefinitions.ItemTable.status).asc)
             }
 
-            return try request.fetchAll(db)
+            var items = try request.fetchAll(db)
+
+            // Populate images for each item
+            // Note: In a real app with many items, this N+1 query should be optimized with a join or batch fetch.
+            // For now, we'll fetch all images and map them in memory for simplicity/speed given local DB.
+            let allImages = try ImageAttachment.fetchAll(db)
+            let imageMap = Dictionary(grouping: allImages, by: { $0.itemId })
+
+            for i in 0..<items.count {
+                if let itemImages = imageMap[items[i].id] {
+                    items[i].images = itemImages
+                }
+            }
+
+            return items
         }
     }
 

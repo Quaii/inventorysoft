@@ -3,29 +3,19 @@ import SwiftUI
 struct InventoryView: View {
     @StateObject var viewModel: InventoryViewModel
     @Environment(\.theme) var theme
+    @EnvironmentObject var appEnvironment: AppEnvironment
     @State private var columns: [TableColumnConfig] = []
     @State private var isLoadingColumns = true
     @State private var columnError: String?
     @State private var showingColumnConfig = false
+    @State private var isGridView = true  // Default to Grid View
+    @State private var selectedItem: Item?
 
     var body: some View {
         ZStack {
             // Background
             theme.colors.backgroundPrimary
                 .ignoresSafeArea()
-
-            // Glow Blobs
-            Circle()
-                .fill(theme.colors.accentSecondary.opacity(0.1))
-                .frame(width: 600, height: 600)
-                .blur(radius: 120)
-                .offset(x: -200, y: -300)
-
-            Circle()
-                .fill(theme.colors.accentTertiary.opacity(0.08))
-                .frame(width: 500, height: 500)
-                .blur(radius: 100)
-                .offset(x: 300, y: 100)
 
             VStack(alignment: .leading, spacing: theme.spacing.xl) {
                 // Page Header
@@ -35,7 +25,11 @@ struct InventoryView: View {
                     subtitle: "Manage your products and stock levels"
                 ) {
                     AppButton(title: "Add Item", icon: "plus", style: .primary) {
-                        // Navigate to add item
+                        // Create a new empty item or just open detail with nil id
+                        // For now, we need a way to trigger "New Item"
+                        // We can use a separate state or just pass nil to selectedItem if we change its type or use a separate bool
+                        // Let's use a separate state for adding
+                        isAddingItem = true
                     }
                 }
 
@@ -69,8 +63,46 @@ struct InventoryView: View {
 
                     Spacer()
 
-                    AppButton(icon: "slider.horizontal.3", style: .secondary) {
-                        showingColumnConfig = true
+                    // View Toggle
+                    HStack(spacing: 0) {
+                        Button(action: { isGridView = true }) {
+                            Image(systemName: "square.grid.2x2")
+                                .foregroundColor(
+                                    isGridView
+                                        ? theme.colors.textPrimary : theme.colors.textSecondary
+                                )
+                                .padding(8)
+                                .background(isGridView ? theme.colors.surfaceElevated : theme.colors.backgroundPrimary)
+                                .cornerRadius(6)
+                        }
+                        .buttonStyle(.plain)
+
+                        Button(action: { isGridView = false }) {
+                            Image(systemName: "list.bullet")
+                                .foregroundColor(
+                                    !isGridView
+                                        ? theme.colors.textPrimary : theme.colors.textSecondary
+                                )
+                                .padding(8)
+                                .background(
+                                    !isGridView ? theme.colors.surfaceElevated : theme.colors.backgroundPrimary
+                                )
+                                .cornerRadius(6)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(4)
+                    .background(theme.colors.surfaceSecondary)
+                    .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(theme.colors.borderSubtle, lineWidth: 1)
+                    )
+
+                    if !isGridView {
+                        AppButton(icon: "slider.horizontal.3", style: .secondary) {
+                            showingColumnConfig = true
+                        }
                     }
                 }
 
@@ -86,6 +118,12 @@ struct InventoryView: View {
                 columnConfigService: viewModel.columnConfigService
             )
         }
+        .sheet(item: $selectedItem) { item in
+            ItemDetailView(itemId: item.id, viewModel: appEnvironment.makeItemDetailViewModel())
+        }
+        .sheet(isPresented: $isAddingItem) {
+            ItemDetailView(viewModel: appEnvironment.makeItemDetailViewModel())
+        }
         .task {
             await loadColumns()
             await viewModel.loadItems()
@@ -100,6 +138,8 @@ struct InventoryView: View {
             Task { await viewModel.loadItems() }
         }
     }
+
+    @State private var isAddingItem = false
 
     @ViewBuilder
     private var contentView: some View {
@@ -143,28 +183,6 @@ struct InventoryView: View {
                 .frame(maxWidth: 300)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else if columns.filter({ $0.isVisible }).isEmpty {
-            AppEmptyStateView(
-                title: "No Columns Configured",
-                message: "Configure which columns to display in your inventory table.",
-                icon: "tablecells",
-                actionTitle: "Configure Columns",
-                action: {
-                    showingColumnConfig = true
-                }
-            )
-        } else if let error = viewModel.errorMessage {
-            AppEmptyStateView(
-                title: "Error Loading Items",
-                message: error,
-                icon: "exclamationmark.triangle",
-                actionTitle: "Retry",
-                action: {
-                    Task {
-                        await viewModel.loadItems()
-                    }
-                }
-            )
         } else if viewModel.items.isEmpty {
             VStack(spacing: theme.spacing.l) {
                 Image(systemName: "cube.box")
@@ -183,22 +201,123 @@ struct InventoryView: View {
                 }
 
                 AppButton(title: "Add First Item", icon: "plus", style: .primary) {
-                    // Navigate to add item
+                    isAddingItem = true
                 }
                 .frame(maxWidth: 200)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
-            DynamicTable(
-                columns: columns.filter { $0.isVisible },
-                rows: viewModel.items,
-                rowContent: { item, column in
-                    formatItemField(item, field: column.field)
-                },
-                onRowTap: { item in
-                    // Navigate to item detail
+            if isGridView {
+                gridView
+            } else {
+                tableView
+            }
+        }
+    }
+
+    // MARK: - Grid View
+    private var gridView: some View {
+        ScrollView {
+            LazyVGrid(
+                columns: [
+                    GridItem(
+                        .adaptive(minimum: 240, maximum: 300), spacing: theme.layout.cardSpacing)
+                ],
+                spacing: theme.layout.cardSpacing
+            ) {
+                ForEach(viewModel.items) { item in
+                    InventoryGridCard(item: item)
+                        .onTapGesture {
+                            selectedItem = item
+                        }
+                        .contextMenu {
+                            Button {
+                                // Mark as sold action
+                            } label: {
+                                Label("Mark as Sold", systemImage: "tag.fill")
+                            }
+
+                            Button {
+                                selectedItem = item
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
+
+                            Divider()
+
+                            Button(role: .destructive) {
+                                Task {
+                                    await viewModel.deleteItem(id: item.id)
+                                }
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
                 }
-            )
+            }
+            .padding(.bottom, theme.spacing.xl)
+        }
+        .inventorySoftScrollStyle()
+    }
+
+    // MARK: - Table View
+    private var tableView: some View {
+        VStack(spacing: theme.spacing.m) {
+            // Header
+            HStack(spacing: 0) {
+                ForEach(columns.filter { $0.isVisible }.sorted { $0.sortOrder < $1.sortOrder }) {
+                    column in
+                    Text(column.label)
+                        .font(theme.typography.caption)
+                        .foregroundColor(theme.colors.textSecondary)
+                        .fontWeight(.semibold)
+                        .frame(width: column.width ?? 100, alignment: .leading)
+                        .padding(.horizontal, theme.spacing.s)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, theme.spacing.m)
+
+            // Rows
+            ScrollView {
+                LazyVStack(spacing: theme.spacing.s) {
+                    ForEach(viewModel.items) { item in
+                        InventoryRow(
+                            item: item,
+                            columns: columns.filter { $0.isVisible }.sorted {
+                                $0.sortOrder < $1.sortOrder
+                            }
+                        )
+                        .onTapGesture {
+                            selectedItem = item
+                        }
+                        .contextMenu {
+                            Button {
+                                // Mark as sold action
+                            } label: {
+                                Label("Mark as Sold", systemImage: "tag.fill")
+                            }
+
+                            Button {
+                                selectedItem = item
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
+
+                            Divider()
+
+                            Button(role: .destructive) {
+                                Task {
+                                    await viewModel.deleteItem(id: item.id)
+                                }
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                    }
+                }
+            }
+            .inventorySoftScrollStyle()
         }
     }
 
@@ -226,6 +345,96 @@ struct InventoryView: View {
             columns = viewModel.columnConfigService.getDefaultColumns(for: .inventory)
         }
     }
+}
+
+// MARK: - Subviews
+
+struct InventoryGridCard: View {
+    let item: Item
+    @Environment(\.theme) var theme
+
+    var body: some View {
+        Card() {
+            VStack(alignment: .leading, spacing: 0) {
+                // Image
+                ZStack {
+                    theme.colors.surfaceSecondary
+                    if let imageAttachment = item.images.first(where: { $0.isPrimary })
+                        ?? item.images.first
+                    {
+                        // In a real app, load image from disk using relativePath
+                        // For now, placeholder or system image if we can't load actual file easily in this snippet
+                        Image(systemName: "photo")
+                            .font(.system(size: 40))
+                            .foregroundColor(theme.colors.textMuted)
+                    } else {
+                        Image(systemName: "photo")
+                            .font(.system(size: 40))
+                            .foregroundColor(theme.colors.textMuted)
+                    }
+                }
+                .frame(height: 160)
+                .frame(maxWidth: .infinity)
+                .clipped()
+
+                // Content
+                VStack(alignment: .leading, spacing: theme.spacing.s) {
+                    HStack {
+                        Text(item.title)
+                            .font(theme.typography.body)
+                            .fontWeight(.medium)
+                            .foregroundColor(theme.colors.textPrimary)
+                            .lineLimit(1)
+
+                        Spacer()
+
+                        StatusBadge(status: item.status)
+                    }
+
+                    Text(item.brandId?.uuidString ?? "Unknown Brand")  // Placeholder for brand name lookup
+                        .font(theme.typography.caption)
+                        .foregroundColor(theme.colors.textSecondary)
+
+                    HStack {
+                        Text(item.purchasePrice.formatted(.currency(code: "USD")))
+                            .font(theme.typography.body)
+                            .fontWeight(.bold)
+                            .foregroundColor(theme.colors.textPrimary)
+
+                        Spacer()
+
+                        Text("Qty: \(item.quantity)")
+                            .font(theme.typography.caption)
+                            .foregroundColor(theme.colors.textSecondary)
+                    }
+                }
+                .padding(theme.spacing.m)
+            }
+        }
+    }
+}
+
+struct InventoryRow: View {
+    let item: Item
+    let columns: [TableColumnConfig]
+    @Environment(\.theme) var theme
+
+    var body: some View {
+        Card {
+            HStack(spacing: 0) {
+                ForEach(columns) { column in
+                    Text(formatItemField(item, field: column.field))
+                        .font(theme.typography.body)
+                        .foregroundColor(theme.colors.textPrimary)
+                        .frame(width: column.width ?? 100, alignment: .leading)
+                        .padding(.horizontal, theme.spacing.s)
+                        .padding(.vertical, theme.spacing.m)
+                }
+                Spacer()
+            }
+            .contentShape(Rectangle())
+        }
+    }
 
     private func formatItemField(_ item: Item, field: String) -> String {
         switch field {
@@ -237,6 +446,36 @@ struct InventoryView: View {
         case "status": return item.status.rawValue
         case "dateAdded": return item.dateAdded.formatted(date: .abbreviated, time: .omitted)
         default: return "-"
+        }
+    }
+}
+
+struct StatusBadge: View {
+    let status: ItemStatus
+    @Environment(\.theme) var theme
+
+    var body: some View {
+        Text(status.rawValue)
+            .font(.system(size: 10, weight: .bold))
+            .foregroundColor(color)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(color.opacity(0.1))
+            .cornerRadius(4)
+            .overlay(
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(color.opacity(0.3), lineWidth: 1)
+            )
+    }
+
+    var color: Color {
+        switch status {
+        case .inStock: return theme.colors.success
+        case .listed: return theme.colors.accentPrimary
+        case .sold: return theme.colors.accentSecondary
+        case .reserved: return theme.colors.warning
+        case .archived: return theme.colors.textMuted
+        case .draft: return theme.colors.textSecondary
         }
     }
 }

@@ -1,31 +1,9 @@
 import SwiftUI
 
-// MARK: - Glass Card
-struct GlassCard<Content: View>: View {
-    let content: Content
-    @Environment(\.theme) var theme
+// Card moved to separate file
 
-    init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
-
-    var body: some View {
-        content
-            .background(
-                RoundedRectangle(cornerRadius: theme.radii.card)
-                    .fill(theme.colors.surfaceGlass)
-                    .background(.ultraThinMaterial)  // Native blur
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: theme.radii.card)
-                    .stroke(theme.colors.borderHighlight, lineWidth: 1)
-            )
-            .shadow(color: Color.black.opacity(0.4), radius: 20, x: 0, y: 10)
-    }
-}
-
-// MARK: - Neon Button
-struct NeonButton: View {
+// MARK: - SimpleButton
+struct SimpleButton: View {
     let title: String
     let icon: String?
     let action: () -> Void
@@ -38,7 +16,7 @@ struct NeonButton: View {
     }
 
     var body: some View {
-        Button(action: action) {
+        SwiftUI.Button(action: action) {
             HStack(spacing: theme.spacing.s) {
                 if let icon = icon {
                     Image(systemName: icon)
@@ -50,26 +28,15 @@ struct NeonButton: View {
             .foregroundColor(theme.colors.textInversePrimary)
             .padding(.horizontal, theme.spacing.l)
             .padding(.vertical, theme.spacing.m)
-            .background(
-                LinearGradient(
-                    colors: [theme.colors.accentSecondary, theme.colors.accentInfo],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
+            .background(theme.colors.accentPrimary)
             .cornerRadius(theme.radii.button)
-            .shadow(color: theme.colors.accentSecondary.opacity(0.4), radius: 10, x: 0, y: 0)  // Neon Glow
-            .overlay(
-                RoundedRectangle(cornerRadius: theme.radii.button)
-                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
-            )
         }
         .buttonStyle(.plain)
     }
 }
 
-// MARK: - Glass Input
-struct GlassInput: View {
+// MARK: - SimpleTextField
+struct SimpleTextField: View {
     let placeholder: String
     @Binding var text: String
     let icon: String?
@@ -82,7 +49,7 @@ struct GlassInput: View {
                     .foregroundColor(theme.colors.textSecondary)
             }
 
-            TextField(placeholder, text: $text)
+            SwiftUI.TextField(placeholder, text: $text)
                 .textFieldStyle(.plain)
                 .font(theme.typography.body)
                 .foregroundColor(theme.colors.textPrimary)
@@ -107,12 +74,7 @@ struct HoverEffectModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .scaleEffect(isHovered ? scale : 1.0)
-            .brightness(isHovered ? brightness : 0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
-            .onHover { hovering in
-                isHovered = hovering
-            }
+        // All hover effects removed for minimal UI
     }
 }
 
@@ -132,9 +94,7 @@ struct InteractiveButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .scaleEffect(configuration.isPressed ? scale : 1.0)
-            .opacity(configuration.isPressed ? opacity : 1.0)
-            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+        // All press effects removed for minimal UI
     }
 }
 

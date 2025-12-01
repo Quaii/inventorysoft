@@ -33,7 +33,7 @@ struct CustomDropdownMenu: View {
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                     .background(
-                        hoveredOption == option ? theme.colors.highlight : Color.clear
+                        hoveredOption == option ? theme.colors.highlight : theme.colors.backgroundPrimary
                     )
                 }
                 .buttonStyle(.plain)

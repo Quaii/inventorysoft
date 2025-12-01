@@ -10,7 +10,7 @@ struct QuickListCard: View {
     @Environment(\.theme) var theme
 
     var body: some View {
-        GlassCard {
+        Card {
             VStack(alignment: .leading, spacing: theme.spacing.m) {
                 // Header
                 HStack {

@@ -7,12 +7,12 @@ struct WidgetCard: View {
     @Environment(\.theme) var theme
 
     var body: some View {
-        GlassCard {
+        Card() {
             VStack(alignment: .leading, spacing: theme.spacing.m) {
                 // Header
                 HStack {
                     Image(systemName: widget.type.icon)
-                        .foregroundColor(theme.colors.accentPrimary)
+                        .foregroundColor(theme.colors.accentSecondary)
                         .font(.system(size: 20))
 
                     Text(widget.metric.displayName)
@@ -75,26 +75,33 @@ struct WidgetCard: View {
                         x: .value("Date", point.date, unit: .day),
                         y: .value("Value", point.value)
                     )
-                    .foregroundStyle(theme.colors.accentPrimary)
+                    .foregroundStyle(theme.colors.accentSecondary)
                     .cornerRadius(4)
                 case .line:
                     LineMark(
                         x: .value("Date", point.date, unit: .day),
                         y: .value("Value", point.value)
                     )
-                    .foregroundStyle(theme.colors.accentPrimary)
+                    .foregroundStyle(theme.colors.accentSecondary)
+                    .interpolationMethod(.catmullRom)
+
+                    AreaMark(
+                        x: .value("Date", point.date, unit: .day),
+                        y: .value("Value", point.value)
+                    )
+                    .foregroundStyle(theme.colors.accentSecondary.opacity(0.2))
                 case .area:
                     AreaMark(
                         x: .value("Date", point.date, unit: .day),
                         y: .value("Value", point.value)
                     )
-                    .foregroundStyle(theme.colors.accentPrimary.opacity(0.3))
+                    .foregroundStyle(theme.colors.accentSecondary.opacity(0.3))
                 case .donut, .table, .none:
                     BarMark(
                         x: .value("Date", point.date, unit: .day),
                         y: .value("Value", point.value)
                     )
-                    .foregroundStyle(theme.colors.accentPrimary)
+                    .foregroundStyle(theme.colors.accentSecondary)
                 }
             }
             .chartXAxis {

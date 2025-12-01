@@ -223,7 +223,7 @@ struct WidgetTypeRow: View {
                         isSelected ? theme.colors.accentPrimary : theme.colors.textSecondary
                     )
                     .frame(width: 32, height: 32)
-                    .background(isSelected ? theme.colors.accentPrimary.opacity(0.1) : Color.clear)
+                    .background(isSelected ? theme.colors.accentPrimary.opacity(0.1) : theme.colors.backgroundPrimary)
                     .cornerRadius(theme.radii.small)
 
                 VStack(alignment: .leading, spacing: 2) {
@@ -245,7 +245,7 @@ struct WidgetTypeRow: View {
                 }
             }
             .padding(theme.spacing.m)
-            .background(isSelected ? theme.colors.accentPrimary.opacity(0.05) : Color.clear)
+            .background(isSelected ? theme.colors.accentPrimary.opacity(0.05) : theme.colors.backgroundPrimary)
             .cornerRadius(theme.radii.small)
         }
         .buttonStyle(.plain)

@@ -31,7 +31,19 @@ struct ImportMappingView: View {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if let error = viewModel.errorMessage {
-                    Text(error).foregroundColor(theme.colors.error)
+                    VStack(spacing: theme.spacing.m) {
+                        Image(systemName: "exclamationmark.triangle")
+                            .font(.system(size: 48))
+                            .foregroundColor(theme.colors.error)
+                        Text("Error Parsing File")
+                            .font(theme.typography.cardTitle)
+                            .foregroundColor(theme.colors.textPrimary)
+                        Text(error)
+                            .font(theme.typography.body)
+                            .foregroundColor(theme.colors.textSecondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .padding()
                 } else {
                     // Profile selector
                     HStack {
@@ -45,62 +57,97 @@ struct ImportMappingView: View {
                             HStack {
                                 Image(systemName: "doc.text")
                                 Text(viewModel.selectedProfile?.name ?? "Select Profile")
+                                    .foregroundColor(theme.colors.textPrimary)
+                                Image(systemName: "chevron.down")
+                                    .font(.caption)
+                                    .foregroundColor(theme.colors.textSecondary)
                             }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(theme.colors.surfaceElevated)
+                            .cornerRadius(8)
                         }
 
                         Spacer()
 
-                        Button("Save as Profile") {
+                        AppButton(
+                            title: "Save Profile", icon: "square.and.arrow.down", style: .secondary
+                        ) {
                             viewModel.showingSaveProfile = true
                         }
                     }
                     .padding(theme.spacing.l)
-
-                    Divider()
+                    .background(theme.colors.surfaceSecondary)
 
                     // Mapping list
-                    List {
-                        ForEach(Array(viewModel.sourceFields.enumerated()), id: \.offset) {
-                            index, sourceField in
-                            HStack {
-                                // Source field
-                                VStack(alignment: .leading) {
-                                    Text(sourceField)
-                                        .font(theme.typography.body)
-                                    if index < viewModel.sampleData.count,
-                                        !viewModel.sampleData[index].isEmpty
-                                    {
-                                        Text(viewModel.sampleData[index])
-                                            .font(theme.typography.caption)
-                                            .foregroundColor(theme.colors.textSecondary)
-                                    }
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                    ScrollView {
+                        VStack(spacing: theme.spacing.m) {
+                            ForEach(Array(viewModel.sourceFields.enumerated()), id: \.offset) {
+                                index, sourceField in
+                                AppCard {
+                                    HStack(spacing: theme.spacing.m) {
+                                        // Source field
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text(sourceField)
+                                                .font(theme.typography.body)
+                                                .foregroundColor(theme.colors.textPrimary)
+                                                .fontWeight(.medium)
 
-                                Image(systemName: "arrow.right")
-                                    .foregroundColor(theme.colors.textSecondary)
-
-                                // Target field
-                                Picker(
-                                    "",
-                                    selection: Binding(
-                                        get: { viewModel.fieldMappings[sourceField] ?? "" },
-                                        set: { newValue in
-                                            viewModel.fieldMappings[sourceField] =
-                                                newValue.isEmpty ? nil : newValue
+                                            if index < viewModel.sampleData.count,
+                                                !viewModel.sampleData[index].isEmpty
+                                            {
+                                                Text("Sample: \(viewModel.sampleData[index])")
+                                                    .font(theme.typography.caption)
+                                                    .foregroundColor(theme.colors.textSecondary)
+                                                    .lineLimit(1)
+                                            }
                                         }
-                                    )
-                                ) {
-                                    Text("Skip").tag("")
-                                    ForEach(viewModel.availableTargetFields, id: \.self) {
-                                        targetField in
-                                        Text(targetField).tag(targetField)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                                        Image(systemName: "arrow.right")
+                                            .foregroundColor(theme.colors.textMuted)
+
+                                        // Target field
+                                        Menu {
+                                            Button("Skip") {
+                                                viewModel.fieldMappings[sourceField] = nil
+                                            }
+                                            Divider()
+                                            ForEach(viewModel.availableTargetFields, id: \.self) {
+                                                targetField in
+                                                Button(targetField) {
+                                                    viewModel.fieldMappings[sourceField] =
+                                                        targetField
+                                                }
+                                            }
+                                        } label: {
+                                            HStack {
+                                                Text(viewModel.fieldMappings[sourceField] ?? "Skip")
+                                                    .foregroundColor(
+                                                        viewModel.fieldMappings[sourceField] == nil
+                                                            ? theme.colors.textSecondary
+                                                            : theme.colors.accentPrimary)
+                                                Image(systemName: "chevron.down")
+                                                    .font(.caption)
+                                                    .foregroundColor(theme.colors.textSecondary)
+                                            }
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 8)
+                                            .background(theme.colors.surfaceSecondary)
+                                            .cornerRadius(6)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 6)
+                                                    .stroke(theme.colors.borderSubtle, lineWidth: 1)
+                                            )
+                                        }
+                                        .frame(width: 160, alignment: .trailing)
                                     }
                                 }
-                                .frame(maxWidth: .infinity)
                             }
                         }
+                        .padding(theme.spacing.l)
                     }
+                    .background(theme.colors.backgroundPrimary)
                 }
             }
             .navigationTitle("Map Fields")

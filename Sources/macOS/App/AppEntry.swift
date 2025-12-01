@@ -17,6 +17,7 @@ struct InventoryFlowApp: App {
                     .tint(appEnvironment.currentTheme.colors.accentPrimary)
                     .frame(minWidth: 900, minHeight: 600)  // Enforce minimum resolution
                     .inventorySoftScrollStyle()  // Global scrollbar hiding
+                    .transparentWindow(opacity: 0.95)  // Custom transparent window
             } else {
                 OnboardingView()
                     .environmentObject(appEnvironment)

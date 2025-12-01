@@ -10,7 +10,7 @@ struct KPICard: View {
 
     var body: some View {
         Button(action: onTap) {
-            AppCard {
+            Card() {
                 VStack(alignment: .leading, spacing: theme.spacing.m) {
                     // Icon and Title Row
                     HStack(spacing: theme.spacing.s) {
@@ -42,8 +42,6 @@ struct KPICard: View {
                 }
                 .padding(theme.spacing.m)
             }
-            .scaleEffect(isHovered ? 1.02 : 1.0)
-            .animation(.easeInOut(duration: 0.15), value: isHovered)
         }
         .buttonStyle(.plain)
         .onHover { hovering in

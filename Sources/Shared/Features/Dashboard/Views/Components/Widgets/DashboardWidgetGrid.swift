@@ -179,7 +179,7 @@ struct DashboardWidgetCard<Content: View>: View {
                             isEditMode
                                 ? theme.colors.accentPrimary.opacity(0.5)
                                 : isHovered
-                                    ? theme.colors.accentSecondary.opacity(0.3) : Color.clear,
+                                    ? theme.colors.accentSecondary.opacity(0.3) : theme.colors.backgroundPrimary,
                             lineWidth: isEditMode ? 3 : 2
                         )
                 )

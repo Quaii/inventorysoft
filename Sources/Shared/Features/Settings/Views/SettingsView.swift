@@ -15,19 +15,6 @@ struct SettingsView: View {
             theme.colors.backgroundPrimary
                 .ignoresSafeArea()
 
-            // Glow Blobs
-            Circle()
-                .fill(theme.colors.accentSecondary.opacity(0.1))
-                .frame(width: 600, height: 600)
-                .blur(radius: 120)
-                .offset(x: -200, y: -300)
-
-            Circle()
-                .fill(theme.colors.accentTertiary.opacity(0.08))
-                .frame(width: 500, height: 500)
-                .blur(radius: 100)
-                .offset(x: 300, y: 100)
-
             ScrollView {
                 VStack(alignment: .leading, spacing: theme.spacing.xl) {
                     // Page Header

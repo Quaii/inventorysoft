@@ -59,7 +59,7 @@ struct WidgetTileView<Content: View>: View {
             .overlay(
                 RoundedRectangle(cornerRadius: theme.radii.medium)
                     .stroke(
-                        isEditing ? theme.colors.accentPrimary.opacity(0.5) : Color.clear,
+                        isEditing ? theme.colors.accentPrimary.opacity(0.5) : theme.colors.backgroundPrimary,
                         lineWidth: isEditing ? 2 : 0
                     )
             )

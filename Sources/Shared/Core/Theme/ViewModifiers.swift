@@ -24,15 +24,8 @@ struct GlassBackgroundModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(theme.colors.surfaceGlass)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(theme.colors.borderHighlight, lineWidth: 1)
-                    )
-                    .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 4)
-            )
+            .background(theme.colors.surfaceGlass)
+            .cornerRadius(cornerRadius)
     }
 }
 

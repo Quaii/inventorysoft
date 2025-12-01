@@ -14,13 +14,6 @@ struct PurchasesListView: View {
             theme.colors.backgroundPrimary
                 .ignoresSafeArea()
 
-            // Glow Blobs
-            Circle()
-                .fill(theme.colors.accentTertiary.opacity(0.1))
-                .frame(width: 600, height: 600)
-                .blur(radius: 120)
-                .offset(x: 300, y: -200)
-
             VStack(alignment: .leading, spacing: theme.spacing.xl) {
                 // Page Header
                 PageHeader(

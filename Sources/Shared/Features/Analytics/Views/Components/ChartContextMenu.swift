@@ -72,7 +72,7 @@ struct ChartContextMenu: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .background(
-                hoveredOption == text ? theme.colors.highlight : Color.clear
+                hoveredOption == text ? theme.colors.highlight : theme.colors.backgroundPrimary
             )
         }
         .buttonStyle(.plain)

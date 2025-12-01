@@ -1,19 +1,19 @@
 import Foundation
 
 struct AppCornerRadius {
-    // Professional macOS corner radius specification
-    let small: CGFloat = 8
-    let medium: CGFloat = 16
-    let large: CGFloat = 24
+    // Standard system-like corner radius
+    let small: CGFloat = 4
+    let medium: CGFloat = 8
+    let large: CGFloat = 12
 
-    // Cards (medium radius, polished cockpit style)
-    let card: CGFloat = 20
+    // Cards
+    let card: CGFloat = 8
 
-    // Buttons, search fields, dropdowns (capsule/pill shape)
-    let button: CGFloat = 999  // Full pill
-    let input: CGFloat = 999  // Full pill for search/input fields
-    let pill: CGFloat = 999  // Generic pill shape
+    // Buttons, inputs - Standard rounded rects, not pills
+    let button: CGFloat = 8
+    let input: CGFloat = 8
+    let pill: CGFloat = 8
 
-    // Sidebar items (capsule for active state)
-    let sidebarItem: CGFloat = 999
+    // Sidebar items
+    let sidebarItem: CGFloat = 6
 }

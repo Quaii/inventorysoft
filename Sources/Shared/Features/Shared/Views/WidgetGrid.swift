@@ -26,15 +26,11 @@ struct WidgetGrid<Content: View, Item: Identifiable & Equatable>: View {
     // Grid Configuration
     #if os(macOS)
         private let columns = [
-            GridItem(.flexible(), spacing: 16),
-            GridItem(.flexible(), spacing: 16),
-            GridItem(.flexible(), spacing: 16),
-            GridItem(.flexible(), spacing: 16),
+            GridItem(.adaptive(minimum: 350), spacing: 16)
         ]
     #else
         private let columns = [
-            GridItem(.flexible(), spacing: 16),
-            GridItem(.flexible(), spacing: 16),
+            GridItem(.adaptive(minimum: 300), spacing: 16)
         ]
     #endif
 

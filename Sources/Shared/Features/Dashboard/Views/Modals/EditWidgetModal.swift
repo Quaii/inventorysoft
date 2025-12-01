@@ -196,11 +196,11 @@ struct WidgetSizeButton: View {
                         isSelected ? theme.colors.accentPrimary : theme.colors.textSecondary)
             }
             .padding(theme.spacing.m)
-            .background(isSelected ? theme.colors.accentPrimary.opacity(0.1) : Color.clear)
+            .background(isSelected ? theme.colors.accentPrimary.opacity(0.1) : theme.colors.backgroundPrimary)
             .cornerRadius(theme.radii.small)
             .overlay(
                 RoundedRectangle(cornerRadius: theme.radii.small)
-                    .stroke(isSelected ? theme.colors.accentPrimary : Color.clear, lineWidth: 2)
+                    .stroke(isSelected ? theme.colors.accentPrimary : theme.colors.backgroundPrimary, lineWidth: 2)
             )
         }
         .buttonStyle(.plain)

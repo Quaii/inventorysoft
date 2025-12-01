@@ -55,7 +55,7 @@ struct DynamicTable<RowData: Identifiable>: View {
     }
 
     private func rowView(for row: RowData) -> some View {
-        GlassCard {
+        Card {
             HStack(spacing: 0) {
                 ForEach(columns) { column in
                     Text(rowContent(row, column))

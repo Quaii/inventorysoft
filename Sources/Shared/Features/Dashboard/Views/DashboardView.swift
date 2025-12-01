@@ -14,45 +14,26 @@ struct DashboardView: View {
     @State private var isEditMode = false
 
     var body: some View {
-        ZStack {
-            // Background
-            theme.colors.backgroundPrimary
-                .ignoresSafeArea()
-
-            // Glow Blobs
-            Circle()
-                .fill(theme.colors.accentSecondary.opacity(0.15))
-                .frame(width: 600, height: 600)
-                .blur(radius: 120)
-                .offset(x: -200, y: -300)
-
-            Circle()
-                .fill(theme.colors.accentTertiary.opacity(0.1))
-                .frame(width: 500, height: 500)
-                .blur(radius: 100)
-                .offset(x: 300, y: 100)
-
-            // Content
-            ScrollView {
-                VStack(alignment: .leading, spacing: theme.spacing.xl) {
-                    // Page Header
-                    PageHeader(
-                        breadcrumbPage: "Dashboard",
-                        title: "Dashboard",
-                        subtitle: "Track your inventory, sales, and key metrics"
-                    ) {
-                        headerButtons
-                    }
-
-                    // Content
-                    dashboardContent
+        // Content (no background - let MainShellView handle it)
+        ScrollView {
+            VStack(alignment: .leading, spacing: theme.spacing.xl) {
+                // Page Header
+                PageHeader(
+                    breadcrumbPage: "Dashboard",
+                    title: "Dashboard",
+                    subtitle: "Track your inventory, sales, and key metrics"
+                ) {
+                    headerButtons
                 }
-                .padding(theme.spacing.xl)
-                .frame(maxWidth: 1400, alignment: .topLeading)
-                .frame(maxWidth: .infinity, alignment: .leading)
+
+                // Content
+                dashboardContent
             }
-            .inventorySoftScrollStyle()
+            .padding(theme.spacing.xl)
+            .frame(maxWidth: 1400, alignment: .topLeading)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .inventorySoftScrollStyle()
         .sheet(isPresented: $showingConfiguration) {
             DashboardConfigurationView(
                 isPresented: $showingConfiguration,
@@ -164,7 +145,7 @@ struct DashboardView: View {
                         },
                         content: { widgetContent(for: widget) }
                     )
-                    .gridCellColumns(widget.size.columnSpan)
+
                 },
                 onReorder: { from, to in
                     viewModel.reorderWidget(from: from, to: to)
