@@ -2,11 +2,11 @@ import Foundation
 import UniformTypeIdentifiers
 
 /// Service to handle export operations with customization support
-class ExportService {
+public class ExportService {
     private let db: DatabaseManager
     private let columnConfigService: ColumnConfigServiceProtocol
 
-    init(db: DatabaseManager, columnConfigService: ColumnConfigServiceProtocol) {
+    public init(db: DatabaseManager, columnConfigService: ColumnConfigServiceProtocol) {
         self.db = db
         self.columnConfigService = columnConfigService
     }

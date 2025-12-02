@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 @MainActor
-class AnalyticsViewModel: ObservableObject {
+public class AnalyticsViewModel: ObservableObject {
     @Published var widgets: [UserWidget] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -14,13 +14,19 @@ class AnalyticsViewModel: ObservableObject {
 
     private let widgetRepository: AnalyticsWidgetRepositoryProtocol
     private let analyticsService: AnalyticsServiceProtocol
+    private let configService: AnalyticsConfigServiceProtocol
+    private let exportService: ExportService
 
-    init(
+    public init(
         widgetRepository: AnalyticsWidgetRepositoryProtocol,
-        analyticsService: AnalyticsServiceProtocol
+        analyticsService: AnalyticsServiceProtocol,
+        configService: AnalyticsConfigServiceProtocol,
+        exportService: ExportService
     ) {
         self.widgetRepository = widgetRepository
         self.analyticsService = analyticsService
+        self.configService = configService
+        self.exportService = exportService
     }
 
     func loadWidgets() async {

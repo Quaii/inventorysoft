@@ -1,40 +1,40 @@
 import Foundation
 
-protocol AnalyticsServiceProtocol {
+public protocol AnalyticsServiceProtocol {
     func totalInventoryValue() async throws -> Decimal
     func totalSalesRevenue() async throws -> Decimal
     func totalNetProfit() async throws -> Decimal
     func itemCount() async throws -> Int
     func saleCount() async throws -> Int
     func getRecentActivity() async throws -> [ActivityItem]
-    func getLowStockItems() async throws -> [Item]
+    func getLowStockItems() async throws -> [StockAlert]
     func getSalesChartData() async throws -> [SalesDataPoint]
     func itemsAddedLast24Hours() async throws -> Int
-    func itemCountHistory(days: Int) async throws -> [Date: Int]
-    func recentItems(limit: Int) async throws -> [Item]
+    func itemCountHistory(days: Int) async throws -> [ItemCountDataPoint]
+    func recentItems(limit: Int) async throws -> [RecentItemInfo]
 }
 
-class AnalyticsService: AnalyticsServiceProtocol {
+public class AnalyticsService: AnalyticsServiceProtocol {
     private let itemRepository: ItemRepositoryProtocol
     private let salesRepository: SalesRepositoryProtocol
 
-    init(itemRepository: ItemRepositoryProtocol, salesRepository: SalesRepositoryProtocol) {
+    public init(itemRepository: ItemRepositoryProtocol, salesRepository: SalesRepositoryProtocol) {
         self.itemRepository = itemRepository
         self.salesRepository = salesRepository
     }
 
-    func totalInventoryValue() async throws -> Decimal {
+    public func totalInventoryValue() async throws -> Decimal {
         let items = try await itemRepository.fetchAllItems(
             search: nil, statusFilter: [.inStock, .listed], sort: .byDateAddedDescending)
         return items.reduce(0) { $0 + ($1.purchasePrice * Decimal($1.quantity)) }
     }
 
-    func totalSalesRevenue() async throws -> Decimal {
+    public func totalSalesRevenue() async throws -> Decimal {
         let sales = try await salesRepository.fetchAllSales()
         return sales.reduce(0) { $0 + $1.soldPrice }
     }
 
-    func totalNetProfit() async throws -> Decimal {
+    public func totalNetProfit() async throws -> Decimal {
         let sales = try await salesRepository.fetchAllSales()
         var totalProfit: Decimal = 0
 
@@ -54,18 +54,18 @@ class AnalyticsService: AnalyticsServiceProtocol {
         return totalProfit
     }
 
-    func itemCount() async throws -> Int {
+    public func itemCount() async throws -> Int {
         let items = try await itemRepository.fetchAllItems(
             search: nil, statusFilter: nil, sort: .byDateAddedDescending)
         return items.count
     }
 
-    func saleCount() async throws -> Int {
+    public func saleCount() async throws -> Int {
         let sales = try await salesRepository.fetchAllSales()
         return sales.count
     }
 
-    func getRecentActivity() async throws -> [ActivityItem] {
+    public func getRecentActivity() async throws -> [ActivityItem] {
         // Fetch recent sales
         let sales = try await salesRepository.fetchAllSales()
         let recentSales = sales.sorted(by: { $0.dateSold > $1.dateSold }).prefix(5)
@@ -102,13 +102,19 @@ class AnalyticsService: AnalyticsServiceProtocol {
         return activities.sorted(by: { $0.date > $1.date }).prefix(10).map { $0 }
     }
 
-    func getLowStockItems() async throws -> [Item] {
+    public func getLowStockItems() async throws -> [StockAlert] {
         let items = try await itemRepository.fetchAllItems(
             search: nil, statusFilter: [.inStock], sort: .byDateAddedDescending)
-        return items.filter { $0.quantity < 3 }
+        return items.filter { $0.quantity < 3 }.map { item in
+            StockAlert(
+                title: item.title,
+                message: "Low stock: \(item.quantity) remaining",
+                severity: .low
+            )
+        }
     }
 
-    func getSalesChartData() async throws -> [SalesDataPoint] {
+    public func getSalesChartData() async throws -> [SalesDataPoint] {
         let sales = try await salesRepository.fetchAllSales()
         // Group by day for the last 7 days
         let calendar = Calendar.current
@@ -137,7 +143,7 @@ class AnalyticsService: AnalyticsServiceProtocol {
 
         return dataPoints.sorted(by: { $0.date < $1.date })
     }
-    func itemsAddedLast24Hours() async throws -> Int {
+    public func itemsAddedLast24Hours() async throws -> Int {
         let items = try await itemRepository.fetchAllItems(
             search: nil, statusFilter: nil, sort: .byDateAddedDescending)
         let calendar = Calendar.current
@@ -145,7 +151,7 @@ class AnalyticsService: AnalyticsServiceProtocol {
         return items.filter { $0.dateAdded >= oneDayAgo }.count
     }
 
-    func itemCountHistory(days: Int) async throws -> [Date: Int] {
+    public func itemCountHistory(days: Int) async throws -> [ItemCountDataPoint] {
         let items = try await itemRepository.fetchAllItems(
             search: nil, statusFilter: nil, sort: .byDateAddedDescending)
         let calendar = Calendar.current
@@ -161,12 +167,23 @@ class AnalyticsService: AnalyticsServiceProtocol {
                 history[day] = count
             }
         }
-        return history
+        return history.map { date, count in
+            ItemCountDataPoint(date: date, count: count)
+        }.sorted(by: { $0.date < $1.date })
     }
 
-    func recentItems(limit: Int) async throws -> [Item] {
+    public func recentItems(limit: Int) async throws -> [RecentItemInfo] {
         let items = try await itemRepository.fetchAllItems(
             search: nil, statusFilter: nil, sort: .byDateAddedDescending)
-        return Array(items.prefix(limit))
+        return items.prefix(limit).map { item in
+            RecentItemInfo(
+                id: item.id,
+                title: item.title,
+                dateAdded: item.dateAdded,
+                price: Double(truncating: item.purchasePrice as NSDecimalNumber),
+                status: item.status.rawValue,
+                condition: item.condition
+            )
+        }
     }
 }

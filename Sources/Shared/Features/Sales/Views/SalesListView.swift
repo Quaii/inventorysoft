@@ -2,49 +2,38 @@ import SwiftUI
 
 struct SalesListView: View {
     @StateObject var viewModel: SalesViewModel
-    @Environment(\.theme) var theme
     @State private var columns: [TableColumnConfig] = []
     @State private var isLoadingColumns = true
     @State private var columnError: String?
 
     var body: some View {
-        ZStack {
-            // Background
-            theme.colors.backgroundPrimary
-                .ignoresSafeArea()
-
-            VStack(alignment: .leading, spacing: theme.spacing.xl) {
-                // Page Header
-                PageHeader(
-                    breadcrumbPage: "Sales",
-                    title: "Sales Orders",
-                    subtitle: "Track your sales and revenue"
-                ) {
-                    AppButton(title: "New Order", icon: "plus", style: .primary) {
-                        // Navigate to add order
-                    }
-                }
-
-                // Search/Filter Row
-                HStack(spacing: theme.spacing.m) {
-                    AppTextField(
-                        placeholder: "Search orders...", text: $viewModel.searchText,
-                        icon: "magnifyingglass"
-                    )
-                    .frame(maxWidth: 320)
+        NavigationStack {
+            VStack(spacing: 0) {
+                // Filters
+                HStack {
+                    TextField("Search orders...", text: $viewModel.searchText)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(maxWidth: 300)
 
                     Spacer()
 
-                    AppButton(icon: "slider.horizontal.3", style: .secondary) {
-                        // showingColumnConfig = true // This variable is not defined in the original code, so commenting out to avoid compilation error.
-                    }
+                    // Column config button if needed, or put in toolbar
                 }
+                .padding()
 
                 // Content
                 contentView
             }
-            .padding(theme.spacing.xl)
-            .frame(maxHeight: .infinity, alignment: .top)
+            .navigationTitle("Sales Orders")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: {
+                        // Navigate to add order
+                    }) {
+                        Label("New Order", systemImage: "plus")
+                    }
+                }
+            }
         }
         .task {
             await loadColumns()
@@ -55,91 +44,85 @@ struct SalesListView: View {
     @ViewBuilder
     private var contentView: some View {
         if isLoadingColumns || viewModel.isLoading {
-            VStack(spacing: theme.spacing.m) {
-                ProgressView()
-                Text(isLoadingColumns ? "Loading columns..." : "Loading sales...")
-                    .font(theme.typography.body)
-                    .foregroundColor(theme.colors.textSecondary)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            ProgressView("Loading...")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if let error = columnError {
-            VStack(spacing: theme.spacing.l) {
-                AppEmptyStateView(
-                    title: "Column Configuration Error",
-                    message: error,
-                    icon: "tablecells.badge.ellipsis",
-                    actionTitle: "Retry",
-                    action: {
-                        Task {
-                            await loadColumns()
-                        }
-                    }
-                )
-
-                AppButton(
-                    title: "Reset Columns",
-                    icon: "arrow.counterclockwise",
-                    style: .secondary
-                ) {
+            ContentUnavailableView {
+                Label("Column Configuration Error", systemImage: "tablecells.badge.ellipsis")
+            } description: {
+                Text(error)
+            } actions: {
+                Button("Retry") {
+                    Task { await loadColumns() }
+                }
+                Button("Reset Columns", role: .destructive) {
                     Task {
-                        do {
-                            try await viewModel.columnConfigService.resetToDefaults(
-                                for: .sales)
-                            await loadColumns()
-                        } catch {
-                            print("Reset columns error: \(error)")
-                        }
+                        try? await viewModel.columnConfigService.resetToDefaults(for: .sales)
+                        await loadColumns()
                     }
                 }
-                .frame(maxWidth: 300)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if let error = viewModel.errorMessage {
-            AppEmptyStateView(
-                title: "Error Loading Sales",
-                message: error,
-                icon: "exclamationmark.triangle",
-                actionTitle: "Retry",
-                action: {
-                    Task {
-                        await viewModel.loadSales()
-                    }
+            ContentUnavailableView {
+                Label("Error Loading Sales", systemImage: "exclamationmark.triangle")
+            } description: {
+                Text(error)
+            } actions: {
+                Button("Retry") {
+                    Task { await viewModel.loadSales() }
                 }
-            )
+            }
         } else if viewModel.sales.isEmpty {
-            VStack(spacing: theme.spacing.l) {
-                Image(systemName: "tag")
-                    .font(.system(size: 64))
-                    .foregroundColor(theme.colors.textSecondary)
-
-                VStack(spacing: theme.spacing.s) {
-                    Text("No Sales Yet")
-                        .font(theme.typography.sectionTitle)
-                        .foregroundColor(theme.colors.textPrimary)
-
-                    Text("Start recording sales to track your revenue.")
-                        .font(theme.typography.body)
-                        .foregroundColor(theme.colors.textSecondary)
-                        .multilineTextAlignment(.center)
-                }
-
-                AppButton(title: "Record First Sale", icon: "plus", style: .primary) {
+            ContentUnavailableView {
+                Label("No Sales Yet", systemImage: "tag")
+            } description: {
+                Text("Start recording sales to track your revenue.")
+            } actions: {
+                Button("Record First Sale") {
                     // Navigate to record sale
                 }
-                .frame(maxWidth: 200)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
-            DynamicTable(
-                columns: columns.filter { $0.isVisible },
-                rows: viewModel.sales,
-                rowContent: { sale, column in
-                    formatSaleField(sale, field: column.field)
-                },
-                onRowTap: { sale in
-                    // Navigate to sale detail
+            List {
+                Section(header: tableHeader) {
+                    ForEach(viewModel.sales) { sale in
+                        HStack(spacing: 0) {
+                            ForEach(
+                                columns.filter { $0.isVisible }.sorted {
+                                    $0.sortOrder < $1.sortOrder
+                                }
+                            ) { column in
+                                Text(formatSaleField(sale, field: column.field))
+                                    .font(.body)
+                                    .frame(width: column.width ?? 100, alignment: .leading)
+                                    .padding(.horizontal, 4)
+                                    .padding(.vertical, 8)
+                            }
+                            Spacer()
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            // Navigate to sale detail
+                        }
+                    }
                 }
-            )
+            }
+            .listStyle(.plain)
+        }
+    }
+
+    private var tableHeader: some View {
+        HStack(spacing: 0) {
+            ForEach(columns.filter { $0.isVisible }.sorted { $0.sortOrder < $1.sortOrder }) {
+                column in
+                Text(column.label)
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .frame(width: column.width ?? 100, alignment: .leading)
+                    .padding(.horizontal, 4)
+            }
+            Spacer()
         }
     }
 

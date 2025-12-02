@@ -1,7 +1,7 @@
 import Combine
 import Foundation
 
-class SalesViewModel: ObservableObject {
+public class SalesViewModel: ObservableObject {
     @Published var sales: [Sale] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
@@ -11,7 +11,7 @@ class SalesViewModel: ObservableObject {
     let columnConfigService: ColumnConfigServiceProtocol
     private let customFieldRepository: CustomFieldRepositoryProtocol
 
-    init(
+    public init(
         salesRepository: SalesRepositoryProtocol,
         columnConfigService: ColumnConfigServiceProtocol,
         customFieldRepository: CustomFieldRepositoryProtocol

@@ -7,27 +7,25 @@ struct QuickListCard: View {
     let onViewAll: () -> Void
     let onItemTap: (QuickListItem) -> Void
 
-    @Environment(\.theme) var theme
-
     var body: some View {
-        Card {
-            VStack(alignment: .leading, spacing: theme.spacing.m) {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 12) {
                 // Header
                 HStack {
                     Text(title)
-                        .font(theme.typography.sectionTitle)
-                        .foregroundColor(theme.colors.textPrimary)
+                        .font(.headline)
+                        .foregroundColor(.primary)
 
                     Spacer()
 
                     Button(action: onViewAll) {
                         HStack(spacing: 4) {
                             Text("View All")
-                                .font(theme.typography.caption)
+                                .font(.caption)
                             Image(systemName: "arrow.right")
                                 .font(.system(size: 10))
                         }
-                        .foregroundColor(theme.colors.accentSecondary)
+                        .foregroundColor(.blue)
                     }
                     .buttonStyle(.plain)
                 }
@@ -37,12 +35,12 @@ struct QuickListCard: View {
                 // Items List
                 if items.isEmpty {
                     Text("No recent activity")
-                        .font(theme.typography.body)
-                        .foregroundColor(theme.colors.textSecondary)
+                        .font(.body)
+                        .foregroundColor(.secondary)
                         .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.vertical, theme.spacing.l)
+                        .padding(.vertical, 16)
                 } else {
-                    VStack(spacing: theme.spacing.s) {
+                    VStack(spacing: 8) {
                         ForEach(items) { item in
                             QuickListRow(
                                 item: item,
@@ -53,7 +51,7 @@ struct QuickListCard: View {
                     }
                 }
             }
-            .padding(theme.spacing.l)
+            .padding(4)
         }
     }
 }

@@ -3,7 +3,7 @@ import SwiftUI
 
 // MARK: - Dashboard Configuration
 
-enum DashboardMetric: String, Codable, CaseIterable, Identifiable {
+public enum DashboardMetric: String, Codable, CaseIterable, Identifiable {
     case inventoryValue = "Inventory Value"
     case totalItems = "Total Items"
     case itemsPerDay = "Items Added / Day"
@@ -14,19 +14,19 @@ enum DashboardMetric: String, Codable, CaseIterable, Identifiable {
     case itemsSoldThisWeek = "Items Sold This Week"
     case topSellingItems = "Top Selling Items"
 
-    var id: String { rawValue }
+    public var id: String { rawValue }
 
-    var displayName: String { rawValue }
+    public var displayName: String { rawValue }
 }
 
-enum WidgetType: String, Codable {
+public enum WidgetType: String, Codable {
     case stat
     case chart
     case list
     case alert
     case text
 
-    var icon: String {
+    public var icon: String {
         switch self {
         case .stat: return "number"
         case .chart: return "chart.xyaxis.line"
@@ -37,7 +37,7 @@ enum WidgetType: String, Codable {
     }
 }
 
-enum WidgetSize: String, Codable, CaseIterable {
+public enum WidgetSize: String, Codable, CaseIterable {
     case small
     case medium
     case large
@@ -45,23 +45,28 @@ enum WidgetSize: String, Codable, CaseIterable {
 
 // ChartType moved to ChartDefinition.swift
 
-struct WidgetPosition: Codable, Equatable {
-    var row: Int
-    var col: Int
+public struct WidgetPosition: Codable, Equatable {
+    public var row: Int
+    public var col: Int
+
+    public init(row: Int, col: Int) {
+        self.row = row
+        self.col = col
+    }
 }
 
-struct DashboardWidget: Identifiable, Codable, Equatable {
-    let id: UUID
-    var metric: DashboardMetric
-    var type: WidgetType
-    var size: WidgetSize
-    var isVisible: Bool
-    var sortOrder: Int
-    var chartType: ChartType?
-    var positionRow: Int
-    var positionCol: Int
+public struct DashboardWidget: Identifiable, Codable, Equatable {
+    public let id: UUID
+    public var metric: DashboardMetric
+    public var type: WidgetType
+    public var size: WidgetSize
+    public var isVisible: Bool
+    public var sortOrder: Int
+    public var chartType: ChartType?
+    public var positionRow: Int
+    public var positionCol: Int
 
-    var position: WidgetPosition {
+    public var position: WidgetPosition {
         get { WidgetPosition(row: positionRow, col: positionCol) }
         set {
             positionRow = newValue.row
@@ -69,7 +74,7 @@ struct DashboardWidget: Identifiable, Codable, Equatable {
         }
     }
 
-    init(
+    public init(
         id: UUID = UUID(),
         metric: DashboardMetric,
         type: WidgetType,
@@ -99,17 +104,7 @@ struct DashboardWidget: Identifiable, Codable, Equatable {
 
 // ItemCountDataPoint moved to AnalyticsModels.swift
 
-struct RecentItemInfo: Identifiable {
-    let id = UUID()
-    let title: String
-    let brand: String
-    let size: String
-    let condition: String
-    let price: String
-    let query: String
-    let timestamp: String
-    let imageURL: String?
-}
+// RecentItemInfo moved to AnalyticsModels.swift
 
 // CategoryDataPoint moved to AnalyticsModels.swift
 

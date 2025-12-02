@@ -7,8 +7,6 @@ struct SettingsRowView<Control: View>: View {
     let control: Control
     let showDivider: Bool
 
-    @Environment(\.theme) var theme
-
     init(
         label: String,
         helpText: String? = nil,
@@ -23,18 +21,18 @@ struct SettingsRowView<Control: View>: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(alignment: .center, spacing: theme.spacing.l) {
+            HStack(alignment: .center, spacing: 16) {
                 // Left: Label and help text
                 VStack(alignment: .leading, spacing: 6) {
                     Text(label)
-                        .font(theme.typography.body)
-                        .fontWeight(.semibold)
-                        .foregroundColor(theme.colors.textPrimary)
+                        .font(.body)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
 
                     if let helpText = helpText {
                         Text(helpText)
-                            .font(theme.typography.caption)
-                            .foregroundColor(theme.colors.textSecondary)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                             .multilineTextAlignment(.leading)
                             .fixedSize(horizontal: false, vertical: true)
                     }
@@ -45,12 +43,14 @@ struct SettingsRowView<Control: View>: View {
                 control
                     .frame(minWidth: 140, alignment: .trailing)
             }
-            .padding(.vertical, 12)
+            .padding(.horizontal, 20)
+            .frame(height: 64)
+            .background(Color.clear)
 
             // Subtle divider
             if showDivider {
                 Divider()
-                    .background(theme.colors.borderSubtle)
+                    .background(Color(nsColor: .separatorColor))
             }
         }
     }

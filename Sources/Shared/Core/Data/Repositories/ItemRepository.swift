@@ -1,14 +1,14 @@
 import Foundation
 import GRDB
 
-enum ItemSortOption {
+public enum ItemSortOption {
     case byDateAddedDescending
     case byTitleAscending
     case byBrand
     case byStatus
 }
 
-protocol ItemRepositoryProtocol {
+public protocol ItemRepositoryProtocol {
     func fetchAllItems(search: String?, statusFilter: [ItemStatus]?, sort: ItemSortOption)
         async throws -> [Item]
     func fetchItem(id: UUID) async throws -> Item?
@@ -17,10 +17,12 @@ protocol ItemRepositoryProtocol {
     func deleteItem(id: UUID) async throws
 }
 
-class ItemRepository: ItemRepositoryProtocol {
+public class ItemRepository: ItemRepositoryProtocol {
     private let dbManager = DatabaseManager.shared
 
-    func fetchAllItems(
+    public init() {}
+
+    public func fetchAllItems(
         search: String? = nil, statusFilter: [ItemStatus]? = nil,
         sort: ItemSortOption = .byDateAddedDescending
     ) async throws -> [Item] {
@@ -69,25 +71,25 @@ class ItemRepository: ItemRepositoryProtocol {
         }
     }
 
-    func fetchItem(id: UUID) async throws -> Item? {
+    public func fetchItem(id: UUID) async throws -> Item? {
         try await dbManager.reader.read { db in
             try Item.fetchOne(db, key: id)
         }
     }
 
-    func createItem(_ item: Item) async throws {
+    public func createItem(_ item: Item) async throws {
         try await dbManager.dbWriter.write { db in
             try item.insert(db)
         }
     }
 
-    func updateItem(_ item: Item) async throws {
+    public func updateItem(_ item: Item) async throws {
         try await dbManager.dbWriter.write { db in
             try item.update(db)
         }
     }
 
-    func deleteItem(id: UUID) async throws {
+    public func deleteItem(id: UUID) async throws {
         try await dbManager.dbWriter.write { db in
             _ = try Item.deleteOne(db, key: id)
         }

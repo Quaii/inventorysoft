@@ -16,11 +16,11 @@ struct KPIWidgetContent: View {
     }
 
     var body: some View {
-        VStack(spacing: theme.spacing.s) {
+        VStack(spacing: 8) {
             // Icon
             Image(systemName: kpi.metricKey.icon)
                 .font(.system(size: 24))
-                .foregroundColor(theme.colors.accentSecondary)
+                .foregroundColor(.blue)
 
             // Value
             if isLoading {
@@ -28,9 +28,9 @@ struct KPIWidgetContent: View {
                     .scaleEffect(0.8)
             } else {
                 Text(kpi.value)
-                    .font(theme.typography.pageTitle)
+                    .font(.largeTitle)
                     .fontWeight(.bold)
-                    .foregroundColor(theme.colors.textPrimary)
+                    .foregroundColor(.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
@@ -38,14 +38,14 @@ struct KPIWidgetContent: View {
             // Secondary Text
             if let secondaryText = kpi.secondaryText {
                 Text(secondaryText)
-                    .font(theme.typography.caption)
-                    .foregroundColor(theme.colors.textSecondary)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(theme.spacing.m)
+        .padding(16)
     }
 }
 
@@ -55,21 +55,21 @@ struct KPIWidgetEmptyState: View {
     let metricType: KPIMetricType
 
     var body: some View {
-        VStack(spacing: theme.spacing.s) {
+        VStack(spacing: 8) {
             Image(systemName: metricType.icon)
                 .font(.system(size: 24))
-                .foregroundColor(theme.colors.textSecondary.opacity(0.3))
+                .foregroundColor(.secondary.opacity(0.3))
 
             Text("--")
-                .font(theme.typography.pageTitle)
+                .font(.largeTitle)
                 .fontWeight(.bold)
-                .foregroundColor(theme.colors.textSecondary)
+                .foregroundColor(.secondary)
 
             Text("Loading...")
-                .font(theme.typography.caption)
-                .foregroundColor(theme.colors.textSecondary)
+                .font(.caption)
+                .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(theme.spacing.m)
+        .padding(16)
     }
 }

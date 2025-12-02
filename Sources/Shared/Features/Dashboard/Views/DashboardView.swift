@@ -3,7 +3,6 @@ import SwiftUI
 
 struct DashboardView: View {
     @StateObject var viewModel: DashboardViewModel
-    @Environment(\.theme) var theme
     @State private var showingConfiguration = false
     @State private var showingAddWidget = false
     @State private var showingEditWidget = false
@@ -11,82 +10,76 @@ struct DashboardView: View {
     @State private var contextMenuWidget: UserWidget?
     @State private var editingWidget: UserWidget?
     @State private var contextMenuPosition: CGPoint = .zero
-    @State private var isEditMode = false
 
     var body: some View {
-        // Content (no background - let MainShellView handle it)
-        ScrollView {
-            VStack(alignment: .leading, spacing: theme.spacing.xl) {
-                // Page Header
-                PageHeader(
-                    breadcrumbPage: "Dashboard",
-                    title: "Dashboard",
-                    subtitle: "Track your inventory, sales, and key metrics"
-                ) {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    // Content
+                    dashboardContent
+                }
+                .padding()
+            }
+            .navigationTitle("Dashboard")
+            .toolbar {
+                ToolbarItemGroup(placement: .primaryAction) {
                     headerButtons
                 }
-
-                // Content
-                dashboardContent
             }
-            .padding(theme.spacing.xl)
-            .frame(maxWidth: 1400, alignment: .topLeading)
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .inventorySoftScrollStyle()
-        .sheet(isPresented: $showingConfiguration) {
-            DashboardConfigurationView(
-                isPresented: $showingConfiguration,
-                widgets: $viewModel.widgets
-            )
-        }
-        .sheet(isPresented: $showingAddWidget) {
-            AddWidgetModal(isPresented: $showingAddWidget) { type, size, name in
-                viewModel.addWidget(type: type, size: size, name: name)
-            }
-        }
-        .sheet(isPresented: $showingEditWidget) {
-            if let widget = editingWidget {
-                EditWidgetModal(
-                    isPresented: $showingEditWidget,
-                    widget: Binding(
-                        get: { widget },
-                        set: { editingWidget = $0 }
-                    )
-                ) { updatedWidget in
-                    viewModel.updateWidget(updatedWidget)
-                }
-            }
-        }
-        .overlay {
-            if showingContextMenu, let widget = contextMenuWidget {
-                WidgetContextMenuOverlay(
-                    isPresented: $showingContextMenu,
-                    widget: widget,
-                    position: contextMenuPosition,
-                    onConfigure: {
-                        editingWidget = widget
-                        showingContextMenu = false
-                        showingEditWidget = true
-                    },
-                    onDuplicate: {
-                        viewModel.duplicateWidget(widget)
-                    },
-                    onChangeSize: { newSize in
-                        viewModel.changeWidgetSize(widget, to: newSize)
-                    },
-                    onRemove: {
-                        viewModel.removeWidget(widget)
-                    }
+            .sheet(isPresented: $showingConfiguration) {
+                DashboardConfigurationView(
+                    isPresented: $showingConfiguration,
+                    widgets: $viewModel.widgets
                 )
             }
-        }
-        .task {
-            await viewModel.loadMetrics()
-        }
-        .onChange(of: viewModel.widgets) { _, newWidgets in
-            Task {
-                await viewModel.saveWidgetConfiguration(newWidgets)
+            .sheet(isPresented: $showingAddWidget) {
+                AddWidgetModal(isPresented: $showingAddWidget) { type, size, name in
+                    viewModel.addWidget(type: type, size: size, name: name)
+                }
+            }
+            .sheet(isPresented: $showingEditWidget) {
+                if let widget = editingWidget {
+                    EditWidgetModal(
+                        isPresented: $showingEditWidget,
+                        widget: Binding(
+                            get: { widget },
+                            set: { editingWidget = $0 }
+                        )
+                    ) { updatedWidget in
+                        viewModel.updateWidget(updatedWidget)
+                    }
+                }
+            }
+            .overlay {
+                if showingContextMenu, let widget = contextMenuWidget {
+                    WidgetContextMenuOverlay(
+                        isPresented: $showingContextMenu,
+                        widget: widget,
+                        position: contextMenuPosition,
+                        onConfigure: {
+                            editingWidget = widget
+                            showingContextMenu = false
+                            showingEditWidget = true
+                        },
+                        onDuplicate: {
+                            viewModel.duplicateWidget(widget)
+                        },
+                        onChangeSize: { newSize in
+                            viewModel.changeWidgetSize(widget, to: newSize)
+                        },
+                        onRemove: {
+                            viewModel.removeWidget(widget)
+                        }
+                    )
+                }
+            }
+            .task {
+                await viewModel.loadMetrics()
+            }
+            .onChange(of: viewModel.widgets) { _, newWidgets in
+                Task {
+                    await viewModel.saveWidgetConfiguration(newWidgets)
+                }
             }
         }
     }
@@ -102,7 +95,7 @@ struct DashboardView: View {
         } else if let error = viewModel.errorMessage {
             errorView(message: error)
         } else {
-            VStack(alignment: .leading, spacing: theme.layout.sectionSpacing) {
+            VStack(alignment: .leading, spacing: 24) {
                 // SECTION 1: KPI Row
                 KPIWidgetRowView(
                     widgets: viewModel.userWidgets.filter {
@@ -118,7 +111,7 @@ struct DashboardView: View {
                 // SECTION 3: Recent Lists
                 recentListsSection
             }
-            .padding(.bottom, theme.layout.sectionSpacing)
+            .padding(.bottom, 24)
         }
     }
 
@@ -129,55 +122,58 @@ struct DashboardView: View {
         }.sorted(by: { $0.position < $1.position })
 
         if !chartWidgets.isEmpty {
-            WidgetGrid(
-                items: chartWidgets,
-                isEditing: isEditMode,
-                content: { widget in
-                    DashboardWidgetCard(
-                        widget: widget,
-                        isEditMode: isEditMode,
-                        onTap: { handleWidgetTap(widget) },
-                        onRemove: { viewModel.removeWidget(widget) },
-                        onContextMenu: { point in
-                            contextMenuWidget = widget
-                            contextMenuPosition = point
-                            showingContextMenu = true
-                        },
-                        content: { widgetContent(for: widget) }
-                    )
-
+            DashboardWidgetGrid(
+                widgets: chartWidgets,
+                onWidgetTap: { widget in handleWidgetTap(widget) },
+                onWidgetRemove: { widget in viewModel.removeWidget(widget) },
+                onWidgetContextMenu: { widget, point in
+                    contextMenuWidget = widget
+                    contextMenuPosition = point
+                    showingContextMenu = true
                 },
-                onReorder: { from, to in
-                    viewModel.reorderWidget(from: from, to: to)
-                }
+                content: { widget in widgetContent(for: widget) }
             )
         }
     }
 
     private func errorView(message: String) -> some View {
-        VStack(spacing: theme.spacing.l) {
-            AppEmptyStateView(
-                title: "Error Loading Dashboard",
-                message: message,
-                icon: "exclamationmark.triangle",
-                actionTitle: "Retry",
-                action: {
-                    Task {
-                        await viewModel.loadMetrics()
-                    }
-                }
-            )
-
-            AppButton(
-                title: "Reset to Defaults",
-                icon: "arrow.counterclockwise",
-                style: .secondary
-            ) {
-                Task {
-                    await viewModel.resetDashboard()
+        VStack(spacing: 20) {
+            if #available(macOS 14.0, iOS 17.0, *) {
+                ContentUnavailableView(
+                    "Error Loading Dashboard",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(message)
+                )
+            } else {
+                VStack {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.largeTitle)
+                    Text("Error Loading Dashboard")
+                        .font(.title2)
+                    Text(message)
+                        .font(.body)
+                        .foregroundColor(.secondary)
                 }
             }
-            .frame(maxWidth: 300)
+
+            Button(action: {
+                Task {
+                    await viewModel.loadMetrics()
+                }
+            }) {
+                Label("Retry", systemImage: "arrow.clockwise")
+            }
+
+            Button(
+                role: .destructive,
+                action: {
+                    Task {
+                        await viewModel.resetDashboard()
+                    }
+                }
+            ) {
+                Label("Reset to Defaults", systemImage: "arrow.counterclockwise")
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -201,14 +197,14 @@ struct DashboardView: View {
     /// Section 3: Recent Lists Row
     @ViewBuilder
     private var recentListsSection: some View {
-        VStack(alignment: .leading, spacing: theme.spacing.m) {
+        VStack(alignment: .leading, spacing: 16) {
             LazyVGrid(
                 columns: [
-                    GridItem(.flexible(), spacing: theme.layout.cardSpacing),
-                    GridItem(.flexible(), spacing: theme.layout.cardSpacing),
-                    GridItem(.flexible(), spacing: theme.layout.cardSpacing),
+                    GridItem(.flexible(), spacing: 16),
+                    GridItem(.flexible(), spacing: 16),
+                    GridItem(.flexible(), spacing: 16),
                 ],
-                spacing: theme.layout.cardSpacing
+                spacing: 16
             ) {
                 // Recent Sales
                 QuickListCard(
@@ -221,7 +217,7 @@ struct DashboardView: View {
                         print("Tapped sale: \(item.title)")
                     }
                 )
-                .frame(height: theme.layout.quickListCardHeight)
+                .frame(height: 240)
 
                 // Recent Purchases
                 QuickListCard(
@@ -234,7 +230,7 @@ struct DashboardView: View {
                         print("Tapped purchase: \(item.title)")
                     }
                 )
-                .frame(height: theme.layout.quickListCardHeight)
+                .frame(height: 240)
 
                 // Recent Items
                 QuickListCard(
@@ -247,7 +243,7 @@ struct DashboardView: View {
                         print("Tapped item: \(item.title)")
                     }
                 )
-                .frame(height: theme.layout.quickListCardHeight)
+                .frame(height: 240)
             }
         }
     }
@@ -256,34 +252,17 @@ struct DashboardView: View {
 
     @ViewBuilder
     private var headerButtons: some View {
-        HStack(spacing: theme.spacing.m) {
-            // Edit Mode Toggle
-            AppButton(
-                title: isEditMode ? "Done" : "Edit",
-                icon: isEditMode ? "checkmark" : "pencil",
-                style: isEditMode ? .primary : .secondary
-            ) {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    isEditMode.toggle()
-                }
+        HStack(spacing: 16) {
+            Button(action: {
+                showingAddWidget = true
+            }) {
+                Label("Add Widget", systemImage: "plus")
             }
 
-            if !isEditMode {
-                AppButton(
-                    title: "Add Widget",
-                    icon: "plus",
-                    style: .secondary
-                ) {
-                    showingAddWidget = true
-                }
-
-                AppButton(
-                    title: "Configure",
-                    icon: "slider.horizontal.3",
-                    style: .secondary
-                ) {
-                    showingConfiguration = true
-                }
+            Button(action: {
+                showingConfiguration = true
+            }) {
+                Label("Configure", systemImage: "slider.horizontal.3")
             }
         }
     }
@@ -313,10 +292,10 @@ struct DashboardView: View {
                 VStack {
                     Image(systemName: "chart.bar")
                         .font(.system(size: 24))
-                        .foregroundColor(theme.colors.textSecondary)
+                        .foregroundColor(.secondary)
                     Text("Chart available in Analytics")
-                        .font(theme.typography.caption)
-                        .foregroundColor(theme.colors.textSecondary)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -333,8 +312,6 @@ struct DashboardView: View {
     }
 
     private func handleWidgetTap(_ widget: UserWidget) {
-        if !isEditMode {
-            print("Tapped widget: \(widget.name)")
-        }
+        print("Tapped widget: \(widget.name)")
     }
 }

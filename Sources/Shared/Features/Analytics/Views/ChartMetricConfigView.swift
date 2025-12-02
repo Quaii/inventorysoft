@@ -13,172 +13,73 @@ struct ChartMetricConfigView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Custom Header
-            HStack {
-                VStack(alignment: .leading, spacing: theme.spacing.xs) {
-                    Text("Configure Chart Metric")
-                        .font(theme.typography.headingL)
-                        .foregroundColor(theme.colors.textPrimary)
-
-                    Text("Choose data source and fields for this chart")
-                        .font(theme.typography.caption)
-                        .foregroundColor(theme.colors.textSecondary)
+        NavigationStack {
+            Form {
+                Section("Chart Title") {
+                    TextField("e.g., Revenue Trend", text: $editedDefinition.title)
                 }
 
-                Spacer()
-
-                Button(action: { dismiss() }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 24))
-                        .foregroundColor(theme.colors.textSecondary)
-                }
-                .buttonStyle(.plain)
-            }
-            .padding(theme.spacing.l)
-            .background(theme.colors.backgroundPrimary)
-
-            Divider().overlay(theme.colors.divider)
-
-            // Content
-            ScrollView {
-                VStack(alignment: .leading, spacing: theme.spacing.l) {
-                    // Chart Title
-                    AppCard {
-                        VStack(alignment: .leading, spacing: theme.spacing.s) {
-                            Text("CHART TITLE")
-                                .font(theme.typography.tableHeader)
-                                .foregroundColor(theme.colors.textSecondary)
-
-                            AppTextField(
-                                placeholder: "e.g., Revenue Trend",
-                                text: $editedDefinition.title
-                            )
+                Section("Data Source") {
+                    Picker("Data Source", selection: $editedDefinition.dataSource) {
+                        ForEach(ChartDataSource.allCases, id: \.self) { source in
+                            Text(source.displayName).tag(source)
                         }
                     }
-                    .padding(.horizontal, theme.spacing.l)
-
-                    // Data Source
-                    AppCard {
-                        VStack(alignment: .leading, spacing: theme.spacing.s) {
-                            Text("DATA SOURCE")
-                                .font(theme.typography.tableHeader)
-                                .foregroundColor(theme.colors.textSecondary)
-
-                            Picker("Data Source", selection: $editedDefinition.dataSource) {
-                                ForEach(ChartDataSource.allCases, id: \.self) { source in
-                                    Text(source.displayName).tag(source)
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                        }
-                    }
-                    .padding(.horizontal, theme.spacing.l)
-
-                    // X-Axis Field
-                    AppCard {
-                        VStack(alignment: .leading, spacing: theme.spacing.s) {
-                            Text("X-AXIS FIELD")
-                                .font(theme.typography.tableHeader)
-                                .foregroundColor(theme.colors.textSecondary)
-
-                            Picker("X-Axis", selection: $editedDefinition.xField) {
-                                ForEach(
-                                    availableFields(for: editedDefinition.dataSource), id: \.self
-                                ) { field in
-                                    Text(field).tag(field)
-                                }
-                            }
-                            .pickerStyle(.menu)
-                        }
-                    }
-                    .padding(.horizontal, theme.spacing.l)
-
-                    // Y-Axis Field
-                    AppCard {
-                        VStack(alignment: .leading, spacing: theme.spacing.s) {
-                            Text("Y-AXIS FIELD")
-                                .font(theme.typography.tableHeader)
-                                .foregroundColor(theme.colors.textSecondary)
-
-                            Picker("Y-Axis", selection: $editedDefinition.yField) {
-                                ForEach(
-                                    availableFields(for: editedDefinition.dataSource), id: \.self
-                                ) { field in
-                                    Text(field).tag(field)
-                                }
-                            }
-                            .pickerStyle(.menu)
-                        }
-                    }
-                    .padding(.horizontal, theme.spacing.l)
-
-                    // Aggregation
-                    AppCard {
-                        VStack(alignment: .leading, spacing: theme.spacing.s) {
-                            Text("AGGREGATION")
-                                .font(theme.typography.tableHeader)
-                                .foregroundColor(theme.colors.textSecondary)
-
-                            Picker("Aggregation", selection: $editedDefinition.aggregation) {
-                                ForEach(ChartAggregation.allCases, id: \.self) { agg in
-                                    Text(agg.displayName).tag(agg)
-                                }
-                            }
-                            .pickerStyle(.menu)
-                        }
-                    }
-                    .padding(.horizontal, theme.spacing.l)
-
-                    // Group By (Optional)
-                    AppCard {
-                        VStack(alignment: .leading, spacing: theme.spacing.s) {
-                            Text("GROUP BY (OPTIONAL)")
-                                .font(theme.typography.tableHeader)
-                                .foregroundColor(theme.colors.textSecondary)
-
-                            Picker(
-                                "Group By",
-                                selection: Binding(
-                                    get: { editedDefinition.groupBy ?? "None" },
-                                    set: { editedDefinition.groupBy = $0 == "None" ? nil : $0 }
-                                )
-                            ) {
-                                Text("None").tag("None")
-                                ForEach(
-                                    availableFields(for: editedDefinition.dataSource), id: \.self
-                                ) { field in
-                                    Text(field).tag(field)
-                                }
-                            }
-                            .pickerStyle(.menu)
-                        }
-                    }
-                    .padding(.horizontal, theme.spacing.l)
-                }
-                .padding(.vertical, theme.spacing.l)
-            }
-
-            // Footer
-            Divider().overlay(theme.colors.divider)
-
-            HStack {
-                AppButton(title: "Cancel", style: .ghost) {
-                    dismiss()
                 }
 
-                Spacer()
+                Section("Fields") {
+                    Picker("X-Axis", selection: $editedDefinition.xField) {
+                        ForEach(availableFields(for: editedDefinition.dataSource), id: \.self) {
+                            field in
+                            Text(field).tag(field)
+                        }
+                    }
 
-                AppButton(title: "Save Changes", style: .primary) {
-                    chartDefinition = editedDefinition
-                    dismiss()
+                    Picker("Y-Axis", selection: $editedDefinition.yField) {
+                        ForEach(availableFields(for: editedDefinition.dataSource), id: \.self) {
+                            field in
+                            Text(field).tag(field)
+                        }
+                    }
+                }
+
+                Section("Configuration") {
+                    Picker("Aggregation", selection: $editedDefinition.aggregation) {
+                        ForEach(ChartAggregation.allCases, id: \.self) { agg in
+                            Text(agg.displayName).tag(agg)
+                        }
+                    }
+
+                    Picker(
+                        "Group By (Optional)",
+                        selection: Binding(
+                            get: { editedDefinition.groupBy ?? "None" },
+                            set: { editedDefinition.groupBy = $0 == "None" ? nil : $0 }
+                        )
+                    ) {
+                        Text("None").tag("None")
+                        ForEach(availableFields(for: editedDefinition.dataSource), id: \.self) {
+                            field in
+                            Text(field).tag(field)
+                        }
+                    }
                 }
             }
-            .padding(theme.spacing.l)
-            .background(theme.colors.backgroundPrimary)
+            .navigationTitle("Configure Chart Metric")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        chartDefinition = editedDefinition
+                        dismiss()
+                    }
+                }
+            }
         }
-        .frame(width: 500, height: 700)
-        .background(theme.colors.backgroundPrimary)
     }
 
     // Helper function to get available fields based on data source

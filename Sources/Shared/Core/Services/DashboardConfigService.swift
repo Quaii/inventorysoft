@@ -1,6 +1,6 @@
 import Foundation
 
-protocol DashboardConfigServiceProtocol {
+public protocol DashboardConfigServiceProtocol {
     func getWidgets() async throws -> [DashboardWidget]
     func saveWidgetConfiguration(_ widgets: [DashboardWidget]) async throws
     func getDefaultWidgets() -> [DashboardWidget]
@@ -8,14 +8,14 @@ protocol DashboardConfigServiceProtocol {
     func resetToDefaults() async throws
 }
 
-class DashboardConfigService: DashboardConfigServiceProtocol {
+public class DashboardConfigService: DashboardConfigServiceProtocol {
     private let repository: DashboardConfigRepositoryProtocol
 
-    init(repository: DashboardConfigRepositoryProtocol = DashboardConfigRepository()) {
+    public init(repository: DashboardConfigRepositoryProtocol) {
         self.repository = repository
     }
 
-    func getWidgets() async throws -> [DashboardWidget] {
+    public func getWidgets() async throws -> [DashboardWidget] {
         let widgets = try await repository.getAllWidgets()
 
         // If no widgets exist, initialize with defaults
@@ -27,21 +27,21 @@ class DashboardConfigService: DashboardConfigServiceProtocol {
         return widgets
     }
 
-    func saveWidgetConfiguration(_ widgets: [DashboardWidget]) async throws {
+    public func saveWidgetConfiguration(_ widgets: [DashboardWidget]) async throws {
         try await repository.saveAllWidgets(widgets)
     }
 
-    func initializeDefaultLayout() async throws {
+    public func initializeDefaultLayout() async throws {
         let defaultWidgets = getDefaultWidgets()
         try await repository.saveAllWidgets(defaultWidgets)
     }
 
-    func resetToDefaults() async throws {
+    public func resetToDefaults() async throws {
         // Clear existing widgets and re-initialize with defaults
         try await repository.saveAllWidgets([])
         try await initializeDefaultLayout()
     }
-    func getDefaultWidgets() -> [DashboardWidget] {
+    public func getDefaultWidgets() -> [DashboardWidget] {
         return [
             DashboardWidget(
                 metric: .inventoryValue,

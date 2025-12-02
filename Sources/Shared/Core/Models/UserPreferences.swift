@@ -1,31 +1,31 @@
 import Foundation
 
-struct UserPreferences: Codable, Equatable {
+public struct UserPreferences: Codable, Equatable {
     // General Settings
-    var baseCurrency: String
-    var displayCurrency: String
-    var dateFormat: String
-    var numberFormattingLocale: String
-    var firstDayOfWeek: String
+    public var baseCurrency: String
+    public var displayCurrency: String
+    public var dateFormat: String
+    public var numberFormattingLocale: String
+    public var firstDayOfWeek: String
 
     // Appearance Settings
-    var themeMode: String
-    var compactMode: Bool
-    var accentColor: String
-    var sidebarCollapseBehavior: String
+    public var themeMode: String
+    public var compactMode: Bool
+    public var accentColor: String
+    public var sidebarCollapseBehavior: String
 
     // Dashboard & Analytics Settings
-    var dashboardInitialLayout: String
-    var allowDashboardEditing: Bool
-    var defaultAnalyticsRange: String
-    var defaultAnalyticsInterval: String
-    var hasCustomizedAnalytics: Bool
+    public var dashboardInitialLayout: String
+    public var allowDashboardEditing: Bool
+    public var defaultAnalyticsRange: String
+    public var defaultAnalyticsInterval: String
+    public var hasCustomizedAnalytics: Bool
 
     // Data Management Settings
-    var backupLocationPath: String
-    var backupFrequency: String
+    public var backupLocationPath: String
+    public var backupFrequency: String
 
-    init(
+    public init(
         baseCurrency: String = "USD",
         displayCurrency: String = "USD",
         dateFormat: String = "DD/MM/YYYY",
@@ -61,24 +61,24 @@ struct UserPreferences: Codable, Equatable {
         self.backupFrequency = backupFrequency
     }
 
-    static let `default` = UserPreferences()
+    public static let `default` = UserPreferences()
 }
 
 // Available options
 extension UserPreferences {
-    static let availableCurrencies = [
+    public static let availableCurrencies = [
         "USD", "EUR", "GBP", "CHF", "CAD", "AUD", "SEK", "NOK", "DKK", "PLN",
     ]
-    static let availableDateFormats = ["DD/MM/YYYY", "MM/DD/YYYY", "YYYY-MM-DD"]
-    static let availableNumberFormats = ["System", "1,234.56", "1.234,56"]
-    static let availableFirstDayOfWeek = ["Sunday", "Monday"]
-    static let availableThemeModes = ["System", "Light", "Dark"]
-    static let availableAccentColors = ["Blue", "Purple", "Green", "Orange", "Pink", "Gray"]
-    static let availableSidebarBehaviors = ["Collapsible", "Fixed Expanded"]
-    static let availableDashboardLayouts = ["Empty", "Recommended KPIs"]
-    static let availableAnalyticsRanges = [
+    public static let availableDateFormats = ["DD/MM/YYYY", "MM/DD/YYYY", "YYYY-MM-DD"]
+    public static let availableNumberFormats = ["System", "1,234.56", "1.234,56"]
+    public static let availableFirstDayOfWeek = ["Sunday", "Monday"]
+    public static let availableThemeModes = ["System", "Light", "Dark"]
+    public static let availableAccentColors = ["Blue", "Purple", "Green", "Orange", "Pink", "Gray"]
+    public static let availableSidebarBehaviors = ["Collapsible", "Fixed Expanded"]
+    public static let availableDashboardLayouts = ["Empty", "Recommended KPIs"]
+    public static let availableAnalyticsRanges = [
         "Last 7 Days", "Last 30 Days", "Last 90 Days", "All Time",
     ]
-    static let availableAnalyticsIntervals = ["Daily", "Weekly", "Monthly"]
-    static let availableBackupFrequencies = ["Off", "Daily", "Weekly", "Monthly"]
+    public static let availableAnalyticsIntervals = ["Daily", "Weekly", "Monthly"]
+    public static let availableBackupFrequencies = ["Off", "Daily", "Weekly", "Monthly"]
 }

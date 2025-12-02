@@ -1,6 +1,6 @@
 import Foundation
 
-enum CustomFieldType: String, Codable, CaseIterable {
+public enum CustomFieldType: String, Codable, CaseIterable {
     case text
     case number
     case date
@@ -28,7 +28,7 @@ enum CustomFieldType: String, Codable, CaseIterable {
     }
 }
 
-enum CustomFieldAppliesTo: String, Codable, CaseIterable {
+public enum CustomFieldAppliesTo: String, Codable, CaseIterable {
     case item
     case sale
     case purchase
@@ -42,17 +42,17 @@ enum CustomFieldAppliesTo: String, Codable, CaseIterable {
     }
 }
 
-struct CustomFieldDefinition: Identifiable, Codable, Equatable {
-    let id: UUID
-    var name: String
-    var type: CustomFieldType
-    var appliesTo: CustomFieldAppliesTo
-    var selectOptions: [String]?
-    var isRequired: Bool
-    var sortOrder: Int
-    var createdAt: Date
+public struct CustomFieldDefinition: Identifiable, Codable, Equatable {
+    public let id: UUID
+    public var name: String
+    public var type: CustomFieldType
+    public var appliesTo: CustomFieldAppliesTo
+    public var selectOptions: [String]?
+    public var isRequired: Bool
+    public var sortOrder: Int
+    public var createdAt: Date
 
-    init(
+    public init(
         id: UUID = UUID(),
         name: String,
         type: CustomFieldType,

@@ -29,7 +29,7 @@ struct OnboardingView: View {
     var body: some View {
         ZStack {
             // Background
-            theme.colors.backgroundPrimary
+            Color(nsColor: .windowBackgroundColor)
                 .ignoresSafeArea()
 
             VStack(spacing: 40) {
@@ -38,7 +38,7 @@ struct OnboardingView: View {
                     ForEach(0..<5) { index in
                         Capsule()
                             .fill(
-                                index == 1 ? theme.colors.accentSecondary : Color.gray.opacity(0.3)
+                                index == 1 ? Color.blue : Color.gray.opacity(0.3)
                             )
                             .frame(width: 40, height: 4)
                     }
@@ -70,28 +70,62 @@ struct OnboardingView: View {
                 // Title
                 VStack(spacing: 12) {
                     Text("Choose offer type")
-                        .font(theme.typography.headingXL)
-                        .foregroundColor(theme.colors.textPrimary)
+                        .font(.largeTitle)
+                        .foregroundColor(.primary)
 
                     Text("What type of collaboration do\nyou have in mind?")
-                        .font(theme.typography.body)
-                        .foregroundColor(theme.colors.textSecondary)
+                        .font(.body)
+                        .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                 }
 
                 // Options
                 VStack(spacing: 16) {
                     ForEach(plans) { plan in
-                        SelectionCard(
-                            iconName: plan.icon,
-                            title: plan.title,
-                            subtitle: plan.subtitle,
-                            isSelected: selectedPlan == plan.id
-                        ) {
+                        Button(action: {
                             withAnimation {
                                 selectedPlan = plan.id
                             }
+                        }) {
+                            HStack {
+                                Image(systemName: plan.icon)
+                                    .font(.title2)
+                                    .foregroundColor(selectedPlan == plan.id ? .white : .primary)
+                                    .frame(width: 40)
+
+                                VStack(alignment: .leading) {
+                                    Text(plan.title)
+                                        .font(.headline)
+                                        .foregroundColor(
+                                            selectedPlan == plan.id ? .white : .primary)
+                                    Text(plan.subtitle)
+                                        .font(.caption)
+                                        .foregroundColor(
+                                            selectedPlan == plan.id
+                                                ? .white.opacity(0.8) : .secondary)
+                                }
+                                Spacer()
+                                if selectedPlan == plan.id {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(.white)
+                                }
+                            }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(
+                                        selectedPlan == plan.id
+                                            ? Color.blue : Color(nsColor: .controlBackgroundColor))
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(
+                                        selectedPlan == plan.id
+                                            ? Color.blue : Color.secondary.opacity(0.2),
+                                        lineWidth: 1)
+                            )
                         }
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal, 20)
@@ -109,7 +143,7 @@ struct OnboardingView: View {
                             Text("Back")
                         }
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(theme.colors.textSecondary)
+                        .foregroundColor(.secondary)
                         .padding(.vertical, 12)
                         .padding(.horizontal, 24)
                         .background(Color.white.opacity(0.05))
@@ -128,7 +162,7 @@ struct OnboardingView: View {
                             Image(systemName: "arrow.right")
                         }
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(theme.colors.textSecondary)
+                        .foregroundColor(.secondary)
                         .padding(.vertical, 12)
                         .padding(.horizontal, 24)
                         .background(Color.white.opacity(0.05))

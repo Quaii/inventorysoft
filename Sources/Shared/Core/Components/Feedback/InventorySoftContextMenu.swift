@@ -4,8 +4,6 @@ struct InventorySoftContextMenu<MenuContent: View>: ViewModifier {
     @Binding var isPresented: Bool
     let content: () -> MenuContent
 
-    @Environment(\.theme) var theme
-
     func body(content: Content) -> some View {
         content
             .overlay(
@@ -23,13 +21,13 @@ struct InventorySoftContextMenu<MenuContent: View>: ViewModifier {
 
                             // Menu Content
                             self.content()
-                                .padding(theme.spacing.s)
-                                .background(theme.colors.surfaceElevated)
-                                .cornerRadius(theme.radii.small)
+                                .padding(8)
+                                .background(Color(nsColor: .windowBackgroundColor))
+                                .cornerRadius(8)
                                 .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: theme.radii.small)
-                                        .stroke(theme.colors.borderSubtle, lineWidth: 1)
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                                 )
                                 .frame(width: 200)  // Fixed width for consistency
                                 .position(
@@ -59,8 +57,6 @@ struct ContextMenuItem: View {
     let isDestructive: Bool
     let action: () -> Void
 
-    @Environment(\.theme) var theme
-
     init(icon: String, title: String, isDestructive: Bool = false, action: @escaping () -> Void) {
         self.icon = icon
         self.title = title
@@ -69,20 +65,21 @@ struct ContextMenuItem: View {
     }
 
     var body: some View {
+
         Button(action: action) {
-            HStack(spacing: theme.spacing.m) {
+            HStack(spacing: 12) {
                 Image(systemName: icon)
                     .font(.system(size: 14))
                     .frame(width: 20, alignment: .center)
 
                 Text(title)
-                    .font(theme.typography.body)
+                    .font(.body)
 
                 Spacer()
             }
-            .foregroundColor(isDestructive ? theme.colors.error : theme.colors.textPrimary)
-            .padding(.vertical, theme.spacing.s)
-            .padding(.horizontal, theme.spacing.m)
+            .foregroundColor(isDestructive ? .red : .primary)
+            .padding(.vertical, 8)
+            .padding(.horizontal, 12)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

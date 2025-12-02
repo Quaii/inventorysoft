@@ -5,18 +5,16 @@ struct AlertChip: View {
     let alert: DashboardAlert
     let onDismiss: () -> Void
 
-    @Environment(\.theme) var theme
-
     private var severityColor: Color {
         switch alert.severity {
-        case .info: return theme.colors.accentSecondary
+        case .info: return .blue
         case .warning: return .orange
         case .success: return .green
         }
     }
 
     var body: some View {
-        HStack(spacing: theme.spacing.s) {
+        HStack(spacing: 8) {
             // Icon
             Image(systemName: alert.severity.icon)
                 .font(.system(size: 14))
@@ -25,13 +23,13 @@ struct AlertChip: View {
             // Content
             VStack(alignment: .leading, spacing: 2) {
                 Text(alert.title)
-                    .font(theme.typography.body)
+                    .font(.body)
                     .fontWeight(.semibold)
-                    .foregroundColor(theme.colors.textPrimary)
+                    .foregroundColor(.primary)
 
                 Text(alert.message)
-                    .font(theme.typography.caption)
-                    .foregroundColor(theme.colors.textSecondary)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
 
             Spacer()
@@ -40,16 +38,16 @@ struct AlertChip: View {
             Button(action: onDismiss) {
                 Image(systemName: "xmark")
                     .font(.system(size: 12))
-                    .foregroundColor(theme.colors.textSecondary)
+                    .foregroundColor(.secondary)
                     .frame(width: 20, height: 20)
             }
             .buttonStyle(.plain)
         }
-        .padding(theme.spacing.m)
+        .padding(12)
         .background(severityColor.opacity(0.1))
-        .cornerRadius(theme.radii.small)
+        .cornerRadius(8)
         .overlay(
-            RoundedRectangle(cornerRadius: theme.radii.small)
+            RoundedRectangle(cornerRadius: 8)
                 .stroke(severityColor.opacity(0.3), lineWidth: 1)
         )
     }

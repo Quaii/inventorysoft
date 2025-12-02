@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MainShellView: View {
     @State private var selectedTab: AppTab = .dashboard
+    @State private var isSidebarCollapsed = false
     @Namespace private var namespace
     @EnvironmentObject var environment: AppEnvironment
     @Environment(\.theme) var theme
@@ -9,8 +10,10 @@ struct MainShellView: View {
     var body: some View {
         HStack(spacing: 0) {
             // Sidebar
-            Sidebar(selectedTab: $selectedTab, namespace: namespace)
-                .zIndex(1)
+            Sidebar(
+                selectedTab: $selectedTab, isCollapsed: $isSidebarCollapsed, namespace: namespace
+            )
+            .zIndex(1)
 
             // Main Content
             ZStack {

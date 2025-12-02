@@ -13,45 +13,52 @@ struct ColumnConfigurationView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
+            Group {
                 if isLoading {
                     ProgressView("Loading columns...")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if let error = errorMessage {
-                    VStack(spacing: theme.spacing.m) {
-                        Image(systemName: "exclamationmark.triangle")
-                            .font(.system(size: 48))
-                            .foregroundColor(theme.colors.error)
-                        Text("Error Loading Columns")
-                            .font(theme.typography.cardTitle)
-                            .foregroundColor(theme.colors.textPrimary)
+                    ContentUnavailableView {
+                        Label("Error Loading Columns", systemImage: "exclamationmark.triangle")
+                    } description: {
                         Text(error)
-                            .font(theme.typography.body)
-                            .foregroundColor(theme.colors.textSecondary)
-                            .multilineTextAlignment(.center)
-
-                        AppButton(title: "Retry") {
+                    } actions: {
+                        Button("Retry") {
                             Task { await loadColumns() }
                         }
                     }
-                    .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: theme.spacing.l) {
+                    List {
+                        Section {
+                            ForEach($columns) { $column in
+                                HStack {
+                                    // Drag handle (visual only for now)
+                                    Image(systemName: "line.3.horizontal")
+                                        .foregroundStyle(.secondary)
+
+                                    // Column info
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(column.label)
+                                            .font(.body)
+                                        Text(column.field)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+
+                                    Spacer()
+
+                                    // Visibility toggle
+                                    Toggle("", isOn: $column.isVisible)
+                                        .labelsHidden()
+                                }
+                            }
+                            .onMove { from, to in
+                                columns.move(fromOffsets: from, toOffset: to)
+                            }
+                        } header: {
                             Text(
                                 "Configure which columns to display in your \(tableType.displayName) table. Drag to reorder."
                             )
-                            .font(theme.typography.body)
-                            .foregroundColor(theme.colors.textSecondary)
-                            .padding(.horizontal, theme.spacing.l)
-                            .padding(.top, theme.spacing.m)
-
-                            ForEach($columns) { $column in
-                                ColumnConfigRow(column: $column)
-                            }
                         }
-                        .padding(.bottom, theme.spacing.xl)
                     }
                 }
             }
@@ -97,37 +104,5 @@ struct ColumnConfigurationView: View {
         } catch {
             errorMessage = "Failed to save: \(error.localizedDescription)"
         }
-    }
-}
-
-struct ColumnConfigRow: View {
-    @Binding var column: TableColumnConfig
-    @Environment(\.theme) var theme
-
-    var body: some View {
-        AppCard {
-            HStack(spacing: theme.spacing.m) {
-                // Drag handle (visual only for now)
-                Image(systemName: "line.3.horizontal")
-                    .foregroundColor(theme.colors.textMuted)
-
-                // Column info
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(column.label)
-                        .font(theme.typography.body)
-                        .foregroundColor(theme.colors.textPrimary)
-                    Text(column.field)
-                        .font(theme.typography.caption)
-                        .foregroundColor(theme.colors.textSecondary)
-                }
-
-                Spacer()
-
-                // Visibility toggle
-                Toggle("", isOn: $column.isVisible)
-                    .labelsHidden()
-            }
-        }
-        .padding(.horizontal, theme.spacing.l)
     }
 }

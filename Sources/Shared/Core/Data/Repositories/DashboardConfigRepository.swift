@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-protocol DashboardConfigRepositoryProtocol {
+public protocol DashboardConfigRepositoryProtocol {
     func getAllWidgets() async throws -> [DashboardWidget]
     func getWidget(id: UUID) async throws -> DashboardWidget?
     func saveWidget(_ widget: DashboardWidget) async throws
@@ -9,14 +9,14 @@ protocol DashboardConfigRepositoryProtocol {
     func saveAllWidgets(_ widgets: [DashboardWidget]) async throws
 }
 
-class DashboardConfigRepository: DashboardConfigRepositoryProtocol {
+public class DashboardConfigRepository: DashboardConfigRepositoryProtocol {
     private let dbWriter: DatabaseWriter
 
-    init(dbWriter: DatabaseWriter = DatabaseManager.shared.dbWriter) {
+    public init(dbWriter: DatabaseWriter = DatabaseManager.shared.dbWriter) {
         self.dbWriter = dbWriter
     }
 
-    func getAllWidgets() async throws -> [DashboardWidget] {
+    public func getAllWidgets() async throws -> [DashboardWidget] {
         try await dbWriter.read { [self] db in
             try Row.fetchAll(
                 db,
@@ -28,7 +28,7 @@ class DashboardConfigRepository: DashboardConfigRepositoryProtocol {
         }
     }
 
-    func getWidget(id: UUID) async throws -> DashboardWidget? {
+    public func getWidget(id: UUID) async throws -> DashboardWidget? {
         try await dbWriter.read { [self] db in
             if let row = try Row.fetchOne(
                 db,
@@ -44,7 +44,7 @@ class DashboardConfigRepository: DashboardConfigRepositoryProtocol {
         }
     }
 
-    func saveWidget(_ widget: DashboardWidget) async throws {
+    public func saveWidget(_ widget: DashboardWidget) async throws {
         try await dbWriter.write { db in
             try db.execute(
                 sql: """
@@ -74,7 +74,7 @@ class DashboardConfigRepository: DashboardConfigRepositoryProtocol {
         }
     }
 
-    func deleteWidget(id: UUID) async throws {
+    public func deleteWidget(id: UUID) async throws {
         try await dbWriter.write { db in
             try db.execute(
                 sql: """
@@ -86,7 +86,7 @@ class DashboardConfigRepository: DashboardConfigRepositoryProtocol {
         }
     }
 
-    func saveAllWidgets(_ widgets: [DashboardWidget]) async throws {
+    public func saveAllWidgets(_ widgets: [DashboardWidget]) async throws {
         try await dbWriter.write { db in
             // Delete all existing widgets
             try db.execute(

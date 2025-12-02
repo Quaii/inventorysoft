@@ -1,7 +1,7 @@
 import CoreGraphics
 import Foundation
 
-enum TableType: String, Codable, CaseIterable {
+public enum TableType: String, Codable, CaseIterable {
     case inventory
     case sales
     case purchases
@@ -15,17 +15,17 @@ enum TableType: String, Codable, CaseIterable {
     }
 }
 
-struct TableColumnConfig: Identifiable, Codable, Equatable {
-    let id: UUID
-    var tableType: TableType
-    var field: String  // either core field name or customFieldId
-    var label: String
-    var width: CGFloat?
-    var sortOrder: Int
-    var isVisible: Bool
-    var isCustomField: Bool
+public struct TableColumnConfig: Codable, Identifiable, Equatable {
+    public let id: UUID
+    public var tableType: TableType
+    public var field: String  // either core field name or customFieldId
+    public var label: String
+    public var width: CGFloat?
+    public var sortOrder: Int
+    public var isVisible: Bool
+    public var isCustomField: Bool
 
-    init(
+    public init(
         id: UUID = UUID(),
         tableType: TableType,
         field: String,

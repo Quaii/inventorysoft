@@ -6,8 +6,6 @@ struct SettingsSectionView<Content: View>: View {
     let description: String?
     let content: Content
 
-    @Environment(\.theme) var theme
-
     init(
         title: String,
         description: String? = nil,
@@ -19,27 +17,27 @@ struct SettingsSectionView<Content: View>: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: theme.spacing.m) {
+        VStack(alignment: .leading, spacing: 12) {
             // Section Header
-            VStack(alignment: .leading, spacing: theme.spacing.xs) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(theme.typography.cardTitle)
-                    .foregroundColor(theme.colors.textPrimary)
+                    .font(.headline)
+                    .foregroundColor(.primary)
 
                 if let description = description {
                     Text(description)
-                        .font(theme.typography.caption)
-                        .foregroundColor(theme.colors.textSecondary)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             }
 
             // Section Content
-            VStack(spacing: theme.spacing.m) {
+            VStack(spacing: 0) {
                 content
             }
         }
-        .padding(theme.spacing.l)
-        .background(theme.colors.surfaceElevated)
-        .cornerRadius(theme.radii.card)
+        .padding(24)
+        .background(Color(nsColor: .controlBackgroundColor))
+        .cornerRadius(16)
     }
 }

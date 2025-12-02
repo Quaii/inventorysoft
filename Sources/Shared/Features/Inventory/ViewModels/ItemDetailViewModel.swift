@@ -1,10 +1,12 @@
+import Foundation
+
 #if canImport(UIKit)
     import UIKit
 #elseif canImport(AppKit)
     import AppKit
 #endif
 
-class ItemDetailViewModel: ObservableObject {
+public class ItemDetailViewModel: ObservableObject {
     @Published var item: Item?
     @Published var images: [ImageAttachment] = []
     @Published var isLoading: Bool = false
@@ -51,7 +53,7 @@ class ItemDetailViewModel: ObservableObject {
     private let imageService: ImageServiceProtocol
     private let salesRepository: SalesRepositoryProtocol
 
-    init(
+    public init(
         itemRepository: ItemRepositoryProtocol, imageRepository: ImageRepositoryProtocol,
         imageService: ImageServiceProtocol, salesRepository: SalesRepositoryProtocol
     ) {
@@ -87,7 +89,7 @@ class ItemDetailViewModel: ObservableObject {
             }
 
             // Fetch sale info if item is sold
-            if let item = self.item, item.status == .sold {
+            if let item = self.item, item.status == ItemStatus.sold {
                 let sales = try await salesRepository.fetchSales(forItemId: id)
                 self.sale = sales.first
             }

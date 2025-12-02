@@ -1,10 +1,10 @@
 import Foundation
 
-struct Brand: Identifiable, Codable, Equatable {
-    let id: UUID
-    var name: String
+public struct Brand: Identifiable, Codable, Equatable {
+    public let id: UUID
+    public var name: String
 
-    init(id: UUID = UUID(), name: String) {
+    public init(id: UUID = UUID(), name: String) {
         self.id = id
         self.name = name
     }

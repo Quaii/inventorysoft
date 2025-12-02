@@ -5,7 +5,7 @@ import SwiftUI
 /// Displays a list of active alerts with dismiss functionality.
 /// Reuses the AlertChip component for individual alert rendering.
 struct AlertsWidgetContent: View {
-    @Environment(\.theme) var theme
+
     let alerts: [DashboardAlert]
     let onDismiss: (DashboardAlert) -> Void
 
@@ -26,7 +26,7 @@ struct AlertsWidgetContent: View {
             AlertsEmptyState()
         } else {
             ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: theme.spacing.s) {
+                VStack(spacing: 8) {
                     ForEach(activeAlerts) { alert in
                         AlertChip(
                             alert: alert,
@@ -36,7 +36,7 @@ struct AlertsWidgetContent: View {
                         )
                     }
                 }
-                .padding(theme.spacing.m)
+                .padding(12)
             }
         }
     }
@@ -44,23 +44,22 @@ struct AlertsWidgetContent: View {
 
 /// Empty state for alerts widget
 struct AlertsEmptyState: View {
-    @Environment(\.theme) var theme
 
     var body: some View {
-        VStack(spacing: theme.spacing.m) {
+        VStack(spacing: 12) {
             Image(systemName: "checkmark.circle")
                 .font(.system(size: 32))
-                .foregroundColor(theme.colors.success)
+                .foregroundColor(.green)
 
             Text("All clear!")
-                .font(theme.typography.sectionTitle)
-                .foregroundColor(theme.colors.textPrimary)
+                .font(.title3)
+                .foregroundColor(.primary)
 
             Text("No active alerts at this time")
-                .font(theme.typography.body)
-                .foregroundColor(theme.colors.textSecondary)
+                .font(.body)
+                .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(theme.spacing.xl)
+        .padding(24)
     }
 }

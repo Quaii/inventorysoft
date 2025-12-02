@@ -7,7 +7,6 @@ struct CustomDropdownMenu: View {
     let onSelect: (String) -> Void
     @Binding var isPresented: Bool
 
-    @Environment(\.theme) var theme
     @State private var hoveredOption: String?
 
     var body: some View {
@@ -19,21 +18,22 @@ struct CustomDropdownMenu: View {
                 }) {
                     HStack {
                         Text(option)
-                            .font(theme.typography.body)
-                            .foregroundColor(theme.colors.textPrimary)
+                            .font(.body)
+                            .foregroundColor(.primary)
 
                         Spacer()
 
                         if option == selectedValue {
                             Image(systemName: "checkmark")
                                 .font(.system(size: 11, weight: .semibold))
-                                .foregroundColor(theme.colors.accentSecondary)
+                                .foregroundColor(.blue)
                         }
                     }
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                     .background(
-                        hoveredOption == option ? theme.colors.highlight : theme.colors.backgroundPrimary
+                        hoveredOption == option
+                            ? Color.blue.opacity(0.1) : Color(nsColor: .windowBackgroundColor)
                     )
                 }
                 .buttonStyle(.plain)
@@ -44,11 +44,10 @@ struct CustomDropdownMenu: View {
 
                 if option != options.last {
                     Divider()
-                        .background(theme.colors.borderSubtle)
                 }
             }
         }
-        .background(theme.colors.surfaceElevated)
+        .background(Color(nsColor: .controlBackgroundColor))
         .cornerRadius(8)
         .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 4)
         .padding(4)
@@ -62,7 +61,6 @@ struct SettingsPickerPill: View {
     let options: [String]
     let onSelect: (String) -> Void
 
-    @Environment(\.theme) var theme
     @State private var isHovered = false
     @State private var showDropdown = false
 
@@ -70,14 +68,14 @@ struct SettingsPickerPill: View {
         Button(action: {
             showDropdown.toggle()
         }) {
-            HStack(spacing: theme.spacing.xs) {
+            HStack(spacing: 4) {
                 Text(selectedValue)
-                    .font(theme.typography.body)
-                    .foregroundColor(theme.colors.textPrimary)
+                    .font(.body)
+                    .foregroundColor(.primary)
 
                 Image(systemName: "chevron.down")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundColor(theme.colors.textSecondary)
+                    .foregroundColor(.secondary)
                     .rotationEffect(.degrees(showDropdown ? 180 : 0))
                     .animation(.easeInOut(duration: 0.2), value: showDropdown)
             }
@@ -86,13 +84,16 @@ struct SettingsPickerPill: View {
             .frame(minWidth: 140)
             .background(
                 RoundedRectangle(cornerRadius: 6)
-                    .fill(isHovered ? theme.colors.surfaceSecondary : theme.colors.surfacePrimary)
+                    .fill(
+                        isHovered
+                            ? Color(nsColor: .controlBackgroundColor)
+                            : Color(nsColor: .windowBackgroundColor))
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 6)
                     .stroke(
                         showDropdown
-                            ? theme.colors.accentSecondary.opacity(0.5) : theme.colors.borderSubtle,
+                            ? Color.blue.opacity(0.5) : Color.gray.opacity(0.2),
                         lineWidth: 1)
             )
         }

@@ -10,12 +10,12 @@ struct KPIGridView: View {
     // Responsive columns: 3 on wide, 2 on medium, 1 on narrow
     private var columns: [GridItem] {
         [
-            GridItem(.adaptive(minimum: 200, maximum: 400), spacing: theme.spacing.l)
+            GridItem(.adaptive(minimum: 200, maximum: 400), spacing: 24)
         ]
     }
 
     var body: some View {
-        LazyVGrid(columns: columns, spacing: theme.spacing.l) {
+        LazyVGrid(columns: columns, spacing: 24) {
             ForEach(kpis.filter { $0.isVisible }.sorted(by: { $0.sortOrder < $1.sortOrder })) {
                 kpi in
                 KPICard(

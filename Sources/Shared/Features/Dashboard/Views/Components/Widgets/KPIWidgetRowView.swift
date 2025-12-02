@@ -15,9 +15,9 @@ struct KPIWidgetRowView: View {
         LazyVGrid(
             columns: [
                 GridItem(
-                    .adaptive(minimum: 160, maximum: .infinity), spacing: theme.layout.cardSpacing)
+                    .adaptive(minimum: 160, maximum: .infinity), spacing: 16)
             ],
-            spacing: theme.layout.cardSpacing
+            spacing: 16
         ) {
             ForEach(displayWidgets) { widget in
                 KPIWidgetCard(
@@ -37,36 +37,39 @@ struct KPIWidgetCard: View {
     let isLoading: Bool
 
     var body: some View {
-        WidgetTileView(
-            title: widget.name,
-            icon: widget.type.icon,
-            size: .small,
-            isEditing: false,  // KPIs are configured via settings, not inline edit
-            onRemove: {},
-            onContextMenu: { _ in }
-        ) {
-            VStack(alignment: .leading, spacing: 4) {
-                if isLoading {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(theme.colors.surfaceElevated)
-                        .frame(width: 60, height: 24)
-                        .shimmering()  // Assuming shimmering modifier exists or just static
-                } else {
-                    Text(value)
-                        .font(theme.typography.headingL)
-                        .foregroundColor(theme.colors.textPrimary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
+        GroupBox {
+            VStack(alignment: .leading, spacing: 12) {
+                // Header
+                HStack {
+                    Label(widget.name, systemImage: widget.type.icon)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                }
 
-                    // Optional secondary label (e.g. "This month")
-                    // We could add this to the model later if needed
-                    Text("This Month")
-                        .font(theme.typography.caption)
-                        .foregroundColor(theme.colors.textSecondary)
+                // Content
+                VStack(alignment: .leading, spacing: 4) {
+                    if isLoading {
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(Color.secondary.opacity(0.1))
+                            .frame(width: 60, height: 24)
+                            .shimmering()
+                    } else {
+                        Text(value)
+                            .font(.largeTitle)
+                            .foregroundColor(.primary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+
+                        Text("This Month")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
                 }
             }
+            .padding(8)
         }
-        .frame(height: 100)  // Fixed height for KPI row
+        .frame(height: 100)
     }
 }
 

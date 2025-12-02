@@ -7,25 +7,25 @@ import Foundation
 /// But since I can't easily see if AppChart.swift is compiled before this, I'll define the conformance in an extension if the protocol is available.
 /// Actually, I'll define the models here and conform them to ChartDataPoint in AppChart.swift or here if ChartDataPoint is visible.
 
-struct SalesDataPoint: Identifiable, Codable {
-    let id: UUID
-    let date: Date
-    let amount: Double
+public struct SalesDataPoint: Identifiable, Equatable {
+    public let id: UUID
+    public let date: Date
+    public let amount: Double
 
-    init(id: UUID = UUID(), date: Date, amount: Double) {
+    public init(id: UUID = UUID(), date: Date, amount: Double) {
         self.id = id
         self.date = date
         self.amount = amount
     }
 }
 
-struct CategoryDataPoint: Identifiable, Codable {
-    let id: UUID
-    let category: String
-    let amount: Double
-    let count: Int
+public struct CategoryDataPoint: Identifiable, Codable {
+    public let id: UUID
+    public let category: String
+    public let amount: Double
+    public let count: Int
 
-    init(id: UUID = UUID(), category: String, amount: Double, count: Int) {
+    public init(id: UUID = UUID(), category: String, amount: Double, count: Int) {
         self.id = id
         self.category = category
         self.amount = amount
@@ -33,46 +33,55 @@ struct CategoryDataPoint: Identifiable, Codable {
     }
 }
 
-struct TopProductInfo: Identifiable, Codable {
-    let id: UUID
-    let name: String
-    let quantity: Int
-    let revenue: Double
+public struct RecentItemInfo: Identifiable, Equatable, Codable {
+    public let id: UUID
+    public let title: String
+    public let dateAdded: Date
+    public let price: Double
+    public let status: String
+    public let condition: String
 
-    init(id: UUID = UUID(), name: String, quantity: Int, revenue: Double) {
+    public init(
+        id: UUID = UUID(), title: String, dateAdded: Date, price: Double, status: String,
+        condition: String
+    ) {
         self.id = id
-        self.name = name
-        self.quantity = quantity
-        self.revenue = revenue
+        self.title = title
+        self.dateAdded = dateAdded
+        self.price = price
+        self.status = status
+        self.condition = condition
     }
 }
 
-struct ItemCountDataPoint: Identifiable, Codable {
-    let id: UUID
-    let date: Date
-    let count: Int
+public struct ItemCountDataPoint: Identifiable, Equatable {
+    public let id: UUID
+    public let date: Date
+    public let count: Int
 
-    init(id: UUID = UUID(), date: Date, count: Int) {
+    public init(id: UUID = UUID(), date: Date, count: Int) {
         self.id = id
         self.date = date
         self.count = count
     }
 }
 
-struct ActivityItem: Identifiable, Codable {
-    let id: UUID
-    let title: String
-    let description: String
-    let type: ActivityType
-    let date: Date
+public struct ActivityItem: Identifiable, Codable {
+    public let id: UUID
+    public let title: String
+    public let description: String
+    public let type: ActivityType
+    public let date: Date
 
-    enum ActivityType: String, Codable {
+    public enum ActivityType: String, Codable {
         case sale
         case purchase
         case alert
     }
 
-    init(id: UUID = UUID(), title: String, description: String, type: ActivityType, date: Date) {
+    public init(
+        id: UUID = UUID(), title: String, description: String, type: ActivityType, date: Date
+    ) {
         self.id = id
         self.title = title
         self.description = description

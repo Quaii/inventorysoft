@@ -8,14 +8,9 @@ struct DashboardConfigurationView: View {
     @State private var editedWidgets: [DashboardWidget] = []
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Content
-
-            Divider().overlay(theme.colors.divider)
-
-            // Content
-            ScrollView {
-                VStack(alignment: .leading, spacing: theme.spacing.l) {
+        NavigationStack {
+            Form {
+                Section {
                     ForEach(Array(editedWidgets.enumerated()), id: \.element.id) { index, widget in
                         WidgetConfigRow(
                             widget: binding(for: widget),
@@ -25,37 +20,30 @@ struct DashboardConfigurationView: View {
                             onMoveDown: { moveWidget(from: index, to: index + 1) }
                         )
                     }
+                }
 
-                    // Reset Button
-                    AppButton(
-                        title: "Reset to Default Layout",
-                        icon: "arrow.counterclockwise",
-                        style: .secondary
-                    ) {
+                Section {
+                    Button(role: .destructive) {
                         resetToDefaults()
+                    } label: {
+                        Label("Reset to Default Layout", systemImage: "arrow.counterclockwise")
                     }
-                    .padding(.horizontal, theme.spacing.l)
-                }
-                .padding(.vertical, theme.spacing.l)
-            }
-
-            // Footer
-            Divider().overlay(theme.colors.divider)
-
-            HStack {
-                AppButton(title: "Cancel", style: .ghost) {
-                    isPresented = false
-                }
-
-                Spacer()
-
-                AppButton(title: "Save Changes", style: .primary) {
-                    saveConfiguration()
-                    isPresented = false
                 }
             }
-            .padding(theme.spacing.l)
-            .background(theme.colors.backgroundPrimary)
+            .navigationTitle("Configure Dashboard")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        isPresented = false
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save Changes") {
+                        saveConfiguration()
+                        isPresented = false
+                    }
+                }
+            }
         }
         .onAppear {
             editedWidgets = widgets
@@ -97,22 +85,17 @@ struct WidgetConfigRow: View {
     let onMoveUp: () -> Void
     let onMoveDown: () -> Void
 
-    @Environment(\.theme) var theme
-
     var body: some View {
-        AppCard {
-            VStack(spacing: theme.spacing.m) {
-                HStack(spacing: theme.spacing.m) {
+        GroupBox {
+            VStack(spacing: 12) {
+                HStack(spacing: 12) {
                     // Reorder Controls
                     VStack(spacing: 4) {
                         Button(action: onMoveUp) {
                             Image(systemName: "chevron.up")
-                                .font(.system(size: 12, weight: .semibold))
-                                .foregroundColor(
-                                    index > 0 ? theme.colors.textPrimary : theme.colors.textMuted
-                                )
+                                .font(.caption.bold())
                                 .frame(width: 24, height: 24)
-                                .background(theme.colors.surfaceElevated)
+                                .background(Color(.secondarySystemFill))
                                 .cornerRadius(4)
                         }
                         .buttonStyle(.plain)
@@ -120,13 +103,9 @@ struct WidgetConfigRow: View {
 
                         Button(action: onMoveDown) {
                             Image(systemName: "chevron.down")
-                                .font(.system(size: 12, weight: .semibold))
-                                .foregroundColor(
-                                    index < totalCount - 1
-                                        ? theme.colors.textPrimary : theme.colors.textMuted
-                                )
+                                .font(.caption.bold())
                                 .frame(width: 24, height: 24)
-                                .background(theme.colors.surfaceElevated)
+                                .background(Color(.secondarySystemFill))
                                 .cornerRadius(4)
                         }
                         .buttonStyle(.plain)
@@ -135,21 +114,20 @@ struct WidgetConfigRow: View {
 
                     // Icon
                     Image(systemName: widget.type.icon)
-                        .font(.system(size: 20))
-                        .foregroundColor(theme.colors.accentPrimary)
+                        .font(.title3)
+                        .foregroundColor(.blue)
                         .frame(width: 40, height: 40)
-                        .background(theme.colors.surfaceElevated)
+                        .background(Color(.secondarySystemFill))
                         .cornerRadius(8)
 
                     // Title
                     VStack(alignment: .leading, spacing: 2) {
                         Text(widget.metric.displayName)
-                            .font(theme.typography.cardTitle)
-                            .foregroundColor(theme.colors.textPrimary)
+                            .font(.headline)
 
                         Text(widget.type.icon)
-                            .font(theme.typography.caption)
-                            .foregroundColor(theme.colors.textSecondary)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
 
                     Spacer()
@@ -160,14 +138,14 @@ struct WidgetConfigRow: View {
                 }
 
                 if widget.isVisible {
-                    Divider().overlay(theme.colors.divider)
+                    Divider()
 
-                    VStack(alignment: .leading, spacing: theme.spacing.m) {
+                    VStack(alignment: .leading, spacing: 12) {
                         // Size Selector
-                        VStack(alignment: .leading, spacing: theme.spacing.s) {
+                        VStack(alignment: .leading, spacing: 8) {
                             Text("SIZE")
-                                .font(theme.typography.tableHeader)
-                                .foregroundColor(theme.colors.textSecondary)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
 
                             Picker("Size", selection: $widget.size) {
                                 ForEach(WidgetSize.allCases, id: \.self) { size in
@@ -179,10 +157,10 @@ struct WidgetConfigRow: View {
 
                         // Chart Type Selector (if applicable)
                         if widget.type == .chart {
-                            VStack(alignment: .leading, spacing: theme.spacing.s) {
+                            VStack(alignment: .leading, spacing: 8) {
                                 Text("CHART TYPE")
-                                    .font(theme.typography.tableHeader)
-                                    .foregroundColor(theme.colors.textSecondary)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
 
                                 Picker("Chart Type", selection: $widget.chartType) {
                                     ForEach([ChartType.bar, .line, .area, .donut], id: \.self) {
@@ -199,7 +177,7 @@ struct WidgetConfigRow: View {
                     }
                 }
             }
+            .padding(4)
         }
-        .padding(.horizontal, theme.spacing.l)
     }
 }

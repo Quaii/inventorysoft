@@ -50,229 +50,112 @@ struct ChartEditorView: View {
     }
 
     var body: some View {
-        ZStack {
-            // Background overlay
-            Color.black.opacity(0.5)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    isPresented = false
-                }
-
-            // Modal content
-            VStack(alignment: .leading, spacing: theme.spacing.l) {
-                // Header
-                HStack {
-                    Text("\(mode) Chart")
-                        .font(theme.typography.sectionTitle)
-                        .foregroundColor(theme.colors.textPrimary)
-
-                    Spacer()
-
-                    Button(action: { isPresented = false }) {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(theme.colors.textSecondary)
-                    }
-                    .buttonStyle(.plain)
-                }
-
-                ScrollView {
-                    VStack(alignment: .leading, spacing: theme.spacing.l) {
-                        // Chart Name
-                        fieldSection(label: "Chart Name") {
-                            TextField("e.g., Monthly Revenue", text: $title)
-                                .textFieldStyle(.plain)
-                                .padding(theme.spacing.s)
-                                .background(theme.colors.backgroundSecondary)
-                                .cornerRadius(6)
-                                .font(theme.typography.body)
-                        }
-
-                        // Chart Type
-                        fieldSection(label: "Chart Type") {
-                            HStack(spacing: theme.spacing.s) {
-                                ForEach([ChartType.bar, .line, .area, .donut], id: \.self) { type in
-                                    chartTypeButton(type)
-                                }
-                            }
-                        }
-
-                        // Data Source
-                        fieldSection(label: "Data Source") {
-                            SettingsPickerPill(
-                                selectedValue: dataSource.displayName,
-                                options: ChartDataSource.allCases.map { $0.displayName }
-                            ) { newValue in
-                                if let source = ChartDataSource.allCases.first(where: {
-                                    $0.displayName == newValue
-                                }) {
-                                    dataSource = source
-                                }
-                            }
-                        }
-
-                        // Metric/Field
-                        fieldSection(label: "Metric Field") {
-                            metricFieldPicker
-                        }
-
-                        // Aggregation
-                        fieldSection(label: "Aggregation") {
-                            SettingsPickerPill(
-                                selectedValue: aggregation.displayName,
-                                options: ChartAggregation.allCases.map { $0.displayName }
-                            ) { newValue in
-                                if let agg = ChartAggregation.allCases.first(where: {
-                                    $0.displayName == newValue
-                                }) {
-                                    aggregation = agg
-                                }
-                            }
-                        }
-
-                        // Formula (optional)
-                        fieldSection(label: "Custom Formula (Optional)") {
-                            Toggle("Use custom formula", isOn: $hasFormula)
-                                .labelsHidden()
-
-                            if hasFormula {
-                                VStack(spacing: theme.spacing.s) {
-                                    HStack(spacing: theme.spacing.s) {
-                                        TextField("Field 1", text: $formulaField1)
-                                            .textFieldStyle(.plain)
-                                            .padding(theme.spacing.s)
-                                            .background(theme.colors.backgroundSecondary)
-                                            .cornerRadius(6)
-
-                                        SettingsPickerPill(
-                                            selectedValue: formulaOperation.symbol,
-                                            options: FormulaOperation.allCases.map { $0.symbol }
-                                        ) { newValue in
-                                            if let op = FormulaOperation.allCases.first(where: {
-                                                $0.symbol == newValue
-                                            }) {
-                                                formulaOperation = op
-                                            }
-                                        }
-                                        .frame(width: 80)
-
-                                        TextField("Field 2", text: $formulaField2)
-                                            .textFieldStyle(.plain)
-                                            .padding(theme.spacing.s)
-                                            .background(theme.colors.backgroundSecondary)
-                                            .cornerRadius(6)
-                                    }
-                                }
-                            }
-                        }
-
-                        // Color Palette
-                        fieldSection(label: "Color Palette") {
-                            HStack(spacing: theme.spacing.s) {
-                                ForEach(
-                                    ["default", "blue", "green", "purple", "orange"], id: \.self
-                                ) { palette in
-                                    colorPaletteButton(palette)
-                                }
-                            }
-                        }
-                    }
-                }
-                .frame(maxHeight: 400)
-
-                // Action buttons
-                HStack(spacing: theme.spacing.m) {
-                    AppButton(
-                        title: "Cancel",
-                        style: .secondary
-                    ) {
+        NavigationStack {
+            Form {
+                chartNameSection
+                chartTypeSection
+                dataSourceSection
+                metricFieldSection
+                aggregationSection
+                customFormulaSection
+                colorPaletteSection
+            }
+            .navigationTitle("\(mode) Chart")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
                         isPresented = false
                     }
-
-                    AppButton(
-                        title: mode == "Create" ? "Create Chart" : "Save Changes",
-                        style: .primary
-                    ) {
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(mode == "Create" ? "Create" : "Save") {
                         saveChart()
                     }
                     .disabled(!isValid)
-                    .opacity(isValid ? 1.0 : 0.5)
-                }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-            }
-            .padding(theme.spacing.xl)
-            .frame(maxWidth: 600)
-            .background(theme.colors.surfaceElevated)
-            .cornerRadius(theme.radii.card)
-            .shadow(color: .black.opacity(0.3), radius: 20, x: 0, y: 10)
-        }
-    }
-
-    @ViewBuilder
-    private func fieldSection<Content: View>(label: String, @ViewBuilder content: () -> Content)
-        -> some View
-    {
-        VStack(alignment: .leading, spacing: theme.spacing.s) {
-            Text(label)
-                .font(theme.typography.body)
-                .fontWeight(.semibold)
-                .foregroundColor(theme.colors.textPrimary)
-
-            content()
-        }
-    }
-
-    @ViewBuilder
-    private func chartTypeButton(_ type: ChartType) -> some View {
-        Button(action: { chartType = type }) {
-            VStack(spacing: 4) {
-                Image(systemName: type.icon)
-                    .font(.system(size: 20))
-                Text(type.rawValue.capitalized)
-                    .font(theme.typography.caption)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, theme.spacing.s)
-            .background(
-                chartType == type
-                    ? theme.colors.accentSecondary.opacity(0.2) : theme.colors.surfaceSecondary
-            )
-            .cornerRadius(6)
-            .overlay(
-                RoundedRectangle(cornerRadius: 6)
-                    .stroke(
-                        chartType == type
-                            ? theme.colors.accentSecondary : theme.colors.borderSubtle,
-                        lineWidth: 1
-                    )
-            )
-        }
-        .buttonStyle(.plain)
-    }
-
-    @ViewBuilder
-    private func colorPaletteButton(_ palette: String) -> some View {
-        Button(action: { colorPalette = palette }) {
-            HStack(spacing: 2) {
-                ForEach(ChartColorPalette.colors(for: palette).prefix(3), id: \.self) { colorHex in
-                    Rectangle()
-                        .fill(Color(hex: colorHex))
-                        .frame(width: 12, height: 24)
                 }
             }
-            .padding(6)
-            .background(theme.colors.surfaceSecondary)
-            .cornerRadius(6)
-            .overlay(
-                RoundedRectangle(cornerRadius: 6)
-                    .stroke(
-                        colorPalette == palette
-                            ? theme.colors.accentSecondary : theme.colors.borderSubtle,
-                        lineWidth: 2
-                    )
-            )
         }
-        .buttonStyle(.plain)
+    }
+
+    private var chartNameSection: some View {
+        Section("Chart Name") {
+            TextField("e.g., Monthly Revenue", text: $title)
+        }
+    }
+
+    private var chartTypeSection: some View {
+        Section("Chart Type") {
+            Picker("Chart Type", selection: $chartType) {
+                ForEach([ChartType.bar, .line, .area, .donut], id: \.self) { type in
+                    Label(type.rawValue.capitalized, systemImage: type.icon)
+                        .tag(type)
+                }
+            }
+        }
+    }
+
+    private var dataSourceSection: some View {
+        Section("Data Source") {
+            Picker("Data Source", selection: $dataSource) {
+                ForEach(ChartDataSource.allCases, id: \.self) { source in
+                    Text(source.displayName).tag(source)
+                }
+            }
+        }
+    }
+
+    private var metricFieldSection: some View {
+        Section("Metric Field") {
+            metricFieldPicker
+        }
+    }
+
+    private var aggregationSection: some View {
+        Section("Aggregation") {
+            Picker("Aggregation", selection: $aggregation) {
+                ForEach(ChartAggregation.allCases, id: \.self) { agg in
+                    Text(agg.displayName).tag(agg)
+                }
+            }
+        }
+    }
+
+    private var customFormulaSection: some View {
+        Section("Custom Formula (Optional)") {
+            Toggle("Use custom formula", isOn: $hasFormula)
+
+            if hasFormula {
+                TextField("Field 1", text: $formulaField1)
+
+                Picker("Operation", selection: $formulaOperation) {
+                    ForEach(FormulaOperation.allCases, id: \.self) { op in
+                        Text(op.symbol).tag(op)
+                    }
+                }
+
+                TextField("Field 2", text: $formulaField2)
+            }
+        }
+    }
+
+    private var colorPaletteSection: some View {
+        Section("Color Palette") {
+            Picker("Color Palette", selection: $colorPalette) {
+                ForEach(["default", "blue", "green", "purple", "orange"], id: \.self) { palette in
+                    HStack {
+                        Text(palette.capitalized)
+                        Spacer()
+                        ForEach(ChartColorPalette.colors(for: palette).prefix(3), id: \.self) {
+                            colorHex in
+                            RoundedRectangle(cornerRadius: 2)
+                                .fill(Color(hex: colorHex))
+                                .frame(width: 12, height: 12)
+                        }
+                    }
+                    .tag(palette)
+                }
+            }
+        }
     }
 
     @ViewBuilder
@@ -290,11 +173,10 @@ struct ChartEditorView: View {
             }
         }()
 
-        SettingsPickerPill(
-            selectedValue: yField,
-            options: fields
-        ) { newValue in
-            yField = newValue
+        Picker("Metric Field", selection: $yField) {
+            ForEach(fields, id: \.self) { field in
+                Text(field).tag(field)
+            }
         }
     }
 

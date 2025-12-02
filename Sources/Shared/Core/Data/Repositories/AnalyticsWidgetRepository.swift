@@ -7,7 +7,7 @@ import GRDB
 ///
 /// Analytics widgets are stored separately from Dashboard widgets to maintain
 /// independence between the two features, even though they share the same `UserWidget` model.
-protocol AnalyticsWidgetRepositoryProtocol {
+public protocol AnalyticsWidgetRepositoryProtocol {
     /// Get all Analytics widgets, ordered by position
     func getAllWidgets() async throws -> [UserWidget]
 
@@ -29,14 +29,14 @@ protocol AnalyticsWidgetRepositoryProtocol {
 
 // MARK: - Analytics Widget Repository Implementation
 
-class AnalyticsWidgetRepository: AnalyticsWidgetRepositoryProtocol {
+public class AnalyticsWidgetRepository: AnalyticsWidgetRepositoryProtocol {
     private let dbManager: DatabaseManager
 
-    init(dbManager: DatabaseManager = .shared) {
+    public init(dbManager: DatabaseManager = .shared) {
         self.dbManager = dbManager
     }
 
-    func getAllWidgets() async throws -> [UserWidget] {
+    public func getAllWidgets() async throws -> [UserWidget] {
         try await dbManager.reader.read { db in
             try UserWidget.fetchAll(
                 db,
@@ -49,7 +49,7 @@ class AnalyticsWidgetRepository: AnalyticsWidgetRepositoryProtocol {
         }
     }
 
-    func getWidget(id: UUID) async throws -> UserWidget? {
+    public func getWidget(id: UUID) async throws -> UserWidget? {
         try await dbManager.reader.read { db in
             try UserWidget.fetchOne(
                 db,
@@ -59,7 +59,7 @@ class AnalyticsWidgetRepository: AnalyticsWidgetRepositoryProtocol {
         }
     }
 
-    func saveWidget(_ widget: UserWidget) async throws {
+    public func saveWidget(_ widget: UserWidget) async throws {
         try await dbManager.dbWriter.write { db in
             var widget = widget
             widget.updatedAt = Date()
@@ -116,7 +116,7 @@ class AnalyticsWidgetRepository: AnalyticsWidgetRepositoryProtocol {
         }
     }
 
-    func saveAllWidgets(_ widgets: [UserWidget]) async throws {
+    public func saveAllWidgets(_ widgets: [UserWidget]) async throws {
         try await dbManager.dbWriter.write { db in
             for var widget in widgets {
                 widget.updatedAt = Date()
@@ -143,7 +143,7 @@ class AnalyticsWidgetRepository: AnalyticsWidgetRepositoryProtocol {
         }
     }
 
-    func deleteWidget(id: UUID) async throws {
+    public func deleteWidget(id: UUID) async throws {
         try await dbManager.dbWriter.write { db in
             try db.execute(
                 sql: "DELETE FROM user_analytics_widget WHERE id = ?",
@@ -152,7 +152,7 @@ class AnalyticsWidgetRepository: AnalyticsWidgetRepositoryProtocol {
         }
     }
 
-    func deleteAllWidgets() async throws {
+    public func deleteAllWidgets() async throws {
         try await dbManager.dbWriter.write { db in
             try db.execute(sql: "DELETE FROM user_analytics_widget")
         }

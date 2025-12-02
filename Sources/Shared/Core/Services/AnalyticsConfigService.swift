@@ -1,6 +1,6 @@
 import Foundation
 
-protocol AnalyticsConfigServiceProtocol {
+public protocol AnalyticsConfigServiceProtocol {
     func getCharts() async throws -> [ChartDefinition]
     func saveChart(_ chart: ChartDefinition) async throws
     func deleteChart(_ chart: ChartDefinition) async throws
@@ -8,11 +8,11 @@ protocol AnalyticsConfigServiceProtocol {
     func resetToDefaults() async throws
 }
 
-class AnalyticsConfigService: AnalyticsConfigServiceProtocol {
+public class AnalyticsConfigService: AnalyticsConfigServiceProtocol {
     private let repository: AnalyticsConfigRepositoryProtocol
     private let preferencesRepo: UserPreferencesRepositoryProtocol
 
-    init(
+    public init(
         repository: AnalyticsConfigRepositoryProtocol,
         preferencesRepo: UserPreferencesRepositoryProtocol
     ) {
@@ -20,7 +20,7 @@ class AnalyticsConfigService: AnalyticsConfigServiceProtocol {
         self.preferencesRepo = preferencesRepo
     }
 
-    func getCharts() async throws -> [ChartDefinition] {
+    public func getCharts() async throws -> [ChartDefinition] {
         let charts = try await repository.fetchCharts()
         let preferences = try await preferencesRepo.getPreferences()
 
@@ -44,7 +44,7 @@ class AnalyticsConfigService: AnalyticsConfigServiceProtocol {
         return charts
     }
 
-    func saveChart(_ chart: ChartDefinition) async throws {
+    public func saveChart(_ chart: ChartDefinition) async throws {
         try await repository.saveChart(chart)
         // Mark as customized
         var preferences = try await preferencesRepo.getPreferences()
@@ -52,7 +52,7 @@ class AnalyticsConfigService: AnalyticsConfigServiceProtocol {
         try await preferencesRepo.savePreferences(preferences)
     }
 
-    func deleteChart(_ chart: ChartDefinition) async throws {
+    public func deleteChart(_ chart: ChartDefinition) async throws {
         try await repository.deleteChart(chart)
         // Mark as customized
         var preferences = try await preferencesRepo.getPreferences()
@@ -60,11 +60,11 @@ class AnalyticsConfigService: AnalyticsConfigServiceProtocol {
         try await preferencesRepo.savePreferences(preferences)
     }
 
-    func updateChartOrder(_ charts: [ChartDefinition]) async throws {
+    public func updateChartOrder(_ charts: [ChartDefinition]) async throws {
         try await repository.updateChartOrder(charts)
     }
 
-    func resetToDefaults() async throws {
+    public func resetToDefaults() async throws {
         let currentCharts = try await repository.fetchCharts()
         for chart in currentCharts {
             try await repository.deleteChart(chart)

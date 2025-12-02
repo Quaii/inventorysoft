@@ -1,15 +1,15 @@
 import Foundation
 
-struct Sale: Identifiable, Codable, Equatable {
-    let id: UUID
-    var itemId: UUID
-    var soldPrice: Decimal
-    var platform: String
-    var fees: Decimal
-    var dateSold: Date
-    var buyer: String?
+public struct Sale: Identifiable, Codable, Equatable {
+    public let id: UUID
+    public var itemId: UUID
+    public var soldPrice: Decimal
+    public var platform: String
+    public var fees: Decimal
+    public var dateSold: Date
+    public var buyer: String?
 
-    init(
+    public init(
         id: UUID = UUID(),
         itemId: UUID,
         soldPrice: Decimal,

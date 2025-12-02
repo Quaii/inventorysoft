@@ -1,7 +1,7 @@
 import CoreGraphics
 import Foundation
 
-protocol ColumnConfigServiceProtocol {
+public protocol ColumnConfigServiceProtocol {
     func getColumns(for tableType: TableType) async throws -> [TableColumnConfig]
     func saveColumnConfiguration(_ columns: [TableColumnConfig], for tableType: TableType)
         async throws
@@ -10,14 +10,14 @@ protocol ColumnConfigServiceProtocol {
     func resetToDefaults(for tableType: TableType) async throws
 }
 
-class ColumnConfigService: ColumnConfigServiceProtocol {
+public class ColumnConfigService: ColumnConfigServiceProtocol {
     private let repository: ColumnConfigRepositoryProtocol
 
-    init(repository: ColumnConfigRepositoryProtocol = ColumnConfigRepository()) {
+    public init(repository: ColumnConfigRepositoryProtocol = ColumnConfigRepository()) {
         self.repository = repository
     }
 
-    func getColumns(for tableType: TableType) async throws -> [TableColumnConfig] {
+    public func getColumns(for tableType: TableType) async throws -> [TableColumnConfig] {
         let columns = try await repository.getColumns(for: tableType)
 
         // If no columns exist, initialize with defaults
@@ -29,13 +29,13 @@ class ColumnConfigService: ColumnConfigServiceProtocol {
         return columns
     }
 
-    func saveColumnConfiguration(_ columns: [TableColumnConfig], for tableType: TableType)
+    public func saveColumnConfiguration(_ columns: [TableColumnConfig], for tableType: TableType)
         async throws
     {
         try await repository.saveAllColumns(columns, for: tableType)
     }
 
-    func getDefaultColumns(for tableType: TableType) -> [TableColumnConfig] {
+    public func getDefaultColumns(for tableType: TableType) -> [TableColumnConfig] {
         switch tableType {
         case .inventory:
             return getDefaultInventoryColumns()
@@ -46,12 +46,12 @@ class ColumnConfigService: ColumnConfigServiceProtocol {
         }
     }
 
-    func initializeDefaultColumns(for tableType: TableType) async throws {
+    public func initializeDefaultColumns(for tableType: TableType) async throws {
         let defaultColumns = getDefaultColumns(for: tableType)
         try await repository.saveAllColumns(defaultColumns, for: tableType)
     }
 
-    func resetToDefaults(for tableType: TableType) async throws {
+    public func resetToDefaults(for tableType: TableType) async throws {
         // Clear existing columns and re-initialize with defaults
         try await repository.saveAllColumns([], for: tableType)
         try await initializeDefaultColumns(for: tableType)

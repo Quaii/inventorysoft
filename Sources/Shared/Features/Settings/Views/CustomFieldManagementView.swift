@@ -21,29 +21,52 @@ struct CustomFieldManagementView: View {
                     }
                 }
                 .pickerStyle(.segmented)
-                .padding(theme.spacing.l)
+                .padding()
 
                 // Custom fields list
                 if viewModel.isLoading {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if viewModel.customFields.isEmpty {
-                    AppEmptyStateView(
-                        title: "No Custom Fields",
-                        message: "Add custom fields to track additional information",
-                        icon: "square.grid.3x3.square"
-                    )
+                    ContentUnavailableView {
+                        Label("No Custom Fields", systemImage: "square.grid.3x3.square")
+                    } description: {
+                        Text("Add custom fields to track additional information")
+                    } actions: {
+                        Button("Add Field") {
+                            showingAddField = true
+                        }
+                    }
                 } else {
                     List {
                         ForEach(viewModel.customFields) { field in
-                            CustomFieldRow(field: field) {
-                                Task {
-                                    await viewModel.deleteField(field.id)
+                            HStack {
+                                Image(systemName: field.type.icon)
+                                    .foregroundStyle(.blue)
+                                    .frame(width: 32, height: 32)
+                                    .background(Color.secondary.opacity(0.1))
+                                    .clipShape(Circle())
+
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(field.name)
+                                        .font(.body)
+                                    Text(
+                                        field.type.displayName
+                                            + (field.isRequired ? " • Required" : "")
+                                    )
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                                 }
                             }
-                            .listRowSeparator(.hidden)
-                            .listRowBackground(theme.colors.backgroundPrimary)
-                            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    Task {
+                                        await viewModel.deleteField(field.id)
+                                    }
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
                         }
                         .onMove { indices, newOffset in
                             Task {
@@ -51,9 +74,6 @@ struct CustomFieldManagementView: View {
                             }
                         }
                     }
-                    .listStyle(.plain)
-                    .scrollContentBackground(.hidden)
-                    .background(theme.colors.backgroundPrimary)
                 }
             }
             .navigationTitle("Custom Fields")
@@ -84,45 +104,8 @@ struct CustomFieldManagementView: View {
     }
 }
 
-struct CustomFieldRow: View {
-    let field: CustomFieldDefinition
-    let onDelete: () -> Void
-    @Environment(\.theme) var theme
-
-    var body: some View {
-        AppCard {
-            HStack(spacing: theme.spacing.m) {
-                Image(systemName: field.type.icon)
-                    .foregroundColor(theme.colors.accentPrimary)
-                    .frame(width: 32, height: 32)
-                    .background(theme.colors.surfaceElevated)
-                    .clipShape(Circle())
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(field.name)
-                        .font(theme.typography.body)
-                        .foregroundColor(theme.colors.textPrimary)
-                    Text(field.type.displayName + (field.isRequired ? " • Required" : ""))
-                        .font(theme.typography.caption)
-                        .foregroundColor(theme.colors.textSecondary)
-                }
-
-                Spacer()
-            }
-        }
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            Button(role: .destructive) {
-                onDelete()
-            } label: {
-                Label("Delete", systemImage: "trash")
-            }
-        }
-    }
-}
-
 struct AddCustomFieldView: View {
     @ObservedObject var viewModel: CustomFieldManagementViewModel
-    @Environment(\.theme) var theme
     @Environment(\.dismiss) var dismiss
 
     @State private var name = ""

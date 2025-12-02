@@ -10,37 +10,37 @@ struct KPICard: View {
 
     var body: some View {
         Button(action: onTap) {
-            Card() {
-                VStack(alignment: .leading, spacing: theme.spacing.m) {
+            GroupBox {
+                VStack(alignment: .leading, spacing: 16) {
                     // Icon and Title Row
-                    HStack(spacing: theme.spacing.s) {
+                    HStack(spacing: 8) {
                         Image(systemName: kpi.metricKey.icon)
                             .font(.system(size: 16))
-                            .foregroundColor(theme.colors.accentSecondary)
+                            .foregroundColor(.blue)
                             .frame(width: 24, height: 24)
 
                         Text(kpi.title)
-                            .font(theme.typography.body)
+                            .font(.body)
                             .fontWeight(.medium)
-                            .foregroundColor(theme.colors.textSecondary)
+                            .foregroundColor(.secondary)
 
                         Spacer()
                     }
 
                     // Value
                     Text(kpi.value)
-                        .font(theme.typography.pageTitle)
+                        .font(.largeTitle)
                         .fontWeight(.bold)
-                        .foregroundColor(theme.colors.textPrimary)
+                        .foregroundColor(.primary)
 
                     // Secondary Text (optional)
                     if let secondaryText = kpi.secondaryText {
                         Text(secondaryText)
-                            .font(theme.typography.caption)
-                            .foregroundColor(theme.colors.textSecondary)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                 }
-                .padding(theme.spacing.m)
+                .padding(16)
             }
         }
         .buttonStyle(.plain)

@@ -12,18 +12,16 @@ struct InventoryFlowApp: App {
             if appEnvironment.hasCompletedOnboarding {
                 MainShellView()
                     .environmentObject(appEnvironment)
-                    .environment(\.theme, appEnvironment.currentTheme)
                     .preferredColorScheme(preferredColorScheme(for: themeMode))
-                    .tint(appEnvironment.currentTheme.colors.accentPrimary)
+                    .tint(Theme.accentColor)
                     .frame(minWidth: 900, minHeight: 600)  // Enforce minimum resolution
-                    .inventorySoftScrollStyle()  // Global scrollbar hiding
-                    .transparentWindow(opacity: 0.95)  // Custom transparent window
+
+                    .transparentWindow(opacity: 1)  // Custom transparent window
             } else {
                 OnboardingView()
                     .environmentObject(appEnvironment)
-                    .environment(\.theme, appEnvironment.currentTheme)
                     .preferredColorScheme(preferredColorScheme(for: themeMode))
-                    .tint(appEnvironment.currentTheme.colors.accentPrimary)
+                    .tint(Theme.accentColor)
                     .frame(minWidth: 900, minHeight: 600)
             }
         }

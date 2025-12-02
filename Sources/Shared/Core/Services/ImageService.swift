@@ -8,13 +8,13 @@ import SwiftUI
     public typealias PlatformImage = UIImage
 #endif
 
-protocol ImageServiceProtocol {
+public protocol ImageServiceProtocol {
     func saveImage(_ data: Data, for itemId: UUID) async throws -> ImageAttachment
     func loadImage(attachment: ImageAttachment) async throws -> PlatformImage?
     func deleteImage(attachment: ImageAttachment) async throws
 }
 
-class ImageService: ImageServiceProtocol {
+public class ImageService: ImageServiceProtocol {
     private let fileManager = FileManager.default
     private let imagesDirectoryName = "Images"
 
@@ -30,7 +30,7 @@ class ImageService: ImageServiceProtocol {
         return directoryURL
     }
 
-    func saveImage(_ data: Data, for itemId: UUID) async throws -> ImageAttachment {
+    public func saveImage(_ data: Data, for itemId: UUID) async throws -> ImageAttachment {
         let imageId = UUID()
         let fileName = "\(imageId.uuidString).jpg"
         let itemDirectoryURL = imagesDirectoryURL.appendingPathComponent(
@@ -52,13 +52,13 @@ class ImageService: ImageServiceProtocol {
         )
     }
 
-    func loadImage(attachment: ImageAttachment) async throws -> PlatformImage? {
+    public func loadImage(attachment: ImageAttachment) async throws -> PlatformImage? {
         let fileURL = imagesDirectoryURL.appendingPathComponent(attachment.relativePath)
         let data = try Data(contentsOf: fileURL)
         return PlatformImage(data: data)
     }
 
-    func deleteImage(attachment: ImageAttachment) async throws {
+    public func deleteImage(attachment: ImageAttachment) async throws {
         let fileURL = imagesDirectoryURL.appendingPathComponent(attachment.relativePath)
         if fileManager.fileExists(atPath: fileURL.path) {
             try fileManager.removeItem(at: fileURL)

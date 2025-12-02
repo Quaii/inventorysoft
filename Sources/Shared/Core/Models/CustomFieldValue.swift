@@ -1,12 +1,12 @@
 import Foundation
 
-struct CustomFieldValue: Identifiable, Codable, Equatable {
-    let id: UUID
-    var customFieldId: UUID
-    var entityId: UUID  // itemId, saleId, or purchaseId
-    var value: String  // stored as string, parsed based on field type
+public struct CustomFieldValue: Identifiable, Codable, Equatable {
+    public let id: UUID
+    public var customFieldId: UUID
+    public var entityId: UUID  // itemId, saleId, or purchaseId
+    public var value: String  // stored as string, parsed based on field type
 
-    init(
+    public init(
         id: UUID = UUID(),
         customFieldId: UUID,
         entityId: UUID,

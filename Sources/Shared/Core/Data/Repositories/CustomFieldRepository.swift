@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-protocol CustomFieldRepositoryProtocol {
+public protocol CustomFieldRepositoryProtocol {
     func getAllDefinitions() async throws -> [CustomFieldDefinition]
     func getDefinitions(for appliesTo: CustomFieldAppliesTo) async throws -> [CustomFieldDefinition]
     func getDefinition(id: UUID) async throws -> CustomFieldDefinition?
@@ -15,16 +15,16 @@ protocol CustomFieldRepositoryProtocol {
     func deleteValues(for entityId: UUID) async throws
 }
 
-class CustomFieldRepository: CustomFieldRepositoryProtocol {
+public class CustomFieldRepository: CustomFieldRepositoryProtocol {
     private let dbWriter: DatabaseWriter
 
-    init(dbWriter: DatabaseWriter = DatabaseManager.shared.dbWriter) {
+    public init(dbWriter: DatabaseWriter = DatabaseManager.shared.dbWriter) {
         self.dbWriter = dbWriter
     }
 
     // MARK: - Field Definitions
 
-    func getAllDefinitions() async throws -> [CustomFieldDefinition] {
+    public func getAllDefinitions() async throws -> [CustomFieldDefinition] {
         try await dbWriter.read { [self] db in
             try Row.fetchAll(
                 db,
@@ -36,7 +36,8 @@ class CustomFieldRepository: CustomFieldRepositoryProtocol {
         }
     }
 
-    func getDefinitions(for appliesTo: CustomFieldAppliesTo) async throws -> [CustomFieldDefinition]
+    public func getDefinitions(for appliesTo: CustomFieldAppliesTo) async throws
+        -> [CustomFieldDefinition]
     {
         try await dbWriter.read { [self] db in
             try Row.fetchAll(
@@ -51,7 +52,7 @@ class CustomFieldRepository: CustomFieldRepositoryProtocol {
         }
     }
 
-    func getDefinition(id: UUID) async throws -> CustomFieldDefinition? {
+    public func getDefinition(id: UUID) async throws -> CustomFieldDefinition? {
         try await dbWriter.read { [self] db in
             if let row = try Row.fetchOne(
                 db,
@@ -67,7 +68,7 @@ class CustomFieldRepository: CustomFieldRepositoryProtocol {
         }
     }
 
-    func createDefinition(_ definition: CustomFieldDefinition) async throws {
+    public func createDefinition(_ definition: CustomFieldDefinition) async throws {
         try await dbWriter.write { db in
             try db.execute(
                 sql: """
@@ -96,7 +97,7 @@ class CustomFieldRepository: CustomFieldRepositoryProtocol {
         }
     }
 
-    func updateDefinition(_ definition: CustomFieldDefinition) async throws {
+    public func updateDefinition(_ definition: CustomFieldDefinition) async throws {
         try await dbWriter.write { db in
             try db.execute(
                 sql: """
@@ -120,7 +121,7 @@ class CustomFieldRepository: CustomFieldRepositoryProtocol {
         }
     }
 
-    func deleteDefinition(id: UUID) async throws {
+    public func deleteDefinition(id: UUID) async throws {
         try await dbWriter.write { db in
             try db.execute(
                 sql: """
@@ -134,7 +135,7 @@ class CustomFieldRepository: CustomFieldRepositoryProtocol {
 
     // MARK: - Field Values
 
-    func getValue(customFieldId: UUID, entityId: UUID) async throws -> CustomFieldValue? {
+    public func getValue(customFieldId: UUID, entityId: UUID) async throws -> CustomFieldValue? {
         try await dbWriter.read { [self] db in
             if let row = try Row.fetchOne(
                 db,
@@ -151,7 +152,7 @@ class CustomFieldRepository: CustomFieldRepositoryProtocol {
         }
     }
 
-    func getValues(for entityId: UUID) async throws -> [CustomFieldValue] {
+    public func getValues(for entityId: UUID) async throws -> [CustomFieldValue] {
         try await dbWriter.read { [self] db in
             try Row.fetchAll(
                 db,
@@ -164,7 +165,7 @@ class CustomFieldRepository: CustomFieldRepositoryProtocol {
         }
     }
 
-    func setValue(_ value: CustomFieldValue) async throws {
+    public func setValue(_ value: CustomFieldValue) async throws {
         try await dbWriter.write { db in
             try db.execute(
                 sql: """
@@ -185,7 +186,7 @@ class CustomFieldRepository: CustomFieldRepositoryProtocol {
         }
     }
 
-    func deleteValues(for entityId: UUID) async throws {
+    public func deleteValues(for entityId: UUID) async throws {
         try await dbWriter.write { db in
             try db.execute(
                 sql: """

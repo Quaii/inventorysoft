@@ -1,20 +1,20 @@
 import Foundation
 import GRDB
 
-protocol UserPreferencesRepositoryProtocol {
+public protocol UserPreferencesRepositoryProtocol {
     func getPreferences() async throws -> UserPreferences
     func savePreferences(_ preferences: UserPreferences) async throws
 }
 
-class UserPreferencesRepository: UserPreferencesRepositoryProtocol {
+public class UserPreferencesRepository: UserPreferencesRepositoryProtocol {
     private let dbWriter: DatabaseWriter
     private let preferencesId = "default"  // Single row for user preferences
 
-    init(dbWriter: DatabaseWriter = DatabaseManager.shared.dbWriter) {
+    public init(dbWriter: DatabaseWriter = DatabaseManager.shared.dbWriter) {
         self.dbWriter = dbWriter
     }
 
-    func getPreferences() async throws -> UserPreferences {
+    public func getPreferences() async throws -> UserPreferences {
         do {
             return try await self.dbWriter.read { [self] db in
                 if let row = try Row.fetchOne(
@@ -29,7 +29,7 @@ class UserPreferencesRepository: UserPreferencesRepositoryProtocol {
         }
     }
 
-    func savePreferences(_ preferences: UserPreferences) async throws {
+    public func savePreferences(_ preferences: UserPreferences) async throws {
         try await self.dbWriter.write { [self] db in
             try db.execute(
                 sql: """

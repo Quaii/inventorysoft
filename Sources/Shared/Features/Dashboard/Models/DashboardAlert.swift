@@ -3,7 +3,7 @@ import Foundation
 /// Represents an alert shown on the dashboard
 struct DashboardAlert: Identifiable, Codable {
     let id: UUID
-    var type: AlertType
+    var type: DashboardAlertType
     var title: String
     var message: String
     var severity: DashboardAlertSeverity
@@ -11,7 +11,7 @@ struct DashboardAlert: Identifiable, Codable {
 
     init(
         id: UUID = UUID(),
-        type: AlertType,
+        type: DashboardAlertType,
         title: String,
         message: String,
         severity: DashboardAlertSeverity,
@@ -26,7 +26,7 @@ struct DashboardAlert: Identifiable, Codable {
     }
 }
 
-enum AlertType: String, Codable {
+enum DashboardAlertType: String, Codable {
     case agingItems
     case profitTrend
     case bestBrand

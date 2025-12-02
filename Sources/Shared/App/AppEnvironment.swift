@@ -1,33 +1,34 @@
 import GRDB
 import SwiftUI
 
-final class AppEnvironment: ObservableObject {
-    let itemRepository: ItemRepositoryProtocol
-    let salesRepository: SalesRepositoryProtocol
-    let purchaseRepository: PurchaseRepositoryProtocol
-    let brandRepository: BrandRepositoryProtocol
-    let categoryRepository: CategoryRepositoryProtocol
-    let imageRepository: ImageRepositoryProtocol
-    let customFieldRepository: CustomFieldRepositoryProtocol
-    let userPreferencesRepository: UserPreferencesRepositoryProtocol
-    let dashboardConfigRepository: DashboardConfigRepositoryProtocol
-    let columnConfigRepository: ColumnConfigRepositoryProtocol
-    let importProfileRepository: ImportProfileRepositoryProtocol
-    let analyticsConfigRepository: AnalyticsConfigRepositoryProtocol
+public final class AppEnvironment: ObservableObject {
+    public let itemRepository: ItemRepositoryProtocol
+    public let salesRepository: SalesRepositoryProtocol
+    public let purchaseRepository: PurchaseRepositoryProtocol
+    public let brandRepository: BrandRepositoryProtocol
+    public let categoryRepository: CategoryRepositoryProtocol
+    public let imageRepository: ImageRepositoryProtocol
+    public let customFieldRepository: CustomFieldRepositoryProtocol
+    public let userPreferencesRepository: UserPreferencesRepositoryProtocol
+    public let dashboardConfigRepository: DashboardConfigRepositoryProtocol
+    public let columnConfigRepository: ColumnConfigRepositoryProtocol
+    public let importProfileRepository: ImportProfileRepositoryProtocol
+    public let analyticsConfigRepository: AnalyticsConfigRepositoryProtocol
+    public let analyticsWidgetRepository: AnalyticsWidgetRepositoryProtocol
 
-    let analyticsService: AnalyticsServiceProtocol
-    let imageService: ImageServiceProtocol
-    let dashboardConfigService: DashboardConfigServiceProtocol
-    let columnConfigService: ColumnConfigServiceProtocol
-    let importMappingService: ImportMappingServiceProtocol
-    let analyticsConfigService: AnalyticsConfigServiceProtocol
-    let exportService: ExportService
+    public let analyticsService: AnalyticsServiceProtocol
+    public let imageService: ImageServiceProtocol
+    public let dashboardConfigService: DashboardConfigServiceProtocol
+    public let columnConfigService: ColumnConfigServiceProtocol
+    public let importMappingService: ImportMappingServiceProtocol
+    public let analyticsConfigService: AnalyticsConfigServiceProtocol
+    public let exportService: ExportService
 
-    @Published var hasCompletedOnboarding: Bool
-    @Published var userPreferences: UserPreferences
-    @Published var currentTheme: Theme
+    @Published public var hasCompletedOnboarding: Bool
+    @Published public var userPreferences: UserPreferences
+    @Published public var currentTheme: Theme
 
-    init() {
+    public init() {
         self.hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
 
         self.itemRepository = ItemRepository()
@@ -43,6 +44,7 @@ final class AppEnvironment: ObservableObject {
         self.importProfileRepository = ImportProfileRepository()
         self.analyticsConfigRepository = AnalyticsConfigRepository(
             dbQueue: DatabaseManager.shared.dbWriter as! GRDB.DatabaseQueue)
+        self.analyticsWidgetRepository = AnalyticsWidgetRepository()
 
         self.analyticsService = AnalyticsService(
             itemRepository: itemRepository, salesRepository: salesRepository)
@@ -59,7 +61,7 @@ final class AppEnvironment: ObservableObject {
 
         // Load user preferences
         self.userPreferences = .default
-        self.currentTheme = Theme(mode: .dark, compactMode: false)
+        self.currentTheme = Theme()
 
         Task {
             do {
@@ -74,20 +76,23 @@ final class AppEnvironment: ObservableObject {
         }
     }
 
-    func completeOnboarding() {
+    public func completeOnboarding() {
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
         self.hasCompletedOnboarding = true
     }
 
     @MainActor
-    func makeDashboardViewModel() -> DashboardViewModel {
+    public func makeDashboardViewModel() -> DashboardViewModel {
         DashboardViewModel(
+            dashboardConfigService: dashboardConfigService,
             analyticsService: analyticsService,
-            dashboardConfigService: dashboardConfigService
+            inventoryViewModel: makeInventoryViewModel(),
+            salesViewModel: makeSalesViewModel(),
+            purchasesViewModel: makePurchasesViewModel()
         )
     }
 
-    func makeInventoryViewModel() -> InventoryViewModel {
+    public func makeInventoryViewModel() -> InventoryViewModel {
         InventoryViewModel(
             itemRepository: itemRepository,
             columnConfigService: columnConfigService,
@@ -95,7 +100,7 @@ final class AppEnvironment: ObservableObject {
         )
     }
 
-    func makeSalesViewModel() -> SalesViewModel {
+    public func makeSalesViewModel() -> SalesViewModel {
         SalesViewModel(
             salesRepository: salesRepository,
             columnConfigService: columnConfigService,
@@ -103,7 +108,7 @@ final class AppEnvironment: ObservableObject {
         )
     }
 
-    func makePurchasesViewModel() -> PurchasesViewModel {
+    public func makePurchasesViewModel() -> PurchasesViewModel {
         PurchasesViewModel(
             purchaseRepository: purchaseRepository,
             columnConfigService: columnConfigService,
@@ -112,15 +117,17 @@ final class AppEnvironment: ObservableObject {
     }
 
     @MainActor
-    func makeAnalyticsViewModel() -> AnalyticsViewModel {
+    public func makeAnalyticsViewModel() -> AnalyticsViewModel {
         AnalyticsViewModel(
-            widgetRepository: AnalyticsWidgetRepository(dbManager: DatabaseManager.shared),
-            analyticsService: analyticsService
+            widgetRepository: analyticsWidgetRepository,
+            analyticsService: analyticsService,
+            configService: analyticsConfigService,
+            exportService: exportService
         )
     }
 
     @MainActor
-    func makeSettingsViewModel() -> SettingsViewModel {
+    public func makeSettingsViewModel() -> SettingsViewModel {
         SettingsViewModel(
             userPreferencesRepository: userPreferencesRepository,
             importProfileRepository: importProfileRepository,
@@ -128,7 +135,7 @@ final class AppEnvironment: ObservableObject {
         )
     }
 
-    func makeItemDetailViewModel() -> ItemDetailViewModel {
+    public func makeItemDetailViewModel() -> ItemDetailViewModel {
         ItemDetailViewModel(
             itemRepository: itemRepository,
             imageRepository: imageRepository,
@@ -137,7 +144,7 @@ final class AppEnvironment: ObservableObject {
         )
     }
 
-    func savePreferences(_ preferences: UserPreferences) async throws {
+    public func savePreferences(_ preferences: UserPreferences) async throws {
         try await userPreferencesRepository.savePreferences(preferences)
         await MainActor.run {
             self.userPreferences = preferences
@@ -149,7 +156,7 @@ final class AppEnvironment: ObservableObject {
 
     @MainActor
     private func updateTheme(from preferences: UserPreferences) {
-        let mode = ThemeMode(rawValue: preferences.themeMode.lowercased()) ?? .dark
-        self.currentTheme = Theme(mode: mode, compactMode: preferences.compactMode)
+        _ = ThemeMode(rawValue: preferences.themeMode.lowercased()) ?? .dark
+        self.currentTheme = Theme()
     }
 }

@@ -1,11 +1,14 @@
 import Foundation
 
-struct Category: Identifiable, Codable, Equatable {
-    let id: UUID
-    var name: String
+public struct Category: Identifiable, Codable, Equatable {
+    public let id: UUID
+    public var name: String
 
-    init(id: UUID = UUID(), name: String) {
+    public var colorHex: String?
+
+    public init(id: UUID = UUID(), name: String, colorHex: String? = nil) {
         self.id = id
         self.name = name
+        self.colorHex = colorHex
     }
 }

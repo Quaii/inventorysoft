@@ -1,21 +1,21 @@
 import Foundation
 import GRDB
 
-protocol ColumnConfigRepositoryProtocol {
+public protocol ColumnConfigRepositoryProtocol {
     func getColumns(for tableType: TableType) async throws -> [TableColumnConfig]
     func saveColumn(_ column: TableColumnConfig) async throws
     func saveAllColumns(_ columns: [TableColumnConfig], for tableType: TableType) async throws
     func deleteColumn(id: UUID) async throws
 }
 
-class ColumnConfigRepository: ColumnConfigRepositoryProtocol {
+public class ColumnConfigRepository: ColumnConfigRepositoryProtocol {
     private let dbWriter: DatabaseWriter
 
-    init(dbWriter: DatabaseWriter = DatabaseManager.shared.dbWriter) {
+    public init(dbWriter: DatabaseWriter = DatabaseManager.shared.dbWriter) {
         self.dbWriter = dbWriter
     }
 
-    func getColumns(for tableType: TableType) async throws -> [TableColumnConfig] {
+    public func getColumns(for tableType: TableType) async throws -> [TableColumnConfig] {
         try await dbWriter.read { [self] db in
             try Row.fetchAll(
                 db,
@@ -29,7 +29,7 @@ class ColumnConfigRepository: ColumnConfigRepositoryProtocol {
         }
     }
 
-    func saveColumn(_ column: TableColumnConfig) async throws {
+    public func saveColumn(_ column: TableColumnConfig) async throws {
         try await dbWriter.write { db in
             try db.execute(
                 sql: """
@@ -58,7 +58,9 @@ class ColumnConfigRepository: ColumnConfigRepositoryProtocol {
         }
     }
 
-    func saveAllColumns(_ columns: [TableColumnConfig], for tableType: TableType) async throws {
+    public func saveAllColumns(_ columns: [TableColumnConfig], for tableType: TableType)
+        async throws
+    {
         try await dbWriter.write { db in
             // Delete existing columns for this table type
             try db.execute(
@@ -99,7 +101,7 @@ class ColumnConfigRepository: ColumnConfigRepositoryProtocol {
         }
     }
 
-    func deleteColumn(id: UUID) async throws {
+    public func deleteColumn(id: UUID) async throws {
         try await dbWriter.write { db in
             try db.execute(
                 sql: """

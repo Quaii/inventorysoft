@@ -2,115 +2,97 @@ import SwiftUI
 
 struct InventoryView: View {
     @StateObject var viewModel: InventoryViewModel
-    @Environment(\.theme) var theme
     @EnvironmentObject var appEnvironment: AppEnvironment
+
     @State private var columns: [TableColumnConfig] = []
     @State private var isLoadingColumns = true
     @State private var columnError: String?
     @State private var showingColumnConfig = false
-    @State private var isGridView = true  // Default to Grid View
+    @State private var isGridView = true
     @State private var selectedItem: Item?
+    @State private var isAddingItem = false
 
     var body: some View {
-        ZStack {
-            // Background
-            theme.colors.backgroundPrimary
-                .ignoresSafeArea()
+        NavigationStack {
+            VStack(spacing: 24) {
+                // Filters & Controls
+                VStack(spacing: 16) {
+                    HStack(spacing: 16) {
+                        // Search
+                        TextField("Search items...", text: $viewModel.searchText)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(maxWidth: 320)
 
-            VStack(alignment: .leading, spacing: theme.spacing.xl) {
-                // Page Header
-                PageHeader(
-                    breadcrumbPage: "Inventory",
-                    title: "Inventory",
-                    subtitle: "Manage your products and stock levels"
-                ) {
-                    AppButton(title: "Add Item", icon: "plus", style: .primary) {
-                        // Create a new empty item or just open detail with nil id
-                        // For now, we need a way to trigger "New Item"
-                        // We can use a separate state or just pass nil to selectedItem if we change its type or use a separate bool
-                        // Let's use a separate state for adding
-                        isAddingItem = true
-                    }
-                }
-
-                // Search/Filter Row
-                HStack(spacing: theme.spacing.m) {
-                    AppTextField(
-                        placeholder: "Search items...", text: $viewModel.searchText,
-                        icon: "magnifyingglass"
-                    )
-                    .frame(maxWidth: 320)
-
-                    AppDropdown(
-                        placeholder: "Category",
-                        options: ["All"] + viewModel.categories,
-                        selection: Binding(
-                            get: { viewModel.selectedCategory ?? "All" },
-                            set: { viewModel.selectedCategory = $0 == "All" ? nil : $0 }
-                        )
-                    )
-                    .frame(width: 180)
-
-                    AppDropdown(
-                        placeholder: "Status",
-                        options: ["All"] + ItemStatus.allCases.map { $0.rawValue },
-                        selection: Binding(
-                            get: { viewModel.selectedStatus?.rawValue ?? "All" },
-                            set: { viewModel.selectedStatus = ItemStatus(rawValue: $0) }
-                        )
-                    )
-                    .frame(width: 160)
-
-                    Spacer()
-
-                    // View Toggle
-                    HStack(spacing: 0) {
-                        Button(action: { isGridView = true }) {
-                            Image(systemName: "square.grid.2x2")
-                                .foregroundColor(
-                                    isGridView
-                                        ? theme.colors.textPrimary : theme.colors.textSecondary
-                                )
-                                .padding(8)
-                                .background(isGridView ? theme.colors.surfaceElevated : theme.colors.backgroundPrimary)
-                                .cornerRadius(6)
+                        // Category Filter
+                        Picker(
+                            "Category",
+                            selection: Binding(
+                                get: { viewModel.selectedCategory ?? "All" },
+                                set: { viewModel.selectedCategory = $0 == "All" ? nil : $0 }
+                            )
+                        ) {
+                            Text("All Categories").tag("All")
+                            ForEach(viewModel.categories, id: \.self) { category in
+                                Text(category).tag(category)
+                            }
                         }
-                        .buttonStyle(.plain)
+                        .frame(width: 160)
 
-                        Button(action: { isGridView = false }) {
-                            Image(systemName: "list.bullet")
-                                .foregroundColor(
-                                    !isGridView
-                                        ? theme.colors.textPrimary : theme.colors.textSecondary
-                                )
-                                .padding(8)
-                                .background(
-                                    !isGridView ? theme.colors.surfaceElevated : theme.colors.backgroundPrimary
-                                )
-                                .cornerRadius(6)
+                        Spacer()
+
+                        // View Toggle
+                        Picker("View", selection: $isGridView) {
+                            Image(systemName: "square.grid.2x2").tag(true)
+                            Image(systemName: "list.bullet").tag(false)
                         }
-                        .buttonStyle(.plain)
-                    }
-                    .padding(4)
-                    .background(theme.colors.surfaceSecondary)
-                    .cornerRadius(8)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(theme.colors.borderSubtle, lineWidth: 1)
-                    )
+                        .pickerStyle(.segmented)
+                        .frame(width: 100)
 
-                    if !isGridView {
-                        AppButton(icon: "slider.horizontal.3", style: .secondary) {
-                            showingColumnConfig = true
+                        // Columns Button (List View Only)
+                        if !isGridView {
+                            Button(action: { showingColumnConfig = true }) {
+                                Label("Columns", systemImage: "slider.horizontal.3")
+                            }
+                        }
+                    }
+
+                    // Status Filter (Secondary Row)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            Text("Status:")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+
+                            Picker(
+                                "Status",
+                                selection: Binding(
+                                    get: { viewModel.selectedStatus?.rawValue ?? "All" },
+                                    set: { viewModel.selectedStatus = ItemStatus(rawValue: $0) }
+                                )
+                            ) {
+                                Text("All Statuses").tag("All")
+                                ForEach(ItemStatus.allCases, id: \.self) { status in
+                                    Text(status.rawValue).tag(status.rawValue)
+                                }
+                            }
+                            .frame(width: 160)
                         }
                     }
                 }
+                .padding(.horizontal)
+                .padding(.top)
 
                 // Content
                 contentView
             }
-            .padding(theme.spacing.xl)
-            .frame(maxHeight: .infinity, alignment: .top)
+            .navigationTitle("Inventory")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: { isAddingItem = true }) {
+                        Label("Add Item", systemImage: "plus")
+                    }
+                }
+            }
         }
         .sheet(isPresented: $showingColumnConfig) {
             ColumnConfigurationView(
@@ -139,73 +121,37 @@ struct InventoryView: View {
         }
     }
 
-    @State private var isAddingItem = false
-
     @ViewBuilder
     private var contentView: some View {
         if isLoadingColumns || viewModel.isLoading {
-            VStack(spacing: theme.spacing.m) {
-                ProgressView()
-                    .scaleEffect(1.2)
-                Text(isLoadingColumns ? "Loading columns..." : "Loading items...")
-                    .font(theme.typography.body)
-                    .foregroundColor(theme.colors.textSecondary)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            ProgressView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if let error = columnError {
-            VStack(spacing: theme.spacing.l) {
-                AppEmptyStateView(
-                    title: "Column Configuration Error",
-                    message: error,
-                    icon: "tablecells.badge.ellipsis",
-                    actionTitle: "Retry",
-                    action: {
-                        Task {
-                            await loadColumns()
-                        }
-                    }
-                )
-
-                AppButton(
-                    title: "Reset Columns",
-                    icon: "arrow.counterclockwise",
-                    style: .secondary
-                ) {
+            ContentUnavailableView {
+                Label("Column Configuration Error", systemImage: "tablecells.badge.ellipsis")
+            } description: {
+                Text(error)
+            } actions: {
+                Button("Retry") {
+                    Task { await loadColumns() }
+                }
+                Button("Reset Columns", role: .destructive) {
                     Task {
-                        do {
-                            try await viewModel.columnConfigService.resetToDefaults(for: .inventory)
-                            await loadColumns()
-                        } catch {
-                            print("Reset columns error: \(error)")
-                        }
+                        try? await viewModel.columnConfigService.resetToDefaults(for: .inventory)
+                        await loadColumns()
                     }
                 }
-                .frame(maxWidth: 300)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if viewModel.items.isEmpty {
-            VStack(spacing: theme.spacing.l) {
-                Image(systemName: "cube.box")
-                    .font(.system(size: 64))
-                    .foregroundColor(theme.colors.textSecondary)
-
-                VStack(spacing: theme.spacing.s) {
-                    Text("No Items Yet")
-                        .font(theme.typography.sectionTitle)
-                        .foregroundColor(theme.colors.textPrimary)
-
-                    Text("Start adding items to your inventory to track your products.")
-                        .font(theme.typography.body)
-                        .foregroundColor(theme.colors.textSecondary)
-                        .multilineTextAlignment(.center)
-                }
-
-                AppButton(title: "Add First Item", icon: "plus", style: .primary) {
+            ContentUnavailableView {
+                Label("No Items Yet", systemImage: "cube.box")
+            } description: {
+                Text("Start adding items to your inventory to track your products.")
+            } actions: {
+                Button("Add First Item") {
                     isAddingItem = true
                 }
-                .frame(maxWidth: 200)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
             if isGridView {
                 gridView
@@ -220,10 +166,9 @@ struct InventoryView: View {
         ScrollView {
             LazyVGrid(
                 columns: [
-                    GridItem(
-                        .adaptive(minimum: 240, maximum: 300), spacing: theme.layout.cardSpacing)
+                    GridItem(.adaptive(minimum: 280, maximum: 360), spacing: 16)
                 ],
-                spacing: theme.layout.cardSpacing
+                spacing: 16
             ) {
                 ForEach(viewModel.items) { item in
                     InventoryGridCard(item: item)
@@ -231,93 +176,77 @@ struct InventoryView: View {
                             selectedItem = item
                         }
                         .contextMenu {
-                            Button {
-                                // Mark as sold action
-                            } label: {
-                                Label("Mark as Sold", systemImage: "tag.fill")
-                            }
-
-                            Button {
-                                selectedItem = item
-                            } label: {
-                                Label("Edit", systemImage: "pencil")
-                            }
-
-                            Divider()
-
-                            Button(role: .destructive) {
-                                Task {
-                                    await viewModel.deleteItem(id: item.id)
-                                }
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
+                            itemContextMenu(for: item)
                         }
                 }
             }
-            .padding(.bottom, theme.spacing.xl)
+            .padding()
         }
-        .inventorySoftScrollStyle()
     }
 
     // MARK: - Table View
     private var tableView: some View {
-        VStack(spacing: theme.spacing.m) {
+        VStack(spacing: 0) {
             // Header
             HStack(spacing: 0) {
                 ForEach(columns.filter { $0.isVisible }.sorted { $0.sortOrder < $1.sortOrder }) {
                     column in
                     Text(column.label)
-                        .font(theme.typography.caption)
-                        .foregroundColor(theme.colors.textSecondary)
+                        .font(.caption)
                         .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
                         .frame(width: column.width ?? 100, alignment: .leading)
-                        .padding(.horizontal, theme.spacing.s)
+                        .padding(.horizontal, 4)
                 }
                 Spacer()
             }
-            .padding(.horizontal, theme.spacing.m)
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            .background(Color.gray.opacity(0.1))
 
-            // Rows
-            ScrollView {
-                LazyVStack(spacing: theme.spacing.s) {
-                    ForEach(viewModel.items) { item in
-                        InventoryRow(
-                            item: item,
-                            columns: columns.filter { $0.isVisible }.sorted {
-                                $0.sortOrder < $1.sortOrder
-                            }
-                        )
-                        .onTapGesture {
-                            selectedItem = item
+            List {
+                ForEach(viewModel.items) { item in
+                    InventoryRow(
+                        item: item,
+                        columns: columns.filter { $0.isVisible }.sorted {
+                            $0.sortOrder < $1.sortOrder
                         }
-                        .contextMenu {
-                            Button {
-                                // Mark as sold action
-                            } label: {
-                                Label("Mark as Sold", systemImage: "tag.fill")
-                            }
-
-                            Button {
-                                selectedItem = item
-                            } label: {
-                                Label("Edit", systemImage: "pencil")
-                            }
-
-                            Divider()
-
-                            Button(role: .destructive) {
-                                Task {
-                                    await viewModel.deleteItem(id: item.id)
-                                }
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                        }
+                    )
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        selectedItem = item
+                    }
+                    .contextMenu {
+                        itemContextMenu(for: item)
                     }
                 }
             }
-            .inventorySoftScrollStyle()
+            .listStyle(.plain)
+        }
+    }
+
+    @ViewBuilder
+    private func itemContextMenu(for item: Item) -> some View {
+        Button {
+            // Mark as sold action
+        } label: {
+            Label("Mark as Sold", systemImage: "tag.fill")
+        }
+
+        Button {
+            selectedItem = item
+        } label: {
+            Label("Edit", systemImage: "pencil")
+        }
+
+        Divider()
+
+        Button(role: .destructive) {
+            Task {
+                await viewModel.deleteItem(id: item.id)
+            }
+        } label: {
+            Label("Delete", systemImage: "trash")
         }
     }
 
@@ -329,7 +258,6 @@ struct InventoryView: View {
             columns = try await viewModel.columnConfigService.getColumns(for: .inventory)
             isLoadingColumns = false
         } catch {
-            // Sanitize error message
             let errorString = error.localizedDescription.lowercased()
             if errorString.contains("sql") || errorString.contains("database")
                 || errorString.contains("column") || errorString.contains("table")
@@ -340,8 +268,6 @@ struct InventoryView: View {
             }
             isLoadingColumns = false
             print("Column load error: \(error)")
-
-            // Even on error, try to use defaults
             columns = viewModel.columnConfigService.getDefaultColumns(for: .inventory)
         }
     }
@@ -351,64 +277,63 @@ struct InventoryView: View {
 
 struct InventoryGridCard: View {
     let item: Item
-    @Environment(\.theme) var theme
 
     var body: some View {
-        Card() {
+        GroupBox {
             VStack(alignment: .leading, spacing: 0) {
-                // Image
+                // Image Placeholder
                 ZStack {
-                    theme.colors.surfaceSecondary
-                    if let imageAttachment = item.images.first(where: { $0.isPrimary })
-                        ?? item.images.first
-                    {
-                        // In a real app, load image from disk using relativePath
-                        // For now, placeholder or system image if we can't load actual file easily in this snippet
-                        Image(systemName: "photo")
-                            .font(.system(size: 40))
-                            .foregroundColor(theme.colors.textMuted)
-                    } else {
-                        Image(systemName: "photo")
-                            .font(.system(size: 40))
-                            .foregroundColor(theme.colors.textMuted)
-                    }
+                    Color.gray.opacity(0.1)
+
+                    Image(systemName: "photo")
+                        .font(.system(size: 32))
+                        .foregroundColor(.secondary)
                 }
-                .frame(height: 160)
+                .frame(height: 140)
                 .frame(maxWidth: .infinity)
                 .clipped()
+                .cornerRadius(8)
+                .padding(4)
 
                 // Content
-                VStack(alignment: .leading, spacing: theme.spacing.s) {
-                    HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(alignment: .top) {
                         Text(item.title)
-                            .font(theme.typography.body)
-                            .fontWeight(.medium)
-                            .foregroundColor(theme.colors.textPrimary)
-                            .lineLimit(1)
+                            .font(.body)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary)
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
 
                         Spacer()
 
                         StatusBadge(status: item.status)
                     }
 
-                    Text(item.brandId?.uuidString ?? "Unknown Brand")  // Placeholder for brand name lookup
-                        .font(theme.typography.caption)
-                        .foregroundColor(theme.colors.textSecondary)
+                    Text(item.brandId?.uuidString ?? "Unknown Brand")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    Spacer().frame(height: 4)
 
                     HStack {
                         Text(item.purchasePrice.formatted(.currency(code: "USD")))
-                            .font(theme.typography.body)
+                            .font(.body)
                             .fontWeight(.bold)
-                            .foregroundColor(theme.colors.textPrimary)
+                            .foregroundColor(.primary)
 
                         Spacer()
 
                         Text("Qty: \(item.quantity)")
-                            .font(theme.typography.caption)
-                            .foregroundColor(theme.colors.textSecondary)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 2)
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(4)
                     }
                 }
-                .padding(theme.spacing.m)
+                .padding(8)
             }
         }
     }
@@ -417,23 +342,25 @@ struct InventoryGridCard: View {
 struct InventoryRow: View {
     let item: Item
     let columns: [TableColumnConfig]
-    @Environment(\.theme) var theme
 
     var body: some View {
-        Card {
-            HStack(spacing: 0) {
-                ForEach(columns) { column in
-                    Text(formatItemField(item, field: column.field))
-                        .font(theme.typography.body)
-                        .foregroundColor(theme.colors.textPrimary)
+        HStack(spacing: 0) {
+            ForEach(columns) { column in
+                if column.field == "status" {
+                    StatusBadge(status: item.status)
                         .frame(width: column.width ?? 100, alignment: .leading)
-                        .padding(.horizontal, theme.spacing.s)
-                        .padding(.vertical, theme.spacing.m)
+                        .padding(.horizontal, 4)
+                } else {
+                    Text(formatItemField(item, field: column.field))
+                        .font(.body)
+                        .foregroundColor(.primary)
+                        .frame(width: column.width ?? 100, alignment: .leading)
+                        .padding(.horizontal, 4)
                 }
-                Spacer()
             }
-            .contentShape(Rectangle())
+            Spacer()
         }
+        .padding(.vertical, 4)
     }
 
     private func formatItemField(_ item: Item, field: String) -> String {
@@ -452,14 +379,13 @@ struct InventoryRow: View {
 
 struct StatusBadge: View {
     let status: ItemStatus
-    @Environment(\.theme) var theme
 
     var body: some View {
         Text(status.rawValue)
             .font(.system(size: 10, weight: .bold))
             .foregroundColor(color)
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
             .background(color.opacity(0.1))
             .cornerRadius(4)
             .overlay(
@@ -470,12 +396,12 @@ struct StatusBadge: View {
 
     var color: Color {
         switch status {
-        case .inStock: return theme.colors.success
-        case .listed: return theme.colors.accentPrimary
-        case .sold: return theme.colors.accentSecondary
-        case .reserved: return theme.colors.warning
-        case .archived: return theme.colors.textMuted
-        case .draft: return theme.colors.textSecondary
+        case .inStock: return .green
+        case .listed: return .blue
+        case .sold: return .purple
+        case .reserved: return .orange
+        case .archived: return .gray
+        case .draft: return .secondary
         }
     }
 }

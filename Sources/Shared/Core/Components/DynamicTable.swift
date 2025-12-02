@@ -7,8 +7,6 @@ struct DynamicTable<RowData: Identifiable>: View {
     let rowContent: (RowData, TableColumnConfig) -> String
     let onRowTap: ((RowData) -> Void)?
 
-    @Environment(\.theme) var theme
-
     init(
         columns: [TableColumnConfig],
         rows: [RowData],
@@ -22,7 +20,7 @@ struct DynamicTable<RowData: Identifiable>: View {
     }
 
     var body: some View {
-        VStack(spacing: theme.spacing.m) {
+        VStack(spacing: 12) {
             headerView
             rowsView
         }
@@ -32,38 +30,37 @@ struct DynamicTable<RowData: Identifiable>: View {
         HStack(spacing: 0) {
             ForEach(columns) { column in
                 Text(column.label)
-                    .font(theme.typography.caption)
-                    .foregroundColor(theme.colors.textSecondary)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
                     .fontWeight(.semibold)
                     .frame(width: column.width ?? 100, alignment: .leading)
-                    .padding(.horizontal, theme.spacing.s)
+                    .padding(.horizontal, 8)
             }
             Spacer()
         }
-        .padding(.horizontal, theme.spacing.m)
+        .padding(.horizontal, 12)
     }
 
     private var rowsView: some View {
         ScrollView {
-            LazyVStack(spacing: theme.spacing.s) {
+            LazyVStack(spacing: 8) {
                 ForEach(rows) { row in
                     rowView(for: row)
                 }
             }
         }
-        .inventorySoftScrollStyle()
     }
 
     private func rowView(for row: RowData) -> some View {
-        Card {
+        GroupBox {
             HStack(spacing: 0) {
                 ForEach(columns) { column in
                     Text(rowContent(row, column))
-                        .font(theme.typography.body)
-                        .foregroundColor(theme.colors.textPrimary)
+                        .font(.body)
+                        .foregroundColor(.primary)
                         .frame(width: column.width ?? 100, alignment: .leading)
-                        .padding(.horizontal, theme.spacing.s)
-                        .padding(.vertical, theme.spacing.m)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 12)
                 }
                 Spacer()
             }

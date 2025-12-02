@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-protocol ImportProfileRepositoryProtocol {
+public protocol ImportProfileRepositoryProtocol {
     func getAllProfiles() async throws -> [ImportProfile]
     func getProfile(id: UUID) async throws -> ImportProfile?
     func getProfiles(for targetType: ImportTargetType) async throws -> [ImportProfile]
@@ -9,16 +9,16 @@ protocol ImportProfileRepositoryProtocol {
     func deleteProfile(id: UUID) async throws
 }
 
-class ImportProfileRepository: ImportProfileRepositoryProtocol {
+public class ImportProfileRepository: ImportProfileRepositoryProtocol {
     private let dbWriter: DatabaseWriter
     private let jsonEncoder = JSONEncoder()
     private let jsonDecoder = JSONDecoder()
 
-    init(dbWriter: DatabaseWriter = DatabaseManager.shared.dbWriter) {
+    public init(dbWriter: DatabaseWriter = DatabaseManager.shared.dbWriter) {
         self.dbWriter = dbWriter
     }
 
-    func getAllProfiles() async throws -> [ImportProfile] {
+    public func getAllProfiles() async throws -> [ImportProfile] {
         try await dbWriter.read { [self] db in
             try Row.fetchAll(
                 db,
@@ -30,7 +30,7 @@ class ImportProfileRepository: ImportProfileRepositoryProtocol {
         }
     }
 
-    func getProfile(id: UUID) async throws -> ImportProfile? {
+    public func getProfile(id: UUID) async throws -> ImportProfile? {
         try await dbWriter.read { [self] db in
             if let row = try Row.fetchOne(
                 db,
@@ -46,7 +46,7 @@ class ImportProfileRepository: ImportProfileRepositoryProtocol {
         }
     }
 
-    func getProfiles(for targetType: ImportTargetType) async throws -> [ImportProfile] {
+    public func getProfiles(for targetType: ImportTargetType) async throws -> [ImportProfile] {
         try await dbWriter.read { [self] db in
             try Row.fetchAll(
                 db,
@@ -60,7 +60,7 @@ class ImportProfileRepository: ImportProfileRepositoryProtocol {
         }
     }
 
-    func saveProfile(_ profile: ImportProfile) async throws {
+    public func saveProfile(_ profile: ImportProfile) async throws {
         let mappingsJSON = try jsonEncoder.encode(profile.mappings)
         let mappingsString = String(data: mappingsJSON, encoding: .utf8)!
 
@@ -88,7 +88,7 @@ class ImportProfileRepository: ImportProfileRepositoryProtocol {
         }
     }
 
-    func deleteProfile(id: UUID) async throws {
+    public func deleteProfile(id: UUID) async throws {
         try await dbWriter.write { db in
             try db.execute(
                 sql: """

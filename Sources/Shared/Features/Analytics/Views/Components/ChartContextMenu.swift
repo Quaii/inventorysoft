@@ -8,7 +8,6 @@ struct ChartContextMenu: View {
     let onDelete: () -> Void
     @Binding var isPresented: Bool
 
-    @Environment(\.theme) var theme
     @State private var hoveredOption: String?
 
     var body: some View {
@@ -22,7 +21,7 @@ struct ChartContextMenu: View {
                 }
             )
 
-            Divider().background(theme.colors.borderSubtle)
+            Divider()
 
             menuOption(
                 text: "Duplicate Chart",
@@ -33,7 +32,7 @@ struct ChartContextMenu: View {
                 }
             )
 
-            Divider().background(theme.colors.borderSubtle)
+            Divider()
 
             menuOption(
                 text: "Remove Chart",
@@ -45,10 +44,9 @@ struct ChartContextMenu: View {
                 }
             )
         }
-        .background(theme.colors.surfaceElevated)
+        .background(Color(nsColor: .windowBackgroundColor))
         .cornerRadius(8)
         .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 4)
-        .padding(4)
         .frame(minWidth: 180)
     }
 
@@ -57,22 +55,22 @@ struct ChartContextMenu: View {
         text: String, icon: String, isDestructive: Bool = false, action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
-            HStack(spacing: theme.spacing.s) {
+            HStack(spacing: 8) {
                 Image(systemName: icon)
                     .font(.system(size: 13))
-                    .foregroundColor(isDestructive ? theme.colors.error : theme.colors.textPrimary)
+                    .foregroundColor(isDestructive ? .red : .primary)
                     .frame(width: 16)
 
                 Text(text)
-                    .font(theme.typography.body)
-                    .foregroundColor(isDestructive ? theme.colors.error : theme.colors.textPrimary)
+                    .font(.body)
+                    .foregroundColor(isDestructive ? .red : .primary)
 
                 Spacer()
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .background(
-                hoveredOption == text ? theme.colors.highlight : theme.colors.backgroundPrimary
+                hoveredOption == text ? Color.blue.opacity(0.1) : Color.clear
             )
         }
         .buttonStyle(.plain)

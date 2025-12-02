@@ -1,13 +1,13 @@
 import Foundation
 
-struct Purchase: Identifiable, Codable, Equatable {
-    let id: UUID
-    var supplier: String
-    var batchName: String?
-    var datePurchased: Date
-    var cost: Decimal
+public struct Purchase: Codable, Identifiable, Equatable {
+    public let id: UUID
+    public var supplier: String
+    public var batchName: String?
+    public var datePurchased: Date
+    public var cost: Decimal
 
-    init(
+    public init(
         id: UUID = UUID(),
         supplier: String,
         batchName: String? = nil,

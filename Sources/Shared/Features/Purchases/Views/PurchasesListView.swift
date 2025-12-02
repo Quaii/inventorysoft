@@ -2,50 +2,47 @@ import SwiftUI
 
 struct PurchasesListView: View {
     @StateObject var viewModel: PurchasesViewModel
-    @Environment(\.theme) var theme
     @State private var columns: [TableColumnConfig] = []
     @State private var isLoadingColumns = true
     @State private var columnError: String?
     @State private var showingColumnConfig = false
 
     var body: some View {
-        ZStack {
-            // Background
-            theme.colors.backgroundPrimary
-                .ignoresSafeArea()
-
-            VStack(alignment: .leading, spacing: theme.spacing.xl) {
-                // Page Header
-                PageHeader(
-                    breadcrumbPage: "Purchases",
-                    title: "Purchase Orders",
-                    subtitle: "Manage your supplier orders"
-                ) {
-                    AppButton(title: "New Order", icon: "plus", style: .primary) {
-                        // Navigate to add order
-                    }
-                }
-
-                // Search/Filter Row
-                HStack(spacing: theme.spacing.m) {
-                    AppTextField(
-                        placeholder: "Search orders...", text: $viewModel.searchText,
-                        icon: "magnifyingglass"
-                    )
-                    .frame(maxWidth: 320)
+        NavigationStack {
+            VStack(spacing: 0) {
+                // Filters
+                HStack {
+                    TextField("Search orders...", text: $viewModel.searchText)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(maxWidth: 300)
 
                     Spacer()
 
-                    AppButton(icon: "slider.horizontal.3", style: .secondary) {
-                        showingColumnConfig = true
+                    Button(action: { showingColumnConfig = true }) {
+                        Label("Columns", systemImage: "slider.horizontal.3")
                     }
                 }
+                .padding()
 
                 // Content
                 contentView
             }
-            .padding(theme.spacing.xl)
-            .frame(maxHeight: .infinity, alignment: .top)
+            .navigationTitle("Purchase Orders")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: {
+                        // Navigate to add order
+                    }) {
+                        Label("New Order", systemImage: "plus")
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $showingColumnConfig) {
+            ColumnConfigurationView(
+                tableType: .purchases,
+                columnConfigService: viewModel.columnConfigService
+            )
         }
         .task {
             await loadColumns()
@@ -56,91 +53,85 @@ struct PurchasesListView: View {
     @ViewBuilder
     private var contentView: some View {
         if isLoadingColumns || viewModel.isLoading {
-            VStack(spacing: theme.spacing.m) {
-                ProgressView()
-                Text(isLoadingColumns ? "Loading columns..." : "Loading purchases...")
-                    .font(theme.typography.body)
-                    .foregroundColor(theme.colors.textSecondary)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            ProgressView("Loading...")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if let error = columnError {
-            VStack(spacing: theme.spacing.l) {
-                AppEmptyStateView(
-                    title: "Column Configuration Error",
-                    message: error,
-                    icon: "tablecells.badge.ellipsis",
-                    actionTitle: "Retry",
-                    action: {
-                        Task {
-                            await loadColumns()
-                        }
-                    }
-                )
-
-                AppButton(
-                    title: "Reset Columns",
-                    icon: "arrow.counterclockwise",
-                    style: .secondary
-                ) {
+            ContentUnavailableView {
+                Label("Column Configuration Error", systemImage: "tablecells.badge.ellipsis")
+            } description: {
+                Text(error)
+            } actions: {
+                Button("Retry") {
+                    Task { await loadColumns() }
+                }
+                Button("Reset Columns", role: .destructive) {
                     Task {
-                        do {
-                            try await viewModel.columnConfigService.resetToDefaults(
-                                for: .purchases)
-                            await loadColumns()
-                        } catch {
-                            print("Reset columns error: \(error)")
-                        }
+                        try? await viewModel.columnConfigService.resetToDefaults(for: .purchases)
+                        await loadColumns()
                     }
                 }
-                .frame(maxWidth: 300)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if let error = viewModel.errorMessage {
-            AppEmptyStateView(
-                title: "Error Loading Purchases",
-                message: error,
-                icon: "exclamationmark.triangle",
-                actionTitle: "Retry",
-                action: {
-                    Task {
-                        await viewModel.loadPurchases()
-                    }
+            ContentUnavailableView {
+                Label("Error Loading Purchases", systemImage: "exclamationmark.triangle")
+            } description: {
+                Text(error)
+            } actions: {
+                Button("Retry") {
+                    Task { await viewModel.loadPurchases() }
                 }
-            )
+            }
         } else if viewModel.purchases.isEmpty {
-            VStack(spacing: theme.spacing.l) {
-                Image(systemName: "cart")
-                    .font(.system(size: 64))
-                    .foregroundColor(theme.colors.textSecondary)
-
-                VStack(spacing: theme.spacing.s) {
-                    Text("No Purchases Yet")
-                        .font(theme.typography.sectionTitle)
-                        .foregroundColor(theme.colors.textPrimary)
-
-                    Text("Start recording purchases to track your inventory costs.")
-                        .font(theme.typography.body)
-                        .foregroundColor(theme.colors.textSecondary)
-                        .multilineTextAlignment(.center)
-                }
-
-                AppButton(title: "Record First Purchase", icon: "plus", style: .primary) {
+            ContentUnavailableView {
+                Label("No Purchases Yet", systemImage: "cart")
+            } description: {
+                Text("Start recording purchases to track your inventory costs.")
+            } actions: {
+                Button("Record First Purchase") {
                     // Navigate to record purchase
                 }
-                .frame(maxWidth: 200)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
-            DynamicTable(
-                columns: columns.filter { $0.isVisible },
-                rows: viewModel.purchases,
-                rowContent: { purchase, column in
-                    formatPurchaseField(purchase, field: column.field)
-                },
-                onRowTap: { purchase in
-                    // Navigate to purchase detail
+            List {
+                Section(header: tableHeader) {
+                    ForEach(viewModel.purchases) { purchase in
+                        HStack(spacing: 0) {
+                            ForEach(
+                                columns.filter { $0.isVisible }.sorted {
+                                    $0.sortOrder < $1.sortOrder
+                                }
+                            ) { column in
+                                Text(formatPurchaseField(purchase, field: column.field))
+                                    .font(.body)
+                                    .frame(width: column.width ?? 100, alignment: .leading)
+                                    .padding(.horizontal, 4)
+                                    .padding(.vertical, 8)
+                            }
+                            Spacer()
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            // Navigate to purchase detail
+                        }
+                    }
                 }
-            )
+            }
+            .listStyle(.plain)
+        }
+    }
+
+    private var tableHeader: some View {
+        HStack(spacing: 0) {
+            ForEach(columns.filter { $0.isVisible }.sorted { $0.sortOrder < $1.sortOrder }) {
+                column in
+                Text(column.label)
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .frame(width: column.width ?? 100, alignment: .leading)
+                    .padding(.horizontal, 4)
+            }
+            Spacer()
         }
     }
 
@@ -179,5 +170,4 @@ struct PurchasesListView: View {
         default: return "-"
         }
     }
-
 }

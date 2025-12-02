@@ -2,7 +2,6 @@ import SwiftUI
 
 /// Edit Widget Modal - Configure existing dashboard widgets
 struct EditWidgetModal: View {
-    @Environment(\.theme) var theme
     @Binding var isPresented: Bool
     @Binding var widget: UserWidget
     let onSave: (UserWidget) -> Void
@@ -36,83 +35,83 @@ struct EditWidgetModal: View {
                 // Header
                 HStack {
                     Text("Configure Widget")
-                        .font(theme.typography.pageTitle)
-                        .foregroundColor(theme.colors.textPrimary)
+                        .font(.largeTitle)
+                        .foregroundColor(.primary)
 
                     Spacer()
 
                     Button(action: { isPresented = false }) {
                         Image(systemName: "xmark")
                             .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(theme.colors.textSecondary)
+                            .foregroundColor(.secondary)
                             .frame(width: 28, height: 28)
-                            .background(theme.colors.backgroundSecondary)
-                            .cornerRadius(theme.radii.small)
+                            .background(Color.secondary.opacity(0.1))
+                            .cornerRadius(4)
                     }
                     .buttonStyle(.plain)
                 }
-                .padding(theme.spacing.xl)
+                .padding(24)
 
                 Divider()
 
                 // Content
                 ScrollView {
-                    VStack(alignment: .leading, spacing: theme.spacing.xl) {
+                    VStack(alignment: .leading, spacing: 24) {
                         // Widget Type Display
-                        VStack(alignment: .leading, spacing: theme.spacing.m) {
+                        VStack(alignment: .leading, spacing: 12) {
                             Text("Widget Type")
-                                .font(theme.typography.sectionTitle)
-                                .foregroundColor(theme.colors.textPrimary)
+                                .font(.headline)
+                                .foregroundColor(.primary)
 
-                            HStack(spacing: theme.spacing.m) {
+                            HStack(spacing: 12) {
                                 Image(systemName: widget.type.icon)
                                     .font(.system(size: 24))
-                                    .foregroundColor(theme.colors.accentPrimary)
+                                    .foregroundColor(.blue)
                                     .frame(width: 48, height: 48)
-                                    .background(theme.colors.accentPrimary.opacity(0.1))
-                                    .cornerRadius(theme.radii.medium)
+                                    .background(Color.blue.opacity(0.1))
+                                    .cornerRadius(8)
 
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(widget.type.displayName)
-                                        .font(theme.typography.body)
+                                        .font(.body)
                                         .fontWeight(.medium)
-                                        .foregroundColor(theme.colors.textPrimary)
+                                        .foregroundColor(.primary)
 
                                     Text(widget.type.description)
-                                        .font(theme.typography.caption)
-                                        .foregroundColor(theme.colors.textSecondary)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
                                 }
 
                                 Spacer()
                             }
-                            .padding(theme.spacing.m)
-                            .background(theme.colors.backgroundSecondary)
-                            .cornerRadius(theme.radii.medium)
+                            .padding(12)
+                            .background(Color.secondary.opacity(0.1))
+                            .cornerRadius(8)
                         }
 
                         // Widget Name
-                        VStack(alignment: .leading, spacing: theme.spacing.xs) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text("Widget Name")
-                                .font(theme.typography.sectionTitle)
-                                .foregroundColor(theme.colors.textPrimary)
+                                .font(.headline)
+                                .foregroundColor(.primary)
 
                             TextField("Enter widget name", text: $widgetName)
                                 .textFieldStyle(.plain)
-                                .padding(theme.spacing.m)
-                                .background(theme.colors.backgroundSecondary)
-                                .cornerRadius(theme.radii.small)
+                                .padding(12)
+                                .background(Color.secondary.opacity(0.1))
+                                .cornerRadius(4)
                                 .onChange(of: widgetName) { _, _ in
                                     hasChanges = true
                                 }
                         }
 
                         // Size Picker
-                        VStack(alignment: .leading, spacing: theme.spacing.xs) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text("Widget Size")
-                                .font(theme.typography.sectionTitle)
-                                .foregroundColor(theme.colors.textPrimary)
+                                .font(.headline)
+                                .foregroundColor(.primary)
 
-                            HStack(spacing: theme.spacing.s) {
+                            HStack(spacing: 8) {
                                 ForEach([DashboardWidgetSize.small, .medium, .large], id: \.self) {
                                     size in
                                     WidgetSizeButton(
@@ -128,10 +127,10 @@ struct EditWidgetModal: View {
                         }
 
                         // Configuration Preview
-                        VStack(alignment: .leading, spacing: theme.spacing.m) {
+                        VStack(alignment: .leading, spacing: 12) {
                             Text("Preview")
-                                .font(theme.typography.sectionTitle)
-                                .foregroundColor(theme.colors.textPrimary)
+                                .font(.headline)
+                                .foregroundColor(.primary)
 
                             ConfigurationPreview(
                                 type: widget.type,
@@ -140,13 +139,13 @@ struct EditWidgetModal: View {
                             )
                         }
                     }
-                    .padding(theme.spacing.xl)
+                    .padding(24)
                 }
 
                 Divider()
 
                 // Actions
-                HStack(spacing: theme.spacing.m) {
+                HStack(spacing: 12) {
                     Button("Cancel") {
                         isPresented = false
                     }
@@ -162,11 +161,11 @@ struct EditWidgetModal: View {
                     .buttonStyle(ConfigPrimaryButtonStyle())
                     .disabled(!hasChanges || widgetName.isEmpty)
                 }
-                .padding(theme.spacing.xl)
+                .padding(24)
             }
             .frame(width: 500)
-            .background(theme.colors.backgroundPrimary)
-            .cornerRadius(theme.radii.large)
+            .background(Color(nsColor: .windowBackgroundColor))
+            .cornerRadius(12)
             .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 10)
         }
     }
@@ -175,32 +174,35 @@ struct EditWidgetModal: View {
 // MARK: - Supporting Views
 
 struct WidgetSizeButton: View {
-    @Environment(\.theme) var theme
     let size: DashboardWidgetSize
     let isSelected: Bool
     let onSelect: () -> Void
 
     var body: some View {
         Button(action: onSelect) {
-            VStack(spacing: theme.spacing.xs) {
+            VStack(spacing: 4) {
                 // Size Icon
                 RoundedRectangle(cornerRadius: 6)
                     .fill(
-                        isSelected ? theme.colors.accentPrimary : theme.colors.backgroundSecondary
+                        isSelected ? Color.blue : Color.secondary.opacity(0.1)
                     )
                     .frame(width: sizeWidth, height: 40)
 
                 Text(size.displayName)
-                    .font(theme.typography.caption)
+                    .font(.caption)
                     .foregroundColor(
-                        isSelected ? theme.colors.accentPrimary : theme.colors.textSecondary)
+                        isSelected ? .blue : .secondary)
             }
-            .padding(theme.spacing.m)
-            .background(isSelected ? theme.colors.accentPrimary.opacity(0.1) : theme.colors.backgroundPrimary)
-            .cornerRadius(theme.radii.small)
+            .padding(12)
+            .background(
+                isSelected ? Color.blue.opacity(0.1) : Color(nsColor: .windowBackgroundColor)
+            )
+            .cornerRadius(4)
             .overlay(
-                RoundedRectangle(cornerRadius: theme.radii.small)
-                    .stroke(isSelected ? theme.colors.accentPrimary : theme.colors.backgroundPrimary, lineWidth: 2)
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(
+                        isSelected ? Color.blue : Color(nsColor: .windowBackgroundColor),
+                        lineWidth: 2)
             )
         }
         .buttonStyle(.plain)
@@ -216,79 +218,75 @@ struct WidgetSizeButton: View {
 }
 
 struct ConfigurationPreview: View {
-    @Environment(\.theme) var theme
     let type: DashboardWidgetType
     let name: String
     let size: DashboardWidgetSize
 
     var body: some View {
-        VStack(alignment: .leading, spacing: theme.spacing.m) {
+        VStack(alignment: .leading, spacing: 12) {
             // Header
             HStack {
                 Image(systemName: type.icon)
                     .font(.system(size: 14))
-                    .foregroundColor(theme.colors.accentSecondary)
+                    .foregroundColor(.blue)
 
                 Text(name)
-                    .font(theme.typography.body)
+                    .font(.body)
                     .fontWeight(.medium)
-                    .foregroundColor(theme.colors.textPrimary)
+                    .foregroundColor(.primary)
 
                 Spacer()
 
                 Text(size.displayName)
-                    .font(theme.typography.caption)
-                    .foregroundColor(theme.colors.textSecondary)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
-            .padding(theme.spacing.m)
+            .padding(12)
 
             Divider()
 
             // Preview Content
-            VStack(spacing: theme.spacing.m) {
+            VStack(spacing: 12) {
                 Image(systemName: type.icon)
                     .font(.system(size: 32))
-                    .foregroundColor(theme.colors.accentPrimary.opacity(0.3))
+                    .foregroundColor(.blue.opacity(0.3))
 
                 Text("Widget Preview")
-                    .font(theme.typography.caption)
-                    .foregroundColor(theme.colors.textSecondary)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
             .frame(maxWidth: .infinity)
             .frame(height: 100)
         }
-        .background(theme.colors.backgroundSecondary)
-        .cornerRadius(theme.radii.medium)
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(8)
     }
 }
 
 // MARK: - Button Styles
 
 struct ConfigPrimaryButtonStyle: ButtonStyle {
-    @Environment(\.theme) var theme
     @Environment(\.isEnabled) var isEnabled
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .padding(.vertical, theme.spacing.m)
-            .padding(.horizontal, theme.spacing.l)
-            .background(isEnabled ? theme.colors.accentPrimary : theme.colors.backgroundSecondary)
-            .foregroundColor(isEnabled ? .white : theme.colors.textSecondary)
-            .cornerRadius(theme.radii.small)
+            .padding(.vertical, 12)
+            .padding(.horizontal, 16)
+            .background(isEnabled ? Color.blue : Color.secondary.opacity(0.1))
+            .foregroundColor(isEnabled ? .white : .secondary)
+            .cornerRadius(4)
             .opacity(configuration.isPressed ? 0.8 : 1.0)
     }
 }
 
 struct ConfigSecondaryButtonStyle: ButtonStyle {
-    @Environment(\.theme) var theme
-
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .padding(.vertical, theme.spacing.m)
-            .padding(.horizontal, theme.spacing.l)
-            .background(theme.colors.backgroundSecondary)
-            .foregroundColor(theme.colors.textPrimary)
-            .cornerRadius(theme.radii.small)
+            .padding(.vertical, 12)
+            .padding(.horizontal, 16)
+            .background(Color.secondary.opacity(0.1))
+            .foregroundColor(.primary)
+            .cornerRadius(4)
             .opacity(configuration.isPressed ? 0.8 : 1.0)
     }
 }

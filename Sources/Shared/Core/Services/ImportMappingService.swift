@@ -1,17 +1,22 @@
 import Foundation
 
-enum ImportFormat {
+public enum ImportFormat {
     case csv
     case json
     case sql
 }
 
-struct DetectedField {
-    let name: String
-    let sampleValues: [String]
+public struct DetectedField {
+    public let name: String
+    public let sampleValues: [String]
+
+    public init(name: String, sampleValues: [String]) {
+        self.name = name
+        self.sampleValues = sampleValues
+    }
 }
 
-protocol ImportMappingServiceProtocol {
+public protocol ImportMappingServiceProtocol {
     func parseCSV(fileURL: URL) async throws -> (headers: [String], rows: [[String]])
     func parseJSON(fileURL: URL) async throws -> [[String: Any]]
     func detectFields(from headers: [String]) -> [DetectedField]
@@ -19,9 +24,11 @@ protocol ImportMappingServiceProtocol {
     func suggestMapping(sourceField: String, targetType: ImportTargetType) -> String?
 }
 
-class ImportMappingService: ImportMappingServiceProtocol {
+public class ImportMappingService: ImportMappingServiceProtocol {
 
-    func parseCSV(fileURL: URL) async throws -> (headers: [String], rows: [[String]]) {
+    public init() {}
+
+    public func parseCSV(fileURL: URL) async throws -> (headers: [String], rows: [[String]]) {
         let content = try String(contentsOf: fileURL, encoding: .utf8)
         let lines = content.components(separatedBy: .newlines).filter { !$0.isEmpty }
 
@@ -38,7 +45,7 @@ class ImportMappingService: ImportMappingServiceProtocol {
         return (headers, Array(rows))
     }
 
-    func parseJSON(fileURL: URL) async throws -> [[String: Any]] {
+    public func parseJSON(fileURL: URL) async throws -> [[String: Any]] {
         let data = try Data(contentsOf: fileURL)
 
         guard let jsonArray = try JSONSerialization.jsonObject(with: data) as? [[String: Any]]
@@ -49,13 +56,13 @@ class ImportMappingService: ImportMappingServiceProtocol {
         return jsonArray
     }
 
-    func detectFields(from headers: [String]) -> [DetectedField] {
+    public func detectFields(from headers: [String]) -> [DetectedField] {
         headers.map { header in
             DetectedField(name: header, sampleValues: [])
         }
     }
 
-    func detectFields(from jsonObjects: [[String: Any]]) -> [DetectedField] {
+    public func detectFields(from jsonObjects: [[String: Any]]) -> [DetectedField] {
         guard let firstObject = jsonObjects.first else {
             return []
         }
@@ -71,7 +78,7 @@ class ImportMappingService: ImportMappingServiceProtocol {
         }
     }
 
-    func suggestMapping(sourceField: String, targetType: ImportTargetType) -> String? {
+    public func suggestMapping(sourceField: String, targetType: ImportTargetType) -> String? {
         let lowercased = sourceField.lowercased()
 
         switch targetType {
@@ -162,12 +169,12 @@ class ImportMappingService: ImportMappingServiceProtocol {
     }
 }
 
-enum ImportError: LocalizedError {
+public enum ImportError: LocalizedError {
     case emptyFile
     case invalidFormat
     case mappingFailed
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .emptyFile: return "The file is empty"
         case .invalidFormat: return "Invalid file format"

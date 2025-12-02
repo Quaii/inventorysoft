@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - Data Sources
 
-enum ChartDataSource: String, Codable, CaseIterable {
+public enum ChartDataSource: String, Codable, CaseIterable {
     case inventory
     case sales
     case purchases
@@ -18,7 +18,7 @@ enum ChartDataSource: String, Codable, CaseIterable {
     }
 }
 
-enum ChartAggregation: String, Codable, CaseIterable {
+public enum ChartAggregation: String, Codable, CaseIterable {
     case sum
     case average
     case count
@@ -38,13 +38,13 @@ enum ChartAggregation: String, Codable, CaseIterable {
 
 // MARK: - Formula Support
 
-enum FormulaOperation: String, Codable, CaseIterable {
+public enum FormulaOperation: String, Codable, CaseIterable {
     case divide
     case subtract
     case add
     case multiply
 
-    var displayName: String {
+    public var displayName: String {
         switch self {
         case .divide: return "Divide"
         case .subtract: return "Subtract"
@@ -53,7 +53,7 @@ enum FormulaOperation: String, Codable, CaseIterable {
         }
     }
 
-    var symbol: String {
+    public var symbol: String {
         switch self {
         case .divide: return "/"
         case .subtract: return "-"
@@ -63,12 +63,12 @@ enum FormulaOperation: String, Codable, CaseIterable {
     }
 }
 
-struct FormulaConfig: Codable, Equatable {
-    var operation: FormulaOperation
-    var field1: String
-    var field2: String
+public struct FormulaConfig: Codable, Equatable {
+    public var operation: FormulaOperation
+    public var field1: String
+    public var field2: String
 
-    init(operation: FormulaOperation, field1: String, field2: String) {
+    public init(operation: FormulaOperation, field1: String, field2: String) {
         self.operation = operation
         self.field1 = field1
         self.field2 = field2
@@ -77,7 +77,7 @@ struct FormulaConfig: Codable, Equatable {
 
 // MARK: - Chart Type
 
-enum ChartType: String, Codable, CaseIterable {
+public enum ChartType: String, Codable, CaseIterable {
     case none
     case bar
     case line
@@ -85,7 +85,7 @@ enum ChartType: String, Codable, CaseIterable {
     case donut
     case table
 
-    var displayName: String {
+    public var displayName: String {
         switch self {
         case .none: return "None"
         case .bar: return "Bar Chart"
@@ -96,7 +96,7 @@ enum ChartType: String, Codable, CaseIterable {
         }
     }
 
-    var icon: String {
+    public var icon: String {
         switch self {
         case .none: return "minus.circle"
         case .bar: return "chart.bar"
@@ -108,22 +108,42 @@ enum ChartType: String, Codable, CaseIterable {
     }
 }
 
+// MARK: - Chart Time Range
+
+public enum ChartTimeRange: String, Codable, CaseIterable {
+    case day
+    case week
+    case month
+    case quarter
+    case year
+
+    public var displayName: String {
+        switch self {
+        case .day: return "Day"
+        case .week: return "Week"
+        case .month: return "Month"
+        case .quarter: return "Quarter"
+        case .year: return "Year"
+        }
+    }
+}
+
 // MARK: - Chart Definition
 
-struct ChartDefinition: Identifiable, Codable, Equatable {
-    let id: UUID
-    var title: String
-    var chartType: ChartType
-    var dataSource: ChartDataSource
-    var xField: String
-    var yField: String
-    var aggregation: ChartAggregation
-    var groupBy: String?
-    var colorPalette: String
-    var formula: FormulaConfig?
-    var sortOrder: Int
+public struct ChartDefinition: Identifiable, Codable, Equatable {
+    public let id: UUID
+    public var title: String
+    public var chartType: ChartType
+    public var dataSource: ChartDataSource
+    public var xField: String
+    public var yField: String
+    public var aggregation: ChartAggregation
+    public var groupBy: String?
+    public var colorPalette: String
+    public var formula: FormulaConfig?
+    public var sortOrder: Int
 
-    init(
+    public init(
         id: UUID = UUID(),
         title: String,
         chartType: ChartType,
@@ -201,8 +221,8 @@ struct ChartDefinition: Identifiable, Codable, Equatable {
 
 // MARK: - Color Palettes
 
-struct ChartColorPalette {
-    static let palettes: [String: [String]] = [
+public struct ChartColorPalette {
+    public static let palettes: [String: [String]] = [
         "default": ["#FFFFFF", "#3DDC97", "#F2A93B", "#3498DB", "#E74C3C"],
         "blue": ["#3498DB", "#5DADE2", "#85C1E9", "#AED6F1", "#D6EAF8"],
         "green": ["#27AE60", "#52BE80", "#7DCEA0", "#A9DFBF", "#D5F4E6"],
@@ -210,7 +230,7 @@ struct ChartColorPalette {
         "orange": ["#E67E22", "#EB984E", "#F0B27A", "#F5CBA7", "#FAE5D3"],
     ]
 
-    static func colors(for palette: String) -> [String] {
+    public static func colors(for palette: String) -> [String] {
         palettes[palette] ?? palettes["default"]!
     }
 }

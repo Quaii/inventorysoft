@@ -2,13 +2,13 @@ import Foundation
 import SwiftUI
 
 /// Stock alert model for dashboard notifications
-struct StockAlert: Identifiable {
-    let id = UUID()
-    let title: String
-    let message: String
-    let severity: AlertSeverity
+public struct StockAlert: Identifiable, Equatable {
+    public let id = UUID()
+    public let title: String
+    public let message: String
+    public let severity: AlertType
 
-    var icon: String {
+    public var icon: String {
         switch severity {
         case .low: return "exclamationmark.triangle"
         case .medium: return "exclamationmark.circle"
@@ -16,17 +16,17 @@ struct StockAlert: Identifiable {
         }
     }
 
-    func severityColor(theme: Theme) -> Color {
+    public func severityColor() -> Color {
         switch severity {
-        case .low: return theme.colors.accentWarning
-        case .medium: return theme.colors.warning
-        case .high: return theme.colors.error
+        case .low: return .yellow
+        case .medium: return .orange
+        case .high: return .red
         }
     }
 }
 
-enum AlertSeverity {
-    case low
-    case medium
-    case high
+public enum AlertType: String, Codable {
+    case low = "low"
+    case medium = "medium"
+    case high = "high"
 }

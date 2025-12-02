@@ -26,128 +26,101 @@ struct ImportMappingView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
+            Group {
                 if viewModel.isLoading {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if let error = viewModel.errorMessage {
-                    VStack(spacing: theme.spacing.m) {
-                        Image(systemName: "exclamationmark.triangle")
-                            .font(.system(size: 48))
-                            .foregroundColor(theme.colors.error)
-                        Text("Error Parsing File")
-                            .font(theme.typography.cardTitle)
-                            .foregroundColor(theme.colors.textPrimary)
+                    ContentUnavailableView {
+                        Label("Error Parsing File", systemImage: "exclamationmark.triangle")
+                    } description: {
                         Text(error)
-                            .font(theme.typography.body)
-                            .foregroundColor(theme.colors.textSecondary)
-                            .multilineTextAlignment(.center)
                     }
-                    .padding()
                 } else {
-                    // Profile selector
-                    HStack {
-                        Menu {
-                            ForEach(viewModel.savedProfiles) { profile in
-                                Button(profile.name) {
-                                    viewModel.loadProfile(profile)
-                                }
-                            }
-                        } label: {
-                            HStack {
-                                Image(systemName: "doc.text")
-                                Text(viewModel.selectedProfile?.name ?? "Select Profile")
-                                    .foregroundColor(theme.colors.textPrimary)
-                                Image(systemName: "chevron.down")
-                                    .font(.caption)
-                                    .foregroundColor(theme.colors.textSecondary)
-                            }
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .background(theme.colors.surfaceElevated)
-                            .cornerRadius(8)
-                        }
-
-                        Spacer()
-
-                        AppButton(
-                            title: "Save Profile", icon: "square.and.arrow.down", style: .secondary
-                        ) {
-                            viewModel.showingSaveProfile = true
-                        }
-                    }
-                    .padding(theme.spacing.l)
-                    .background(theme.colors.surfaceSecondary)
-
-                    // Mapping list
-                    ScrollView {
-                        VStack(spacing: theme.spacing.m) {
-                            ForEach(Array(viewModel.sourceFields.enumerated()), id: \.offset) {
-                                index, sourceField in
-                                AppCard {
-                                    HStack(spacing: theme.spacing.m) {
-                                        // Source field
-                                        VStack(alignment: .leading, spacing: 4) {
-                                            Text(sourceField)
-                                                .font(theme.typography.body)
-                                                .foregroundColor(theme.colors.textPrimary)
-                                                .fontWeight(.medium)
-
-                                            if index < viewModel.sampleData.count,
-                                                !viewModel.sampleData[index].isEmpty
-                                            {
-                                                Text("Sample: \(viewModel.sampleData[index])")
-                                                    .font(theme.typography.caption)
-                                                    .foregroundColor(theme.colors.textSecondary)
-                                                    .lineLimit(1)
-                                            }
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                                        Image(systemName: "arrow.right")
-                                            .foregroundColor(theme.colors.textMuted)
-
-                                        // Target field
-                                        Menu {
-                                            Button("Skip") {
-                                                viewModel.fieldMappings[sourceField] = nil
-                                            }
-                                            Divider()
-                                            ForEach(viewModel.availableTargetFields, id: \.self) {
-                                                targetField in
-                                                Button(targetField) {
-                                                    viewModel.fieldMappings[sourceField] =
-                                                        targetField
-                                                }
-                                            }
-                                        } label: {
-                                            HStack {
-                                                Text(viewModel.fieldMappings[sourceField] ?? "Skip")
-                                                    .foregroundColor(
-                                                        viewModel.fieldMappings[sourceField] == nil
-                                                            ? theme.colors.textSecondary
-                                                            : theme.colors.accentPrimary)
-                                                Image(systemName: "chevron.down")
-                                                    .font(.caption)
-                                                    .foregroundColor(theme.colors.textSecondary)
-                                            }
-                                            .padding(.horizontal, 12)
-                                            .padding(.vertical, 8)
-                                            .background(theme.colors.surfaceSecondary)
-                                            .cornerRadius(6)
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 6)
-                                                    .stroke(theme.colors.borderSubtle, lineWidth: 1)
-                                            )
-                                        }
-                                        .frame(width: 160, alignment: .trailing)
+                    List {
+                        // Profile selector
+                        Section {
+                            Menu {
+                                ForEach(viewModel.savedProfiles) { profile in
+                                    Button(profile.name) {
+                                        viewModel.loadProfile(profile)
                                     }
                                 }
+                            } label: {
+                                HStack {
+                                    Label(
+                                        viewModel.selectedProfile?.name ?? "Select Profile",
+                                        systemImage: "doc.text")
+                                    Spacer()
+                                    Image(systemName: "chevron.down")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+
+                            Button {
+                                viewModel.showingSaveProfile = true
+                            } label: {
+                                Label("Save Profile", systemImage: "square.and.arrow.down")
+                            }
+                        } header: {
+                            Text("Import Profile")
+                        }
+
+                        // Mapping list
+                        Section("Field Mappings") {
+                            ForEach(Array(viewModel.sourceFields.enumerated()), id: \.offset) {
+                                index, sourceField in
+                                HStack {
+                                    // Source field
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(sourceField)
+                                            .fontWeight(.medium)
+
+                                        if index < viewModel.sampleData.count,
+                                            !viewModel.sampleData[index].isEmpty
+                                        {
+                                            Text("Sample: \(viewModel.sampleData[index])")
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                                .lineLimit(1)
+                                        }
+                                    }
+
+                                    Spacer()
+
+                                    Image(systemName: "arrow.right")
+                                        .foregroundStyle(.secondary)
+                                        .padding(.horizontal, 8)
+
+                                    // Target field
+                                    Picker(
+                                        "Target",
+                                        selection: Binding(
+                                            get: { viewModel.fieldMappings[sourceField] ?? "Skip" },
+                                            set: { newValue in
+                                                if newValue == "Skip" {
+                                                    viewModel.fieldMappings[sourceField] = nil
+                                                } else {
+                                                    viewModel.fieldMappings[sourceField] = newValue
+                                                }
+                                            }
+                                        )
+                                    ) {
+                                        Text("Skip").tag("Skip")
+                                        Divider()
+                                        ForEach(viewModel.availableTargetFields, id: \.self) {
+                                            targetField in
+                                            Text(targetField).tag(targetField)
+                                        }
+                                    }
+                                    .pickerStyle(.menu)
+                                    .labelsHidden()
+                                    .frame(width: 150)
+                                }
                             }
                         }
-                        .padding(theme.spacing.l)
                     }
-                    .background(theme.colors.backgroundPrimary)
                 }
             }
             .navigationTitle("Map Fields")

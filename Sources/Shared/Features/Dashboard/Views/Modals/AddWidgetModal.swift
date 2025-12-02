@@ -22,310 +22,96 @@ struct AddWidgetModal: View {
     }
 
     var body: some View {
-        ZStack {
-            // Backdrop
-            Color.black.opacity(0.4)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    isPresented = false
-                }
-
-            // Modal Content
-            VStack(spacing: 0) {
-                // Header
-                HStack {
-                    Text("Add Widget")
-                        .font(theme.typography.pageTitle)
-                        .foregroundColor(theme.colors.textPrimary)
-
-                    Spacer()
-
-                    Button(action: { isPresented = false }) {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(theme.colors.textSecondary)
-                            .frame(width: 28, height: 28)
-                            .background(theme.colors.backgroundSecondary)
-                            .cornerRadius(theme.radii.small)
+        NavigationStack {
+            HStack(spacing: 0) {
+                // Left Sidebar: Widget Gallery
+                List(selection: $selectedType) {
+                    Section {
+                        TextField("Search widgets...", text: $searchQuery)
+                            .textFieldStyle(.roundedBorder)
                     }
-                    .buttonStyle(.plain)
-                }
-                .padding(theme.spacing.xl)
 
-                Divider()
-
-                // Content
-                HStack(alignment: .top, spacing: 0) {
-                    // Left: Widget Gallery
-                    VStack(alignment: .leading, spacing: theme.spacing.m) {
-                        // Search
-                        HStack {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundColor(theme.colors.textSecondary)
-                            TextField("Search widgets...", text: $searchQuery)
-                                .textFieldStyle(.plain)
-                        }
-                        .padding(theme.spacing.m)
-                        .background(theme.colors.backgroundSecondary)
-                        .cornerRadius(theme.radii.small)
-
-                        // Widget List - Grouped by Category
-                        ScrollView {
-                            VStack(alignment: .leading, spacing: theme.spacing.l) {
-                                // Group widgets by category
-                                ForEach(WidgetCategory.allCases, id: \.self) { category in
-                                    let categoryWidgets = filteredWidgetTypes.filter {
-                                        $0.category == category
-                                    }
-
-                                    if !categoryWidgets.isEmpty {
-                                        VStack(alignment: .leading, spacing: theme.spacing.s) {
-                                            // Category Header
-                                            Text(category.displayName)
-                                                .font(theme.typography.caption)
-                                                .foregroundColor(theme.colors.textSecondary)
-                                                .textCase(.uppercase)
-                                                .padding(.horizontal, theme.spacing.s)
-
-                                            // Category Widgets
-                                            ForEach(categoryWidgets, id: \.self) { type in
-                                                WidgetTypeRow(
-                                                    type: type,
-                                                    isSelected: selectedType == type,
-                                                    onSelect: {
-                                                        selectedType = type
-                                                        selectedSize = type.defaultSize
-                                                        if widgetName.isEmpty {
-                                                            widgetName = type.displayName
-                                                        }
-                                                    }
-                                                )
-                                            }
+                    ForEach(WidgetCategory.allCases, id: \.self) { category in
+                        let categoryWidgets = filteredWidgetTypes.filter { $0.category == category }
+                        if !categoryWidgets.isEmpty {
+                            Section(category.displayName) {
+                                ForEach(categoryWidgets, id: \.self) { type in
+                                    HStack {
+                                        Label(type.displayName, systemImage: type.icon)
+                                        Spacer()
+                                        if selectedType == type {
+                                            Image(systemName: "checkmark")
+                                                .foregroundStyle(.blue)
                                         }
                                     }
+                                    .tag(type)
                                 }
                             }
                         }
                     }
-                    .frame(width: 300)
-                    .padding(theme.spacing.xl)
+                }
+                .frame(width: 300)
 
-                    Divider()
-
-                    // Right: Configuration
-                    VStack(alignment: .leading, spacing: theme.spacing.xl) {
-                        if let type = selectedType {
-                            // Preview
-                            VStack(alignment: .leading, spacing: theme.spacing.m) {
-                                Text("Preview")
-                                    .font(theme.typography.sectionTitle)
-                                    .foregroundColor(theme.colors.textPrimary)
-
-                                WidgetPreview(type: type, size: selectedSize)
-                            }
-
-                            // Configuration
-                            VStack(alignment: .leading, spacing: theme.spacing.m) {
-                                Text("Configuration")
-                                    .font(theme.typography.sectionTitle)
-                                    .foregroundColor(theme.colors.textPrimary)
-
-                                // Widget Name
-                                VStack(alignment: .leading, spacing: theme.spacing.xs) {
-                                    Text("Widget Name")
-                                        .font(theme.typography.caption)
-                                        .foregroundColor(theme.colors.textSecondary)
-
-                                    TextField("Enter name", text: $widgetName)
-                                        .textFieldStyle(.plain)
-                                        .padding(theme.spacing.m)
-                                        .background(theme.colors.backgroundSecondary)
-                                        .cornerRadius(theme.radii.small)
-                                }
-
-                                // Size Picker
-                                VStack(alignment: .leading, spacing: theme.spacing.xs) {
-                                    Text("Size")
-                                        .font(theme.typography.caption)
-                                        .foregroundColor(theme.colors.textSecondary)
-
-                                    HStack(spacing: theme.spacing.s) {
-                                        ForEach(
-                                            [DashboardWidgetSize.small, .medium, .large], id: \.self
-                                        ) { size in
-                                            SizeOptionButton(
-                                                size: size,
-                                                isSelected: selectedSize == size,
-                                                onSelect: { selectedSize = size }
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-
-                            Spacer()
-
-                            // Actions
-                            HStack(spacing: theme.spacing.m) {
-                                Button("Cancel") {
-                                    isPresented = false
-                                }
-                                .buttonStyle(SecondaryButtonStyle())
-
-                                Button("Add Widget") {
-                                    onAddWidget(type, selectedSize, widgetName)
-                                    isPresented = false
-                                }
-                                .buttonStyle(PrimaryButtonStyle())
-                                .disabled(widgetName.isEmpty)
-                            }
-                        } else {
-                            // Empty State
-                            VStack(spacing: theme.spacing.m) {
-                                Image(systemName: "square.grid.3x3.fill")
+                // Right Content: Configuration
+                if let type = selectedType {
+                    Form {
+                        Section("Preview") {
+                            VStack(alignment: .center, spacing: 16) {
+                                Image(systemName: type.icon)
                                     .font(.system(size: 48))
-                                    .foregroundColor(theme.colors.textSecondary.opacity(0.3))
-
-                                Text("Select a widget type")
-                                    .font(theme.typography.body)
-                                    .foregroundColor(theme.colors.textSecondary)
+                                    .foregroundStyle(.blue)
+                                Text(type.displayName)
+                                    .font(.headline)
+                                Text("Size: \(selectedSize.displayName)")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                             }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                        }
+
+                        Section("Configuration") {
+                            TextField("Widget Name", text: $widgetName)
+
+                            Picker("Size", selection: $selectedSize) {
+                                ForEach([DashboardWidgetSize.small, .medium, .large], id: \.self) {
+                                    size in
+                                    Text(size.displayName).tag(size)
+                                }
+                            }
+                            .pickerStyle(.segmented)
                         }
                     }
-                    .frame(width: 400)
-                    .padding(theme.spacing.xl)
-                }
-                .frame(height: 500)
-            }
-            .frame(width: 700)
-            .background(theme.colors.backgroundPrimary)
-            .cornerRadius(theme.radii.large)
-            .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 10)
-        }
-    }
-}
-
-// MARK: - Supporting Views
-
-struct WidgetTypeRow: View {
-    @Environment(\.theme) var theme
-    let type: DashboardWidgetType
-    let isSelected: Bool
-    let onSelect: () -> Void
-
-    var body: some View {
-        Button(action: onSelect) {
-            HStack(spacing: theme.spacing.m) {
-                Image(systemName: type.icon)
-                    .font(.system(size: 20))
-                    .foregroundColor(
-                        isSelected ? theme.colors.accentPrimary : theme.colors.textSecondary
-                    )
-                    .frame(width: 32, height: 32)
-                    .background(isSelected ? theme.colors.accentPrimary.opacity(0.1) : theme.colors.backgroundPrimary)
-                    .cornerRadius(theme.radii.small)
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(type.displayName)
-                        .font(theme.typography.body)
-                        .foregroundColor(theme.colors.textPrimary)
-
-                    Text(type.description)
-                        .font(theme.typography.caption)
-                        .foregroundColor(theme.colors.textSecondary)
-                        .lineLimit(1)
-                }
-
-                Spacer()
-
-                if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(theme.colors.accentPrimary)
+                } else {
+                    ContentUnavailableView("Select a Widget", systemImage: "square.grid.3x3.fill")
                 }
             }
-            .padding(theme.spacing.m)
-            .background(isSelected ? theme.colors.accentPrimary.opacity(0.05) : theme.colors.backgroundPrimary)
-            .cornerRadius(theme.radii.small)
+            .navigationTitle("Add Widget")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        isPresented = false
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Add") {
+                        if let type = selectedType {
+                            onAddWidget(type, selectedSize, widgetName)
+                            isPresented = false
+                        }
+                    }
+                    .disabled(selectedType == nil || widgetName.isEmpty)
+                }
+            }
+            .onChange(of: selectedType) { _, newType in
+                if let type = newType {
+                    selectedSize = type.defaultSize
+                    if widgetName.isEmpty {
+                        widgetName = type.displayName
+                    }
+                }
+            }
         }
-        .buttonStyle(.plain)
-    }
-}
-
-struct WidgetPreview: View {
-    @Environment(\.theme) var theme
-    let type: DashboardWidgetType
-    let size: DashboardWidgetSize
-
-    var body: some View {
-        VStack(spacing: theme.spacing.m) {
-            Image(systemName: type.icon)
-                .font(.system(size: 32))
-                .foregroundColor(theme.colors.accentPrimary)
-
-            Text(type.displayName)
-                .font(theme.typography.body)
-                .foregroundColor(theme.colors.textPrimary)
-
-            Text("Size: \(size.displayName)")
-                .font(theme.typography.caption)
-                .foregroundColor(theme.colors.textSecondary)
-        }
-        .frame(maxWidth: .infinity)
-        .frame(height: 150)
-        .background(theme.colors.backgroundSecondary)
-        .cornerRadius(theme.radii.medium)
-    }
-}
-
-struct SizeOptionButton: View {
-    @Environment(\.theme) var theme
-    let size: DashboardWidgetSize
-    let isSelected: Bool
-    let onSelect: () -> Void
-
-    var body: some View {
-        Button(action: onSelect) {
-            Text(size.displayName)
-                .font(theme.typography.body)
-                .foregroundColor(isSelected ? .white : theme.colors.textPrimary)
-                .padding(.vertical, theme.spacing.s)
-                .padding(.horizontal, theme.spacing.m)
-                .background(
-                    isSelected ? theme.colors.accentPrimary : theme.colors.backgroundSecondary
-                )
-                .cornerRadius(theme.radii.small)
-        }
-        .buttonStyle(.plain)
-    }
-}
-
-// MARK: - Button Styles
-
-struct PrimaryButtonStyle: ButtonStyle {
-    @Environment(\.theme) var theme
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .padding(.vertical, theme.spacing.m)
-            .padding(.horizontal, theme.spacing.l)
-            .background(theme.colors.accentPrimary)
-            .foregroundColor(.white)
-            .cornerRadius(theme.radii.small)
-            .opacity(configuration.isPressed ? 0.8 : 1.0)
-    }
-}
-
-struct SecondaryButtonStyle: ButtonStyle {
-    @Environment(\.theme) var theme
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .padding(.vertical, theme.spacing.m)
-            .padding(.horizontal, theme.spacing.l)
-            .background(theme.colors.backgroundSecondary)
-            .foregroundColor(theme.colors.textPrimary)
-            .cornerRadius(theme.radii.small)
-            .opacity(configuration.isPressed ? 0.8 : 1.0)
+        .frame(width: 800, height: 600)
     }
 }

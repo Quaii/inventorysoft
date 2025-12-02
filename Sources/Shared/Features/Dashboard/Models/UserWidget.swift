@@ -21,18 +21,18 @@ import Foundation
 ///     position: 0
 /// )
 /// ```
-struct UserWidget: Identifiable, Codable, Equatable {
-    let id: UUID
-    var type: DashboardWidgetType
-    var size: DashboardWidgetSize
-    var name: String
-    var position: Int
-    var configuration: Data?  // JSON-encoded widget configuration
-    var isVisible: Bool
-    var createdAt: Date
-    var updatedAt: Date
+public struct UserWidget: Identifiable, Codable, Equatable {
+    public let id: UUID
+    public var type: DashboardWidgetType
+    public var size: DashboardWidgetSize
+    public var name: String
+    public var position: Int
+    public var configuration: Data?  // JSON-encoded widget configuration
+    public var isVisible: Bool
+    public var createdAt: Date
+    public var updatedAt: Date
 
-    init(
+    public init(
         id: UUID = UUID(),
         type: DashboardWidgetType,
         size: DashboardWidgetSize,

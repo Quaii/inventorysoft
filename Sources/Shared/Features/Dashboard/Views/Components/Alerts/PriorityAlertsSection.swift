@@ -13,14 +13,14 @@ struct PriorityAlertsSection: View {
 
     var body: some View {
         if !activeAlerts.isEmpty {
-            VStack(alignment: .leading, spacing: theme.spacing.m) {
+            VStack(alignment: .leading, spacing: 16) {
                 // Section Title
                 Text("Priority Alerts")
-                    .font(theme.typography.sectionTitle)
-                    .foregroundColor(theme.colors.textPrimary)
+                    .font(.title2)
+                    .foregroundColor(.primary)
 
                 // Alert Chips
-                VStack(spacing: theme.spacing.s) {
+                VStack(spacing: 8) {
                     ForEach(activeAlerts) { alert in
                         AlertChip(
                             alert: alert,

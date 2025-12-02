@@ -1,11 +1,11 @@
 import Foundation
 import GRDB
 
-class DatabaseManager {
-    static let shared = DatabaseManager()
+public class DatabaseManager {
+    public static let shared = DatabaseManager()
 
     // The database writer (DatabaseQueue or DatabasePool)
-    let dbWriter: DatabaseWriter
+    public let dbWriter: DatabaseWriter
 
     private init() {
         do {
@@ -56,7 +56,7 @@ class DatabaseManager {
 // MARK: - Database Access
 extension DatabaseManager {
     // Helper to access the database reader
-    var reader: DatabaseReader {
+    public var reader: DatabaseReader {
         dbWriter
     }
 }

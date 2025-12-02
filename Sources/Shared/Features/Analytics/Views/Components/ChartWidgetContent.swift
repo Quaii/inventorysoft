@@ -1,4 +1,5 @@
 import Charts
+import GRDB
 import SwiftUI
 
 /// Renders chart content based on widget configuration
@@ -6,7 +7,7 @@ import SwiftUI
 /// This component is used by the unified widget grid to display chart widgets
 /// on both the Dashboard and Analytics pages.
 struct ChartWidgetContent: View {
-    @Environment(\.theme) var theme
+
     let widget: UserWidget
     let salesData: [SalesDataPoint]
     let isLoading: Bool
@@ -18,7 +19,7 @@ struct ChartWidgetContent: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: theme.spacing.m) {
+        VStack(alignment: .leading, spacing: 12) {
             // Chart visualization
             if let config: ChartWidgetConfig = widget.getConfiguration() {
                 chartView(for: config)
@@ -70,12 +71,12 @@ struct ChartWidgetContent: View {
                 x: .value("Date", dataPoint.date),
                 y: .value("Amount", dataPoint.amount)
             )
-            .foregroundStyle(theme.colors.accentPrimary)
+            .foregroundStyle(.blue)
         }
         .chartXAxis {
             AxisMarks(values: .automatic) { _ in
                 AxisValueLabel()
-                    .foregroundStyle(theme.colors.textSecondary)
+                    .foregroundStyle(.secondary)
             }
         }
         .chartYAxis {
@@ -83,7 +84,7 @@ struct ChartWidgetContent: View {
                 AxisValueLabel {
                     if let doubleValue = value.as(Double.self) {
                         Text(formatCurrency(doubleValue))
-                            .foregroundStyle(theme.colors.textSecondary)
+                            .foregroundStyle(.secondary)
                     }
                 }
             }
@@ -98,12 +99,12 @@ struct ChartWidgetContent: View {
                 x: .value("Date", dataPoint.date),
                 y: .value("Amount", dataPoint.amount)
             )
-            .foregroundStyle(theme.colors.accentPrimary)
+            .foregroundStyle(.blue)
         }
         .chartXAxis {
             AxisMarks(values: .automatic) { _ in
                 AxisValueLabel()
-                    .foregroundStyle(theme.colors.textSecondary)
+                    .foregroundStyle(.secondary)
             }
         }
         .chartYAxis {
@@ -111,7 +112,7 @@ struct ChartWidgetContent: View {
                 AxisValueLabel {
                     if let doubleValue = value.as(Double.self) {
                         Text(formatCurrency(doubleValue))
-                            .foregroundStyle(theme.colors.textSecondary)
+                            .foregroundStyle(.secondary)
                     }
                 }
             }
@@ -145,18 +146,18 @@ struct ChartWidgetContent: View {
 
     @ViewBuilder
     private func emptyStateView() -> some View {
-        VStack(spacing: theme.spacing.m) {
+        VStack(spacing: 12) {
             Image(systemName: widget.type.icon)
                 .font(.system(size: 48))
-                .foregroundColor(theme.colors.textSecondary)
+                .foregroundColor(.secondary)
 
             Text("No data available")
-                .font(theme.typography.body)
-                .foregroundColor(theme.colors.textPrimary)
+                .font(.body)
+                .foregroundColor(.primary)
 
             Text("Configure the chart or add data to see results.")
-                .font(theme.typography.caption)
-                .foregroundColor(theme.colors.textSecondary)
+                .font(.caption)
+                .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
@@ -192,10 +193,20 @@ struct ChartWidgetContent: View {
                     analyticsService: AnalyticsService(
                         itemRepository: ItemRepository(),
                         salesRepository: SalesRepository()
+                    ),
+                    configService: AnalyticsConfigService(
+                        repository: AnalyticsConfigRepository(
+                            dbQueue: DatabaseManager.shared.dbWriter as! GRDB.DatabaseQueue),
+                        preferencesRepo: UserPreferencesRepository()
+                    ),
+                    exportService: ExportService(
+                        db: DatabaseManager.shared,
+                        columnConfigService: ColumnConfigService(
+                            repository: ColumnConfigRepository())
                     )
                 )
             )
-            .environment(\.theme, Theme(mode: .light))
+
             .frame(width: 400, height: 350)
             .padding()
         }

@@ -8,36 +8,34 @@ struct TotalItemsCard: View {
     @Environment(\.theme) var theme
 
     var body: some View {
-        AppCard {
-            VStack(alignment: .leading, spacing: theme.spacing.m) {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 12) {
                 // Header
                 HStack(alignment: .top) {
                     Text("Total Items")
-                        .font(theme.typography.cardTitle)
-                        .foregroundColor(theme.colors.textPrimary)
+                        .font(.headline)
 
                     Spacer()
 
                     Text("All Time")
-                        .font(theme.typography.caption)
-                        .foregroundColor(theme.colors.textSecondary)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
 
                 // Large Number
                 Text("\(totalItems)")
-                    .font(theme.typography.numericLarge)
-                    .foregroundColor(theme.colors.textPrimary)
+                    .font(.system(size: 48, weight: .bold))
 
                 Spacer()
 
                 // Chart Area
                 if historicData.isEmpty {
                     // Empty state chart placeholder
-                    VStack(spacing: theme.spacing.s) {
+                    VStack(spacing: 8) {
                         HStack(alignment: .bottom, spacing: 8) {
                             ForEach(0..<7) { index in
                                 RoundedRectangle(cornerRadius: 4)
-                                    .fill(theme.colors.surfaceSecondary)
+                                    .fill(Color(.secondarySystemFill))
                                     .frame(width: 20, height: CGFloat.random(in: 20...60))
                             }
                         }
@@ -45,8 +43,8 @@ struct TotalItemsCard: View {
                         .frame(height: 80)
 
                         Text("No data yet")
-                            .font(theme.typography.caption)
-                            .foregroundColor(theme.colors.textSecondary)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                 } else {
                     // Real chart
@@ -55,24 +53,25 @@ struct TotalItemsCard: View {
                             x: .value("Date", point.date, unit: .day),
                             y: .value("Items", point.count)
                         )
-                        .foregroundStyle(theme.colors.accentPrimary)
+                        .foregroundStyle(.blue)
                         .cornerRadius(4)
                     }
                     .chartXAxis {
                         AxisMarks(values: .stride(by: .day)) { _ in
                             AxisValueLabel(format: .dateTime.weekday(.abbreviated))
-                                .foregroundStyle(theme.colors.textSecondary)
+                                .foregroundStyle(.secondary)
                         }
                     }
                     .chartYAxis {
                         AxisMarks { _ in
                             AxisGridLine()
-                                .foregroundStyle(theme.colors.borderSubtle)
+                                .foregroundStyle(Color(nsColor: .separatorColor))
                         }
                     }
                     .frame(height: 100)
                 }
             }
+            .padding(4)
         }
         .frame(minHeight: 260)
     }

@@ -8,10 +8,10 @@ enum ToastType {
 
     var color: Color {
         switch self {
-        case .warning: return Color(hex: "FF9F0A")  // Neon Orange
-        case .success: return Color(hex: "00FF94")  // Neon Green
-        case .error: return Color(hex: "FF375F")  // Neon Red/Pink
-        case .info: return Color(hex: "0A84FF")  // Neon Blue
+        case .warning: return .orange
+        case .success: return .green
+        case .error: return .red
+        case .info: return .blue
         }
     }
 
@@ -74,7 +74,7 @@ struct NotificationToast: View {
         .background(
             Color.black.opacity(0.8)
         )
-        .glass(cornerRadius: 12)
+
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .strokeBorder(type.color.opacity(0.2), lineWidth: 1)

@@ -1,7 +1,7 @@
 import Combine
 import Foundation
 
-class InventoryViewModel: ObservableObject {
+public class InventoryViewModel: ObservableObject {
     @Published var items: [Item] = []
     @Published var searchText: String = ""
     @Published var selectedStatus: ItemStatus?
@@ -17,7 +17,7 @@ class InventoryViewModel: ObservableObject {
     let columnConfigService: ColumnConfigServiceProtocol
     private let customFieldRepository: CustomFieldRepositoryProtocol
 
-    init(
+    public init(
         itemRepository: ItemRepositoryProtocol,
         columnConfigService: ColumnConfigServiceProtocol,
         customFieldRepository: CustomFieldRepositoryProtocol

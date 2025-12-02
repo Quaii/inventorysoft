@@ -1,11 +1,11 @@
 import Foundation
 
-enum ImportTargetType: String, Codable, CaseIterable {
+public enum ImportTargetType: String, Codable, CaseIterable {
     case item
     case sale
     case purchase
 
-    var displayName: String {
+    public var displayName: String {
         switch self {
         case .item: return "Items"
         case .sale: return "Sales"
@@ -14,27 +14,27 @@ enum ImportTargetType: String, Codable, CaseIterable {
     }
 }
 
-struct FieldMapping: Codable, Equatable {
-    var sourceField: String
-    var targetField: String  // core field name or customFieldId
-    var isCustomField: Bool
+public struct FieldMapping: Codable, Equatable {
+    public var sourceField: String
+    public var targetField: String  // core field name or customFieldId
+    public var isCustomField: Bool
 
-    init(sourceField: String, targetField: String, isCustomField: Bool = false) {
+    public init(sourceField: String, targetField: String, isCustomField: Bool = false) {
         self.sourceField = sourceField
         self.targetField = targetField
         self.isCustomField = isCustomField
     }
 }
 
-struct ImportProfile: Identifiable, Codable, Equatable {
-    let id: UUID
-    var name: String
-    var targetType: ImportTargetType
-    var mappings: [FieldMapping]
-    var createdAt: Date
-    var updatedAt: Date
+public struct ImportProfile: Identifiable, Codable, Equatable {
+    public let id: UUID
+    public var name: String
+    public var targetType: ImportTargetType
+    public var mappings: [FieldMapping]
+    public var createdAt: Date
+    public var updatedAt: Date
 
-    init(
+    public init(
         id: UUID = UUID(),
         name: String,
         targetType: ImportTargetType,

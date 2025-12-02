@@ -2,7 +2,7 @@ import Combine
 import Foundation
 
 @MainActor
-class DashboardViewModel: ObservableObject {
+public class DashboardViewModel: ObservableObject {
     private let analyticsService: AnalyticsServiceProtocol
     private let dashboardConfigService: DashboardConfigServiceProtocol
 
@@ -38,17 +38,25 @@ class DashboardViewModel: ObservableObject {
     @Published var recentItems: [RecentItemInfo] = []
     @Published var itemCountHistory: [ItemCountDataPoint] = []
 
-    init(
-        analyticsService: AnalyticsServiceProtocol,
+    public init(
         dashboardConfigService: DashboardConfigServiceProtocol,
-        userWidgetRepository: UserWidgetRepositoryProtocol = UserWidgetRepository()
+        analyticsService: AnalyticsServiceProtocol,
+        inventoryViewModel: InventoryViewModel,
+        salesViewModel: SalesViewModel,
+        purchasesViewModel: PurchasesViewModel
     ) {
-        self.analyticsService = analyticsService
         self.dashboardConfigService = dashboardConfigService
-        self.userWidgetRepository = userWidgetRepository
+        self.analyticsService = analyticsService
+        self.inventoryViewModel = inventoryViewModel
+        self.salesViewModel = salesViewModel
+        self.purchasesViewModel = purchasesViewModel
+        self.userWidgetRepository = UserWidgetRepository()  // Initialize here if not passed
     }
 
     private let userWidgetRepository: UserWidgetRepositoryProtocol
+    private let inventoryViewModel: InventoryViewModel
+    private let salesViewModel: SalesViewModel
+    private let purchasesViewModel: PurchasesViewModel
 
     /// Get KPI data for a specific widget type
     func getKPIData(for widgetType: DashboardWidgetType) -> DashboardKPI? {
@@ -299,25 +307,11 @@ class DashboardViewModel: ObservableObject {
 
     private func loadItemCountHistory() async throws -> [ItemCountDataPoint] {
         let history = try await analyticsService.itemCountHistory(days: 7)
-        return history.map { date, count in
-            ItemCountDataPoint(date: date, count: count)
-        }.sorted(by: { $0.date < $1.date })
+        return history.sorted(by: { $0.date < $1.date })
     }
 
     private func loadRecentItems() async throws -> [RecentItemInfo] {
-        let items = try await analyticsService.recentItems(limit: 10)
-        return items.map { item in
-            RecentItemInfo(
-                title: item.title,
-                brand: "Unknown",  // Placeholder as Item doesn't have brand name directly
-                size: "-",  // Placeholder as Item doesn't have size directly
-                condition: item.condition,  // condition is already a String
-                price: item.purchasePrice.formatted(.currency(code: "USD")),
-                query: "-",
-                timestamp: item.dateAdded.formatted(date: .abbreviated, time: .shortened),
-                imageURL: nil
-            )
-        }
+        return try await analyticsService.recentItems(limit: 10)
     }
 
     private func loadRecentActivity() async throws -> [ActivityItem] {
@@ -547,8 +541,8 @@ class DashboardViewModel: ObservableObject {
             QuickListItem(
                 icon: "shippingbox",
                 title: item.title,
-                subtitle: item.timestamp,
-                value: item.price
+                subtitle: item.dateAdded.formatted(date: .abbreviated, time: .shortened),
+                value: item.price.formatted(.currency(code: "USD"))
             )
         }
     }

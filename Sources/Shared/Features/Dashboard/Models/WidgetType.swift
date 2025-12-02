@@ -34,7 +34,7 @@ import SwiftUI
 /// 5. Set sensible `defaultSize` (.small/.medium/.large)
 /// 6. Update `AddWidgetModal` if special configuration needed
 /// 7. Implement data fetching in `DashboardViewModel` if required
-enum DashboardWidgetType: String, Codable, CaseIterable {
+public enum DashboardWidgetType: String, Codable, CaseIterable {
     // KPI Widgets (single metric cards)
     case kpiInventoryValue = "kpi_inventory_value"
     case kpiItemsInStock = "kpi_items_in_stock"
@@ -61,7 +61,7 @@ enum DashboardWidgetType: String, Codable, CaseIterable {
     case customFormula = "custom_formula"
 
     /// Human-readable name displayed in UI
-    var displayName: String {
+    public var displayName: String {
         switch self {
         // KPI Widgets
         case .kpiInventoryValue: return "Inventory Value"
@@ -91,7 +91,7 @@ enum DashboardWidgetType: String, Codable, CaseIterable {
     }
 
     /// Description shown in Add Widget modal
-    var description: String {
+    public var description: String {
         switch self {
         // KPI Widgets
         case .kpiInventoryValue: return "Total value of your inventory"
@@ -121,7 +121,7 @@ enum DashboardWidgetType: String, Codable, CaseIterable {
     }
 
     /// SF Symbol icon representing this widget type
-    var icon: String {
+    public var icon: String {
         switch self {
         // KPI Widgets
         case .kpiInventoryValue: return "dollarsign.circle"
@@ -151,7 +151,7 @@ enum DashboardWidgetType: String, Codable, CaseIterable {
     }
 
     /// Default size when widget is first added
-    var defaultSize: DashboardWidgetSize {
+    public var defaultSize: DashboardWidgetSize {
         switch self {
         // KPI Widgets - small by default (fit 3 per row)
         case .kpiInventoryValue, .kpiItemsInStock, .kpiItemsListed,
@@ -177,7 +177,7 @@ enum DashboardWidgetType: String, Codable, CaseIterable {
     }
 
     /// Widget category for grouping in Add Widget modal
-    var category: WidgetCategory {
+    public var category: WidgetCategory {
         switch self {
         case .kpiInventoryValue, .kpiItemsInStock, .kpiItemsListed,
             .kpiSoldMonth, .kpiRevenueMonth, .kpiProfitMonth:
@@ -193,7 +193,7 @@ enum DashboardWidgetType: String, Codable, CaseIterable {
     }
 
     /// Maps KPI widget types to their corresponding metric type
-    var kpiMetricType: KPIMetricType? {
+    public var kpiMetricType: KPIMetricType? {
         switch self {
         case .kpiInventoryValue: return .inventoryValue
         case .kpiItemsInStock: return .itemsInStock
@@ -207,15 +207,15 @@ enum DashboardWidgetType: String, Codable, CaseIterable {
 }
 
 /// Categories for grouping widgets in the Add Widget modal
-enum WidgetCategory: String, CaseIterable {
+public enum WidgetCategory: String, CaseIterable {
     case metrics = "Metrics"
     case activity = "Activity"
     case alerts = "Alerts"
     case charts = "Charts"
 
-    var displayName: String { rawValue }
+    public var displayName: String { rawValue }
 
-    var icon: String {
+    public var icon: String {
         switch self {
         case .metrics: return "chart.bar.fill"
         case .activity: return "clock.fill"
@@ -239,18 +239,18 @@ enum WidgetCategory: String, CaseIterable {
 ///
 /// In edit mode, widgets display in a single-column list layout regardless of size,
 /// but return to their configured size when exiting edit mode.
-enum DashboardWidgetSize: String, Codable {
+public enum DashboardWidgetSize: String, Codable {
     case small = "small"
     case medium = "medium"
     case large = "large"
 
     /// Capitalized name for UI display
-    var displayName: String {
+    public var displayName: String {
         rawValue.capitalized
     }
 
     /// Number of columns this widget spans in the grid (1-3)
-    var columnSpan: Int {
+    public var columnSpan: Int {
         switch self {
         case .small: return 1
         case .medium: return 2

@@ -5,8 +5,6 @@ struct InventorySoftModal<ModalContent: View>: ViewModifier {
     let title: String
     let content: () -> ModalContent
 
-    @Environment(\.theme) var theme
-
     func body(content: Content) -> some View {
         ZStack {
             content
@@ -29,8 +27,8 @@ struct InventorySoftModal<ModalContent: View>: ViewModifier {
                     // Header
                     HStack {
                         Text(title)
-                            .font(theme.typography.headingM)
-                            .foregroundColor(theme.colors.textPrimary)
+                            .font(.title3)
+                            .foregroundColor(.primary)
 
                         Spacer()
 
@@ -41,31 +39,31 @@ struct InventorySoftModal<ModalContent: View>: ViewModifier {
                         }) {
                             Image(systemName: "xmark")
                                 .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(theme.colors.textSecondary)
+                                .foregroundColor(.secondary)
                                 .frame(width: 28, height: 28)
-                                .background(theme.colors.surfaceElevated)
+                                .background(Color(nsColor: .controlBackgroundColor))
                                 .clipShape(Circle())
                         }
                         .buttonStyle(.plain)
                     }
-                    .padding(theme.spacing.l)
-                    .background(theme.colors.surfaceSecondary)
+                    .padding(24)
+                    .background(Color(nsColor: .windowBackgroundColor))
 
-                    Divider().overlay(theme.colors.divider)
+                    Divider()
 
                     // Body
                     self.content()
-                        .padding(theme.spacing.l)
+                        .padding(24)
                 }
-                .background(theme.colors.surfacePrimary)
-                .cornerRadius(theme.radii.large)
+                .background(Color(nsColor: .windowBackgroundColor))
+                .cornerRadius(16)
                 .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 10)
                 .overlay(
-                    RoundedRectangle(cornerRadius: theme.radii.large)
-                        .stroke(theme.colors.borderSubtle, lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
                 )
                 .frame(maxWidth: 500)
-                .padding(theme.spacing.l)
+                .padding(24)
                 .transition(.scale(scale: 0.95).combined(with: .opacity))
                 .zIndex(1)
             }

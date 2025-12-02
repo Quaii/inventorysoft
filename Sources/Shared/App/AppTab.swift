@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum AppTab: String, CaseIterable, Identifiable {
+public enum AppTab: String, CaseIterable, Identifiable {
     case dashboard
     case inventory
     case sales
@@ -8,9 +8,9 @@ enum AppTab: String, CaseIterable, Identifiable {
     case analytics
     case settings
 
-    var id: String { rawValue }
+    public var id: String { rawValue }
 
-    var title: String {
+    public var title: String {
         switch self {
         case .dashboard: return "Dashboard"
         case .inventory: return "Inventory"
@@ -21,7 +21,7 @@ enum AppTab: String, CaseIterable, Identifiable {
         }
     }
 
-    var icon: String {
+    public var icon: String {
         switch self {
         case .dashboard: return "square.grid.2x2"
         case .inventory: return "box.truck"

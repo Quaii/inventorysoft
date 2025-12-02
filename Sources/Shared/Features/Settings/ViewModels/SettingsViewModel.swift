@@ -3,20 +3,20 @@ import Foundation
 import UniformTypeIdentifiers
 
 @MainActor
-class SettingsViewModel: ObservableObject {
+public class SettingsViewModel: ObservableObject {
     private let userPreferencesRepository: UserPreferencesRepositoryProtocol
-    let importProfileRepository: ImportProfileRepositoryProtocol
-    let importMappingService: ImportMappingServiceProtocol
+    public let importProfileRepository: ImportProfileRepositoryProtocol
+    public let importMappingService: ImportMappingServiceProtocol
 
-    @Published var userPreferences: UserPreferences
-    @Published var showingImportMapping = false
-    @Published var showingResetConfirmation = false
-    @Published var resetConfirmationText = ""
-    @Published var importURL: URL?
-    @Published var importTargetType: ImportTargetType = .item
-    @Published var errorMessage: String?
+    @Published public var userPreferences: UserPreferences
+    @Published public var showingImportMapping = false
+    @Published public var showingResetConfirmation = false
+    @Published public var resetConfirmationText = ""
+    @Published public var importURL: URL?
+    @Published public var importTargetType: ImportTargetType = .item
+    @Published public var errorMessage: String?
 
-    init(
+    public init(
         userPreferencesRepository: UserPreferencesRepositoryProtocol,
         importProfileRepository: ImportProfileRepositoryProtocol,
         importMappingService: ImportMappingServiceProtocol
@@ -31,7 +31,7 @@ class SettingsViewModel: ObservableObject {
         }
     }
 
-    func loadPreferences() async {
+    public func loadPreferences() async {
         do {
             userPreferences = try await userPreferencesRepository.getPreferences()
         } catch {
@@ -39,7 +39,7 @@ class SettingsViewModel: ObservableObject {
         }
     }
 
-    func savePreferences() async {
+    public func savePreferences() async {
         do {
             try await userPreferencesRepository.savePreferences(userPreferences)
         } catch {
@@ -49,79 +49,79 @@ class SettingsViewModel: ObservableObject {
 
     // MARK: - General Settings
 
-    func updateCurrency(_ currency: String) async {
+    public func updateCurrency(_ currency: String) async {
         userPreferences.baseCurrency = currency
         userPreferences.displayCurrency = currency
         await savePreferences()
     }
 
-    func updateDateFormat(_ format: String) async {
+    public func updateDateFormat(_ format: String) async {
         userPreferences.dateFormat = format
         await savePreferences()
     }
 
-    func updateNumberFormat(_ format: String) async {
+    public func updateNumberFormat(_ format: String) async {
         userPreferences.numberFormattingLocale = format
         await savePreferences()
     }
 
     // MARK: - Appearance Settings
 
-    func updateThemeMode(_ mode: String) async {
+    public func updateThemeMode(_ mode: String) async {
         userPreferences.themeMode = mode
         await savePreferences()
     }
 
-    func updateCompactMode(_ enabled: Bool) async {
+    public func updateCompactMode(_ enabled: Bool) async {
         userPreferences.compactMode = enabled
         await savePreferences()
     }
 
-    func updateAccentColor(_ color: String) async {
+    public func updateAccentColor(_ color: String) async {
         userPreferences.accentColor = color
         await savePreferences()
     }
 
-    func updateSidebarBehavior(_ behavior: String) async {
+    public func updateSidebarBehavior(_ behavior: String) async {
         userPreferences.sidebarCollapseBehavior = behavior
         await savePreferences()
     }
 
     // MARK: - Dashboard & Analytics Settings
 
-    func updateDashboardInitialLayout(_ layout: String) async {
+    public func updateDashboardInitialLayout(_ layout: String) async {
         userPreferences.dashboardInitialLayout = layout
         await savePreferences()
     }
 
-    func updateAllowDashboardEditing(_ allow: Bool) async {
+    public func updateAllowDashboardEditing(_ allow: Bool) async {
         userPreferences.allowDashboardEditing = allow
         await savePreferences()
     }
 
-    func updateDefaultAnalyticsRange(_ range: String) async {
+    public func updateDefaultAnalyticsRange(_ range: String) async {
         userPreferences.defaultAnalyticsRange = range
         await savePreferences()
     }
 
-    func updateDefaultAnalyticsInterval(_ interval: String) async {
+    public func updateDefaultAnalyticsInterval(_ interval: String) async {
         userPreferences.defaultAnalyticsInterval = interval
         await savePreferences()
     }
 
     // MARK: - Data Management
 
-    func updateBackupLocation(_ path: String) async {
+    public func updateBackupLocation(_ path: String) async {
         userPreferences.backupLocationPath = path
         await savePreferences()
     }
 
-    func updateBackupFrequency(_ frequency: String) async {
+    public func updateBackupFrequency(_ frequency: String) async {
         userPreferences.backupFrequency = frequency
         await savePreferences()
     }
 
-    func handleImportFile(_ url: URL, targetType: ImportTargetType) {
+    public func handleImportFile(_ url: URL, targetType: ImportTargetType) {
         self.importURL = url
         self.importTargetType = targetType
         self.showingImportMapping = true

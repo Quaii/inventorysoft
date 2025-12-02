@@ -1,6 +1,6 @@
 import Foundation
 
-enum ItemStatus: String, Codable, CaseIterable {
+public enum ItemStatus: String, Codable, CaseIterable {
     case inStock = "In Stock"
     case listed = "Listed"
     case sold = "Sold"
@@ -9,24 +9,24 @@ enum ItemStatus: String, Codable, CaseIterable {
     case draft = "Draft"
 }
 
-struct Item: Identifiable, Codable, Equatable {
-    let id: UUID
-    var title: String
-    var brandId: UUID?
-    var categoryId: UUID?
-    var purchasePrice: Decimal
-    var quantity: Int
-    var dateAdded: Date
-    var condition: String
-    var notes: String?
-    var status: ItemStatus
-    var sku: String?
-    var category: String?  // Added for UI display
+public struct Item: Identifiable, Equatable, Codable {
+    public let id: UUID
+    public var title: String
+    public var brandId: UUID?
+    public var categoryId: UUID?
+    public var purchasePrice: Decimal
+    public var quantity: Int
+    public var dateAdded: Date
+    public var condition: String
+    public var notes: String?
+    public var status: ItemStatus
+    public var sku: String?
+    public var category: String?  // Added for UI display
 
     // In-memory convenience, not persisted directly in Item table
-    var images: [ImageAttachment] = []
+    public var images: [ImageAttachment] = []
 
-    init(
+    public init(
         id: UUID = UUID(),
         title: String,
         brandId: UUID? = nil,

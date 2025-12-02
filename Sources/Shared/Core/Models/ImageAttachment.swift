@@ -1,14 +1,14 @@
 import Foundation
 
-struct ImageAttachment: Identifiable, Codable, Equatable {
-    let id: UUID
-    var itemId: UUID
-    var fileName: String
-    var relativePath: String
-    var isPrimary: Bool
-    var createdAt: Date
+public struct ImageAttachment: Identifiable, Codable, Equatable {
+    public let id: UUID
+    public var itemId: UUID
+    public var fileName: String
+    public var relativePath: String
+    public var isPrimary: Bool
+    public var createdAt: Date
 
-    init(
+    public init(
         id: UUID = UUID(),
         itemId: UUID,
         fileName: String,

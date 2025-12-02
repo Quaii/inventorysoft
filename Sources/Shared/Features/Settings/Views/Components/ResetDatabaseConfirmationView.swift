@@ -6,92 +6,57 @@ struct ResetDatabaseConfirmationView: View {
     @Binding var confirmationText: String
     let onConfirm: () -> Void
 
-    @Environment(\.theme) var theme
-
     var body: some View {
-        ZStack {
-            // Background overlay
-            Color.black.opacity(0.5)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    isPresented = false
-                }
-
-            // Confirmation dialog
-            VStack(alignment: .leading, spacing: theme.spacing.l) {
-                // Title
-                Text("Reset Database")
-                    .font(theme.typography.sectionTitle)
-                    .foregroundColor(theme.colors.error)
-
-                // Warning message
-                VStack(alignment: .leading, spacing: theme.spacing.s) {
-                    Text("This action will permanently delete:")
-                        .font(theme.typography.body)
-                        .foregroundColor(theme.colors.textPrimary)
-
-                    VStack(alignment: .leading, spacing: 4) {
+        NavigationStack {
+            Form {
+                Section {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("This action will permanently delete:")
+                            .font(.headline)
                         Text("• All inventory items")
                         Text("• All sales records")
                         Text("• All purchase records")
                         Text("• All images and attachments")
                         Text("• All custom fields")
                         Text("• All settings")
+
+                        Text("This action cannot be undone.")
+                            .font(.headline)
+                            .foregroundStyle(.red)
+                            .padding(.top, 8)
                     }
-                    .font(theme.typography.caption)
-                    .foregroundColor(theme.colors.textSecondary)
-
-                    Text("This action cannot be undone.")
-                        .font(theme.typography.body)
-                        .bold()
-                        .foregroundColor(theme.colors.error)
-                        .padding(.top, theme.spacing.s)
+                } header: {
+                    Text("Warning")
                 }
 
-                Divider()
-                    .overlay(theme.colors.divider)
-
-                // Confirmation input
-                VStack(alignment: .leading, spacing: theme.spacing.s) {
-                    Text("Type RESET to confirm:")
-                        .font(theme.typography.caption)
-                        .foregroundColor(theme.colors.textSecondary)
-
-                    TextField("", text: $confirmationText)
-                        .textFieldStyle(.plain)
-                        .padding(theme.spacing.s)
-                        .background(theme.colors.backgroundSecondary)
-                        .cornerRadius(theme.radii.small)
-                        .font(theme.typography.body)
+                Section {
+                    TextField("Type RESET to confirm", text: $confirmationText)
+                        .autocorrectionDisabled()
+                        .autocorrectionDisabled()
+                } header: {
+                    Text("Confirmation")
+                } footer: {
+                    Text("Type RESET to confirm deletion")
                 }
-
-                // Action buttons
-                HStack(spacing: theme.spacing.m) {
-                    AppButton(
-                        title: "Cancel",
-                        style: .secondary
-                    ) {
+            }
+            .navigationTitle("Reset Database")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
                         isPresented = false
                         confirmationText = ""
                     }
-
-                    AppButton(
-                        title: "Reset Database",
-                        style: .destructive
-                    ) {
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Reset Database", role: .destructive) {
                         onConfirm()
                         isPresented = false
                         confirmationText = ""
                     }
                     .disabled(confirmationText != "RESET")
-                    .opacity(confirmationText == "RESET" ? 1.0 : 0.5)
                 }
             }
-            .padding(theme.spacing.xl)
-            .frame(maxWidth: 500)
-            .background(theme.colors.surfaceElevated)
-            .cornerRadius(theme.radii.large)
-            .shadow(color: .black.opacity(0.3), radius: 20, x: 0, y: 10)
         }
+        .frame(width: 500, height: 400)
     }
 }
