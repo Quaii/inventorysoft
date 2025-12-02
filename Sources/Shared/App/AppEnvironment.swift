@@ -22,7 +22,9 @@ public final class AppEnvironment: ObservableObject {
     public let columnConfigService: ColumnConfigServiceProtocol
     public let importMappingService: ImportMappingServiceProtocol
     public let analyticsConfigService: AnalyticsConfigServiceProtocol
+    public let analyticsConfigService: AnalyticsConfigServiceProtocol
     public let exportService: ExportService
+    public let kpiService: KPIServiceProtocol
 
     @Published public var hasCompletedOnboarding: Bool
     @Published public var userPreferences: UserPreferences
@@ -58,6 +60,7 @@ public final class AppEnvironment: ObservableObject {
         )
         self.exportService = ExportService(
             db: DatabaseManager.shared, columnConfigService: columnConfigService)
+        self.kpiService = KPIService(analyticsService: analyticsService)
 
         // Load user preferences
         self.userPreferences = .default
@@ -86,6 +89,7 @@ public final class AppEnvironment: ObservableObject {
         DashboardViewModel(
             dashboardConfigService: dashboardConfigService,
             analyticsService: analyticsService,
+            kpiService: kpiService,
             inventoryViewModel: makeInventoryViewModel(),
             salesViewModel: makeSalesViewModel(),
             purchasesViewModel: makePurchasesViewModel()

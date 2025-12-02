@@ -6,6 +6,7 @@ public class DatabaseManager {
 
     // The database writer (DatabaseQueue or DatabasePool)
     public let dbWriter: DatabaseWriter
+    public private(set) var setupError: Error?
 
     private init() {
         do {
@@ -25,13 +26,28 @@ public class DatabaseManager {
             }
 
             // 3. Create DatabaseQueue
-            dbWriter = try DatabaseQueue(path: databaseURL.path, configuration: config)
+            do {
+                dbWriter = try DatabaseQueue(path: databaseURL.path, configuration: config)
+            } catch {
+                print("Database creation failed: \(error). Attempting to recover...")
+                // Recovery: Delete and recreate
+                try fileManager.removeItem(at: databaseURL)
+                dbWriter = try DatabaseQueue(path: databaseURL.path, configuration: config)
+            }
 
             // 4. Run migrations
             try migrator.migrate(dbWriter)
 
         } catch {
-            fatalError("Database setup failed: \(error)")
+            print("Critical Database Error: \(error)")
+            setupError = error
+            // Fallback to in-memory database so the app doesn't crash
+            // The user will see an empty state, but we should show an error alert
+            do {
+                dbWriter = try DatabaseQueue()
+            } catch {
+                fatalError("Failed to create in-memory fallback database: \(error)")
+            }
         }
     }
 

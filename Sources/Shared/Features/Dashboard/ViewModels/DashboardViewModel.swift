@@ -21,9 +21,6 @@ public class DashboardViewModel: ObservableObject {
     // KPI data
     @Published var kpis: [DashboardKPI] = []
 
-    // Alert data
-    @Published var alerts: [DashboardAlert] = []
-
     // Quick list data
     @Published var recentSales: [QuickListItem] = []
     @Published var recentPurchases: [QuickListItem] = []
@@ -38,25 +35,29 @@ public class DashboardViewModel: ObservableObject {
     @Published var recentItems: [RecentItemInfo] = []
     @Published var itemCountHistory: [ItemCountDataPoint] = []
 
+    private let userWidgetRepository: UserWidgetRepositoryProtocol
+    private let inventoryViewModel: InventoryViewModel
+    private let salesViewModel: SalesViewModel
+    private let purchasesViewModel: PurchasesViewModel
+    private let kpiService: KPIServiceProtocol
+    private let kpiService: KPIServiceProtocol
+
     public init(
         dashboardConfigService: DashboardConfigServiceProtocol,
         analyticsService: AnalyticsServiceProtocol,
+        kpiService: KPIServiceProtocol,
         inventoryViewModel: InventoryViewModel,
         salesViewModel: SalesViewModel,
         purchasesViewModel: PurchasesViewModel
     ) {
         self.dashboardConfigService = dashboardConfigService
         self.analyticsService = analyticsService
+        self.kpiService = kpiService
         self.inventoryViewModel = inventoryViewModel
         self.salesViewModel = salesViewModel
         self.purchasesViewModel = purchasesViewModel
-        self.userWidgetRepository = UserWidgetRepository()  // Initialize here if not passed
+        self.userWidgetRepository = UserWidgetRepository()
     }
-
-    private let userWidgetRepository: UserWidgetRepositoryProtocol
-    private let inventoryViewModel: InventoryViewModel
-    private let salesViewModel: SalesViewModel
-    private let purchasesViewModel: PurchasesViewModel
 
     /// Get KPI data for a specific widget type
     func getKPIData(for widgetType: DashboardWidgetType) -> DashboardKPI? {
@@ -263,9 +264,6 @@ public class DashboardViewModel: ObservableObject {
         // Load KPIs
         await loadKPIs()
 
-        // Load Alerts
-        await loadAlerts()
-
         // Load Quick Lists
         await loadQuickLists()
 
@@ -326,7 +324,7 @@ public class DashboardViewModel: ObservableObject {
 
     func loadKPIs() async {
         do {
-            kpis = try await calculateKPIs()
+            kpis = try await kpiService.calculateKPIs()
         } catch {
             print("KPI calculation error: \(error)")
             // Set empty KPIs on error
@@ -334,176 +332,13 @@ public class DashboardViewModel: ObservableObject {
         }
     }
 
-    private func calculateKPIs() async throws -> [DashboardKPI] {
-        // Calculate all KPIs in parallel for better performance
-        async let inventoryValue = calculateInventoryValue()
-        async let itemsInStock = calculateItemsInStock()
-        async let itemsListed = calculateItemsListed()
-        async let itemsSoldMonth = calculateItemsSoldThisMonth()
-        async let revenueMonth = calculateRevenueThisMonth()
-        async let profitMonth = calculateProfitThisMonth()
-
-        return [
-            DashboardKPI(
-                title: "Inventory Value",
-                value: try await inventoryValue.0,
-                secondaryText: try await inventoryValue.1,
-                metricKey: .inventoryValue,
-                sortOrder: 0
-            ),
-            DashboardKPI(
-                title: "Items in Stock",
-                value: try await itemsInStock.0,
-                secondaryText: try await itemsInStock.1,
-                metricKey: .itemsInStock,
-                sortOrder: 1
-            ),
-            DashboardKPI(
-                title: "Items Listed",
-                value: try await itemsListed.0,
-                secondaryText: try await itemsListed.1,
-                metricKey: .itemsListed,
-                sortOrder: 2
-            ),
-            DashboardKPI(
-                title: "Sold This Month",
-                value: try await itemsSoldMonth.0,
-                secondaryText: try await itemsSoldMonth.1,
-                metricKey: .itemsSoldMonth,
-                sortOrder: 3
-            ),
-            DashboardKPI(
-                title: "Revenue (Month)",
-                value: try await revenueMonth.0,
-                secondaryText: try await revenueMonth.1,
-                metricKey: .revenueMonth,
-                sortOrder: 4
-            ),
-            DashboardKPI(
-                title: "Profit (Month)",
-                value: try await profitMonth.0,
-                secondaryText: try await profitMonth.1,
-                metricKey: .profitMonth,
-                sortOrder: 5
-            ),
-        ]
-    }
-
-    private func calculateInventoryValue() async throws -> (String, String) {
-        let value = try await analyticsService.totalInventoryValue()
-        let formatted = value.formatted(.currency(code: "USD"))
-        return (formatted, "Total value of inventory")
-    }
-
-    private func calculateItemsInStock() async throws -> (String, String) {
-        // This would need a new analytics service method
-        // For now, use total items as approximation
-        let count = try await analyticsService.itemCount()
-        return ("\(count)", "Items available")
-    }
-
-    private func calculateItemsListed() async throws -> (String, String) {
-        // This would need a new analytics service method
-        // For now, return placeholder
-        return ("0", "Items listed for sale")
-    }
-
-    private func calculateItemsSoldThisMonth() async throws -> (String, String) {
-        // This would need a date-filtered sales count
-        // For now, return placeholder
-        return ("0", "This month")
-    }
-
-    private func calculateRevenueThisMonth() async throws -> (String, String) {
-        // This would need date-filtered revenue
-        // For now, use total revenue as placeholder
-        let revenue = try await analyticsService.totalSalesRevenue()
-        let formatted = revenue.formatted(.currency(code: "USD"))
-        return (formatted, "This month")
-    }
-
-    private func calculateProfitThisMonth() async throws -> (String, String) {
-        // This would need date-filtered profit
-        // For now, use total profit as placeholder
-        let profit = try await analyticsService.totalNetProfit()
-        let formatted = profit.formatted(.currency(code: "USD"))
-        return (formatted, "This month")
-    }
-
     // MARK: - Alert Generation
-
-    func loadAlerts() async {
-        do {
-            alerts = try await generateAlerts()
-        } catch {
-            print("Alert generation error: \(error)")
-            alerts = []
-        }
-    }
-
-    func dismissAlert(_ alert: DashboardAlert) {
-        if let index = alerts.firstIndex(where: { $0.id == alert.id }) {
-            alerts[index].isDismissed = true
-        }
-    }
-
-    private func generateAlerts() async throws -> [DashboardAlert] {
-        var generatedAlerts: [DashboardAlert] = []
-
-        // Alert 1: Aging Items (items over 90 days old)
-        let agingAlert = try await generateAgingItemsAlert()
-        if let alert = agingAlert {
-            generatedAlerts.append(alert)
-        }
-
-        // Alert 2: Profit Trend (compare current vs previous month)
-        // Placeholder for now
-        let profitAlert = DashboardAlert(
-            type: .profitTrend,
-            title: "Profit Trend",
-            message: "Profit analysis requires historical data",
-            severity: .info
-        )
-        generatedAlerts.append(profitAlert)
-
-        // Alert 3: Best Brand (most sales this month)
-        // Placeholder for now
-        let brandAlert = DashboardAlert(
-            type: .bestBrand,
-            title: "Top Performer",
-            message: "Brand analytics coming soon",
-            severity: .info
-        )
-        generatedAlerts.append(brandAlert)
-
-        return generatedAlerts
-    }
+    // Alerts removed as per system audit
 
     func handleKPITap(_ kpi: DashboardKPI) {
         print("Tapped KPI: \(kpi.title) - Metric: \(kpi.metricKey.rawValue)")
         // Future: Navigate to detailed view based on KPI type
         // For now, KPI widgets in the unified system handle their own tap events
-    }
-
-    private func generateAgingItemsAlert() async throws -> DashboardAlert? {
-        // This would need a date comparison query
-        // For now, return placeholder
-        // let agingThresholdDays = 90
-        // let agingCount = ... query items where dateAdded < 90 days ago
-
-        // Placeholder: assume 0 items for now
-        // In real implementation, this would be dynamic
-        // let agingCount = 0
-
-        // if agingCount > 0 {
-        //     return DashboardAlert(
-        //         type: .agingItems,
-        //         title: "Aging Inventory",
-        //         message: "\(agingCount) items over \(agingThresholdDays) days in stock",
-        //         severity: .warning
-        //     )
-        // }
-        return nil
     }
 
     // MARK: - Quick Lists
@@ -582,15 +417,8 @@ public class DashboardViewModel: ObservableObject {
             position += 1
         }
 
-        // Row 2: Priority Alerts (1 large widget)
-        widgets.append(
-            UserWidget(
-                type: .priorityAlerts,
-                size: .large,
-                name: "Priority Alerts",
-                position: position
-            ))
-        position += 1
+        // Row 2: Priority Alerts (Removed)
+        // widgets.append(...)
 
         // Row 3: Quick Lists (3 medium widgets)
         widgets.append(

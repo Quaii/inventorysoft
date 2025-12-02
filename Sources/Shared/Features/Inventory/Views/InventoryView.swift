@@ -10,58 +10,35 @@ struct InventoryView: View {
     @State private var showingColumnConfig = false
     @State private var isGridView = true
     @State private var selectedItem: Item?
+    @State private var selectedItems: Set<Item.ID> = []  // For Table selection
     @State private var isAddingItem = false
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 24) {
-                // Filters & Controls
-                VStack(spacing: 16) {
-                    HStack(spacing: 16) {
-                        // Search
-                        TextField("Search items...", text: $viewModel.searchText)
-                            .textFieldStyle(.roundedBorder)
-                            .frame(maxWidth: 320)
-
-                        // Category Filter
-                        Picker(
-                            "Category",
-                            selection: Binding(
-                                get: { viewModel.selectedCategory ?? "All" },
-                                set: { viewModel.selectedCategory = $0 == "All" ? nil : $0 }
-                            )
-                        ) {
-                            Text("All Categories").tag("All")
-                            ForEach(viewModel.categories, id: \.self) { category in
-                                Text(category).tag(category)
-                            }
-                        }
-                        .frame(width: 160)
-
-                        Spacer()
-
-                        // View Toggle
-                        Picker("View", selection: $isGridView) {
-                            Image(systemName: "square.grid.2x2").tag(true)
-                            Image(systemName: "list.bullet").tag(false)
-                        }
-                        .pickerStyle(.segmented)
-                        .frame(width: 100)
-
-                        // Columns Button (List View Only)
-                        if !isGridView {
-                            Button(action: { showingColumnConfig = true }) {
-                                Label("Columns", systemImage: "slider.horizontal.3")
-                            }
+            contentView
+                .navigationTitle("Inventory")
+                .searchable(text: $viewModel.searchText, prompt: "Search items...")
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button(action: { isAddingItem = true }) {
+                            Label("Add Item", systemImage: "plus")
                         }
                     }
 
-                    // Status Filter (Secondary Row)
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            Text("Status:")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                    ToolbarItem(placement: .secondaryAction) {
+                        Menu {
+                            Picker(
+                                "Category",
+                                selection: Binding(
+                                    get: { viewModel.selectedCategory ?? "All" },
+                                    set: { viewModel.selectedCategory = $0 == "All" ? nil : $0 }
+                                )
+                            ) {
+                                Text("All Categories").tag("All")
+                                ForEach(viewModel.categories, id: \.self) { category in
+                                    Text(category).tag(category)
+                                }
+                            }
 
                             Picker(
                                 "Status",
@@ -75,24 +52,27 @@ struct InventoryView: View {
                                     Text(status.rawValue).tag(status.rawValue)
                                 }
                             }
-                            .frame(width: 160)
+                        } label: {
+                            Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
+                        }
+                    }
+
+                    ToolbarItem(placement: .secondaryAction) {
+                        Picker("View", selection: $isGridView) {
+                            Image(systemName: "square.grid.2x2").tag(true)
+                            Image(systemName: "list.bullet").tag(false)
+                        }
+                        .pickerStyle(.segmented)
+                    }
+
+                    if !isGridView {
+                        ToolbarItem(placement: .secondaryAction) {
+                            Button(action: { showingColumnConfig = true }) {
+                                Label("Columns", systemImage: "slider.horizontal.3")
+                            }
                         }
                     }
                 }
-                .padding(.horizontal)
-                .padding(.top)
-
-                // Content
-                contentView
-            }
-            .navigationTitle("Inventory")
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button(action: { isAddingItem = true }) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
         }
         .sheet(isPresented: $showingColumnConfig) {
             ColumnConfigurationView(
@@ -185,25 +165,52 @@ struct InventoryView: View {
     }
 
     // MARK: - Table View
+    // MARK: - Table View
+    @ViewBuilder
     private var tableView: some View {
-        VStack(spacing: 0) {
-            // Header
-            HStack(spacing: 0) {
-                ForEach(columns.filter { $0.isVisible }.sorted { $0.sortOrder < $1.sortOrder }) {
-                    column in
-                    Text(column.label)
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.secondary)
-                        .frame(width: column.width ?? 100, alignment: .leading)
-                        .padding(.horizontal, 4)
+        #if os(macOS)
+            Table(viewModel.items, selection: $selectedItem) {
+                TableColumn("Status") { item in
+                    StatusBadge(status: item.status)
                 }
-                Spacer()
-            }
-            .padding(.horizontal)
-            .padding(.vertical, 8)
-            .background(Color.gray.opacity(0.1))
+                .width(min: 80, ideal: 100, max: 120)
 
+                TableColumn("Title") { item in
+                    Text(item.title)
+                        .foregroundStyle(.primary)
+                }
+
+                TableColumn("Brand") { item in
+                    Text(item.brandId?.uuidString ?? "-")
+                }
+
+                TableColumn("Category") { item in
+                    Text(item.category ?? "-")
+                }
+
+                TableColumn("Price") { item in
+                    Text(item.purchasePrice.formatted(.currency(code: "USD")))
+                        .monospacedDigit()
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+                .width(min: 80, ideal: 100, max: 120)
+
+                TableColumn("Qty") { item in
+                    Text("\(item.quantity)")
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+                .width(min: 50, ideal: 60, max: 80)
+
+                TableColumn("Date Added") { item in
+                    Text(item.dateAdded.formatted(date: .abbreviated, time: .omitted))
+                }
+            }
+            .contextMenu(forSelectionType: Item.self) { items in
+                if let item = items.first {
+                    itemContextMenu(for: item)
+                }
+            }
+        #else
             List {
                 ForEach(viewModel.items) { item in
                     InventoryRow(
@@ -222,7 +229,7 @@ struct InventoryView: View {
                 }
             }
             .listStyle(.plain)
-        }
+        #endif
     }
 
     @ViewBuilder
@@ -382,7 +389,7 @@ struct StatusBadge: View {
 
     var body: some View {
         Text(status.rawValue)
-            .font(.system(size: 10, weight: .bold))
+            .font(.caption2.bold())
             .foregroundColor(color)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)

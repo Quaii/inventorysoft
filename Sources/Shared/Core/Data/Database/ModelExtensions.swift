@@ -4,6 +4,8 @@ import GRDB
 // MARK: - Item
 extension Item: FetchableRecord, PersistableRecord {
     public static var databaseTableName: String { SchemaDefinitions.ItemTable.databaseTableName }
+
+    public static let images = hasMany(ImageAttachment.self)
 }
 
 // MARK: - Sale

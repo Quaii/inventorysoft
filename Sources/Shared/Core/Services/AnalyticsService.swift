@@ -6,6 +6,8 @@ public protocol AnalyticsServiceProtocol {
     func totalNetProfit() async throws -> Decimal
     func itemCount() async throws -> Int
     func saleCount() async throws -> Int
+    func itemCount(status: ItemStatus) async throws -> Int
+    func saleCount(since date: Date) async throws -> Int
     func getRecentActivity() async throws -> [ActivityItem]
     func getLowStockItems() async throws -> [StockAlert]
     func getSalesChartData() async throws -> [SalesDataPoint]
@@ -60,9 +62,20 @@ public class AnalyticsService: AnalyticsServiceProtocol {
         return items.count
     }
 
+    public func itemCount(status: ItemStatus) async throws -> Int {
+        let items = try await itemRepository.fetchAllItems(
+            search: nil, statusFilter: [status], sort: .byDateAddedDescending)
+        return items.count
+    }
+
     public func saleCount() async throws -> Int {
         let sales = try await salesRepository.fetchAllSales()
         return sales.count
+    }
+
+    public func saleCount(since date: Date) async throws -> Int {
+        let sales = try await salesRepository.fetchAllSales()
+        return sales.filter { $0.dateSold >= date }.count
     }
 
     public func getRecentActivity() async throws -> [ActivityItem] {

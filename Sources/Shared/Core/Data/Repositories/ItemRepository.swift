@@ -27,7 +27,7 @@ public class ItemRepository: ItemRepositoryProtocol {
         sort: ItemSortOption = .byDateAddedDescending
     ) async throws -> [Item] {
         try await dbManager.reader.read { db in
-            var request = Item.all()
+            var request = Item.including(all: Item.images)
 
             if let search = search, !search.isEmpty {
                 request = request.filter(
@@ -53,21 +53,7 @@ public class ItemRepository: ItemRepositoryProtocol {
                 request = request.order(Column(SchemaDefinitions.ItemTable.status).asc)
             }
 
-            var items = try request.fetchAll(db)
-
-            // Populate images for each item
-            // Note: In a real app with many items, this N+1 query should be optimized with a join or batch fetch.
-            // For now, we'll fetch all images and map them in memory for simplicity/speed given local DB.
-            let allImages = try ImageAttachment.fetchAll(db)
-            let imageMap = Dictionary(grouping: allImages, by: { $0.itemId })
-
-            for i in 0..<items.count {
-                if let itemImages = imageMap[items[i].id] {
-                    items[i].images = itemImages
-                }
-            }
-
-            return items
+            return try request.fetchAll(db)
         }
     }
 
