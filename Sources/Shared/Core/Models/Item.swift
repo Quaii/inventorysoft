@@ -9,7 +9,7 @@ public enum ItemStatus: String, Codable, CaseIterable {
     case draft = "Draft"
 }
 
-public struct Item: Identifiable, Equatable, Codable {
+public struct Item: Identifiable, Equatable, Codable, Hashable {
     public let id: UUID
     public var title: String
     public var brandId: UUID?

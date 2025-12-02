@@ -169,7 +169,7 @@ struct InventoryView: View {
     @ViewBuilder
     private var tableView: some View {
         #if os(macOS)
-            Table(viewModel.items, selection: $selectedItem) {
+            Table(viewModel.items, selection: $selectedItems) {
                 TableColumn("Status") { item in
                     StatusBadge(status: item.status)
                 }
@@ -205,9 +205,18 @@ struct InventoryView: View {
                     Text(item.dateAdded.formatted(date: .abbreviated, time: .omitted))
                 }
             }
-            .contextMenu(forSelectionType: Item.self) { items in
-                if let item = items.first {
+            .contextMenu(forSelectionType: Item.ID.self) { itemIds in
+                if let itemId = itemIds.first,
+                    let item = viewModel.items.first(where: { $0.id == itemId })
+                {
                     itemContextMenu(for: item)
+                }
+            }
+            .onChange(of: selectedItems) { _, newSelection in
+                if let id = newSelection.first {
+                    selectedItem = viewModel.items.first(where: { $0.id == id })
+                } else {
+                    selectedItem = nil
                 }
             }
         #else

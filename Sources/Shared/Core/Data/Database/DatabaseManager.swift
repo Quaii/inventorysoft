@@ -10,48 +10,53 @@ public class DatabaseManager {
 
     private init() {
         do {
-            // 1. Setup database path
-            let fileManager = FileManager.default
-            let appSupportURL = try fileManager.url(
-                for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil,
-                create: true)
-            let directoryURL = appSupportURL.appendingPathComponent("Database", isDirectory: true)
-            try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
-            let databaseURL = directoryURL.appendingPathComponent("db.sqlite")
-
-            // 2. Setup configuration
-            var config = Configuration()
-            config.prepareDatabase { db in
-                db.trace { print($0) }  // Debug logging
-            }
-
-            // 3. Create DatabaseQueue
-            do {
-                dbWriter = try DatabaseQueue(path: databaseURL.path, configuration: config)
-            } catch {
-                print("Database creation failed: \(error). Attempting to recover...")
-                // Recovery: Delete and recreate
-                try fileManager.removeItem(at: databaseURL)
-                dbWriter = try DatabaseQueue(path: databaseURL.path, configuration: config)
-            }
-
-            // 4. Run migrations
-            try migrator.migrate(dbWriter)
-
+            self.dbWriter = try DatabaseManager.createDatabase()
         } catch {
             print("Critical Database Error: \(error)")
-            setupError = error
-            // Fallback to in-memory database so the app doesn't crash
-            // The user will see an empty state, but we should show an error alert
+            self.setupError = error
+            // Fallback to in-memory database
             do {
-                dbWriter = try DatabaseQueue()
+                self.dbWriter = try DatabaseQueue()
             } catch {
                 fatalError("Failed to create in-memory fallback database: \(error)")
             }
         }
     }
 
-    private var migrator: DatabaseMigrator {
+    private static func createDatabase() throws -> DatabaseWriter {
+        // 1. Setup database path
+        let fileManager = FileManager.default
+        let appSupportURL = try fileManager.url(
+            for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil,
+            create: true)
+        let directoryURL = appSupportURL.appendingPathComponent("Database", isDirectory: true)
+        try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+        let databaseURL = directoryURL.appendingPathComponent("db.sqlite")
+
+        // 2. Setup configuration
+        var config = Configuration()
+        config.prepareDatabase { db in
+            db.trace { print($0) }  // Debug logging
+        }
+
+        // 3. Create DatabaseQueue
+        let writer: DatabaseWriter
+        do {
+            writer = try DatabaseQueue(path: databaseURL.path, configuration: config)
+        } catch {
+            print("Database creation failed: \(error). Attempting to recover...")
+            // Recovery: Delete and recreate
+            try fileManager.removeItem(at: databaseURL)
+            writer = try DatabaseQueue(path: databaseURL.path, configuration: config)
+        }
+
+        // 4. Run migrations
+        try DatabaseManager.migrator.migrate(writer)
+
+        return writer
+    }
+
+    private static var migrator: DatabaseMigrator {
         var migrator = DatabaseMigrator()
 
         #if DEBUG

@@ -48,9 +48,6 @@ public enum DashboardWidgetType: String, Codable, CaseIterable {
     case quickListPurchases = "quick_list_purchases"
     case quickListItems = "quick_list_items"
 
-    // Alert Widgets
-    case priorityAlerts = "priority_alerts"
-
     // Chart Widgets (existing)
     case revenueChart = "revenue_chart"
     case profitChart = "profit_chart"
@@ -75,9 +72,6 @@ public enum DashboardWidgetType: String, Codable, CaseIterable {
         case .quickListSales: return "Recent Sales"
         case .quickListPurchases: return "Recent Purchases"
         case .quickListItems: return "Recent Items"
-
-        // Alert Widgets
-        case .priorityAlerts: return "Priority Alerts"
 
         // Chart Widgets
         case .revenueChart: return "Revenue Chart"
@@ -106,9 +100,6 @@ public enum DashboardWidgetType: String, Codable, CaseIterable {
         case .quickListPurchases: return "Your most recent purchases"
         case .quickListItems: return "Recently added inventory items"
 
-        // Alert Widgets
-        case .priorityAlerts: return "Important notifications and warnings"
-
         // Chart Widgets
         case .revenueChart: return "Track revenue trends over time"
         case .profitChart: return "Monitor profit performance"
@@ -136,9 +127,6 @@ public enum DashboardWidgetType: String, Codable, CaseIterable {
         case .quickListPurchases: return "bag.fill"
         case .quickListItems: return "shippingbox.fill"
 
-        // Alert Widgets
-        case .priorityAlerts: return "exclamationmark.triangle.fill"
-
         // Chart Widgets
         case .revenueChart: return "chart.line.uptrend.xyaxis"
         case .profitChart: return "dollarsign.circle"
@@ -162,10 +150,6 @@ public enum DashboardWidgetType: String, Codable, CaseIterable {
         case .quickListSales, .quickListPurchases, .quickListItems:
             return .medium
 
-        // Alert Widgets - large (full width)
-        case .priorityAlerts:
-            return .large
-
         // Chart Widgets - large for time series, medium for rankings
         case .revenueChart, .profitChart, .itemsSoldOverTime:
             return .large
@@ -184,8 +168,6 @@ public enum DashboardWidgetType: String, Codable, CaseIterable {
             return .metrics
         case .quickListSales, .quickListPurchases, .quickListItems:
             return .activity
-        case .priorityAlerts:
-            return .alerts
         case .revenueChart, .profitChart, .itemsSoldOverTime,
             .topCategories, .topBrands, .averageSalePrice, .customFormula:
             return .charts
@@ -210,7 +192,6 @@ public enum DashboardWidgetType: String, Codable, CaseIterable {
 public enum WidgetCategory: String, CaseIterable {
     case metrics = "Metrics"
     case activity = "Activity"
-    case alerts = "Alerts"
     case charts = "Charts"
 
     public var displayName: String { rawValue }
@@ -219,7 +200,6 @@ public enum WidgetCategory: String, CaseIterable {
         switch self {
         case .metrics: return "chart.bar.fill"
         case .activity: return "clock.fill"
-        case .alerts: return "bell.fill"
         case .charts: return "chart.xyaxis.line"
         }
     }

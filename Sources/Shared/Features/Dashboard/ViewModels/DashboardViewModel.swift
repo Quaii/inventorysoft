@@ -40,7 +40,6 @@ public class DashboardViewModel: ObservableObject {
     private let salesViewModel: SalesViewModel
     private let purchasesViewModel: PurchasesViewModel
     private let kpiService: KPIServiceProtocol
-    private let kpiService: KPIServiceProtocol
 
     public init(
         dashboardConfigService: DashboardConfigServiceProtocol,

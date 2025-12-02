@@ -12,11 +12,11 @@
 		022F109038804529F47D26AB /* CategoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B425866AA93B96A346884823 /* CategoryRepository.swift */; };
 		026176FEBB31EC7C9AE68958 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4951DB3544984027D017060 /* AnalyticsView.swift */; };
 		047AAF360669C8DFF7847B67 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CDA2A620645EFE8EF902B8 /* AppEnvironment.swift */; };
-		05C14A30E621E2D550AF43DA /* DashboardKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA07D4E9CE5E2C7C5CE6B124 /* DashboardKPI.swift */; };
 		05FB6E47037D8C4AA8DA0B64 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0DBB50FB633578FE7EBC11 /* SwiftUI.framework */; };
 		066774190DB87B6F223917E2 /* AnalyticsConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36914B836A71C4F6004249A /* AnalyticsConfigRepository.swift */; };
 		07AF2D6B53EC200A1B35635B /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE974B527E5C1174E473328 /* SettingsViewModel.swift */; };
 		0A2090F94140D026EAF822DD /* ImportMappingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51B2727E922BBF87151F425 /* ImportMappingService.swift */; };
+		0A325BCA079F02D6ED52B728 /* KPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DC0588C272EF1E895FCBAC /* KPIService.swift */; };
 		0B9E9E6AD26FB1100BAA174A /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D560A799888943875609DDC7 /* ExportService.swift */; };
 		0E415C1A6445303C5675C845 /* AnalyticsWidgetRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07CE3004EC9FD64F4BF628C2 /* AnalyticsWidgetRepository.swift */; };
 		10F9AACF584D5D76EDE57468 /* StockAlertsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9EBD2659317572ACDF900A /* StockAlertsView.swift */; };
@@ -26,7 +26,6 @@
 		15EF682AF656E1FC1113EDB1 /* MetricWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0671BBFF4B467E58DA273CF /* MetricWidget.swift */; };
 		168DF6C935ACCFB25F64E954 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8503F2949FA2DCB8BCDF9CEF /* Item.swift */; };
 		168E40762725408C56244189 /* WidgetConfigurationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F31941B4A6CABC6CBB5ED6 /* WidgetConfigurationModels.swift */; };
-		17147BA7B4EDCAB130C02399 /* DashboardKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA07D4E9CE5E2C7C5CE6B124 /* DashboardKPI.swift */; };
 		1759296A5B68F47B7F24B650 /* InventorySoftModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135A821506B5A754742B6616 /* InventorySoftModal.swift */; };
 		17F0AB4639A208CB76FB7AFB /* KPIGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FA2B6BFF3CBB5070A418AC /* KPIGridView.swift */; };
 		18E40E1F2A34639D2C6B43A8 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE77E75BC4BE3B8F0E1E42CA /* OnboardingView.swift */; };
@@ -62,8 +61,9 @@
 		43CA59DDAB27C73D5D96B9A2 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C4A55BDD8D0E6A61B0D9BE /* ImageRepository.swift */; };
 		44BE60E7CA0BFAF0892BB3F3 /* UserWidgetRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81DB03351FF0610ABA1F351 /* UserWidgetRepository.swift */; };
 		4704E2D7329DDE63CB89FF91 /* SettingsComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59106D68077EC1A69ECF7BEC /* SettingsComponents.swift */; };
+		47A4B3B924CB8858E562E0DA /* DashboardKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD73E7C3B25BD7D8E86706E5 /* DashboardKPI.swift */; };
 		4832E888B600D2D0B5BB9052 /* AnalyticsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D484E273283BFAE259D90 /* AnalyticsModels.swift */; };
-		48AFED5D174408D531FA5DC3 /* AlertChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2B29D3E9B501158068F51 /* AlertChip.swift */; };
+		48F8D21DB99695CA2A9724FD /* KPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DC0588C272EF1E895FCBAC /* KPIService.swift */; };
 		4BBF6FD22B6631089F0FBD4F /* WidgetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8577F00DF7E0F4BB1A8A77 /* WidgetType.swift */; };
 		4C52AFC5CF7C9497CC9E2C80 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 130E9D120958EDF2E4E16178 /* GRDB */; };
 		4CD6C8D8A5CEA1EA626E3A08 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AD734F9EEA6E3E875453CD /* InventoryView.swift */; };
@@ -73,7 +73,6 @@
 		4DFF1889E28FEE6D24FCE547 /* ChartMetricConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0DDFE0C2BEDD0FF01482D7 /* ChartMetricConfigView.swift */; };
 		4E2534AE1C7DCE1269722CFE /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353C282D70DBBB5D5C82D5E1 /* DateExtensions.swift */; };
 		4E7391B7522533FD417399EC /* SettingsComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59106D68077EC1A69ECF7BEC /* SettingsComponents.swift */; };
-		4FDE7F977570008288DA3403 /* PriorityAlertsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B1977E8B5EFBA84CF55A39 /* PriorityAlertsSection.swift */; };
 		4FF2939C7743FE6B015DD6AB /* SalesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F1557F3D74D2BE3FB77B69 /* SalesListView.swift */; };
 		5006120F9DE37E4D33EE7A75 /* ImportMappingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A6946BD6B81D75B96D40F7 /* ImportMappingView.swift */; };
 		50C2486EA0475B0BF8DD09CE /* DashboardConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F318D98EB744C480507C9874 /* DashboardConfigurationView.swift */; };
@@ -81,7 +80,6 @@
 		51DC05583964A45CCD117D24 /* DataTransferService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D30F95323F370042E37ACF6 /* DataTransferService.swift */; };
 		539671B908F2E6FF3A36B023 /* QuickListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707A443667260169FD015730 /* QuickListItem.swift */; };
 		545129E3883079B40B9B3EB9 /* UserPreferencesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA55DFE5F3DBCBD5C87F5DBA /* UserPreferencesRepository.swift */; };
-		54FA4173B8093AC261218C0B /* DynamicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF117EDB93AF4D371AC32BF /* DynamicTable.swift */; };
 		5548C4F812B42FADE6ADDAE3 /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0302F8B09372D5EA690A242E /* ImageService.swift */; };
 		55C579E8EE9463D598B7D1AF /* EditWidgetModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F09BA470FB2A580FD7288F /* EditWidgetModal.swift */; };
 		5664519C797F3F6668C186A5 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A81255E797B156DD099FC59 /* Theme.swift */; };
@@ -89,6 +87,7 @@
 		58FB60345EF2C9DC322E6A5E /* AddWidgetModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC5D453044C9BB2F1A81147 /* AddWidgetModal.swift */; };
 		5B1FF38710BDD16C8E3A7046 /* ResetDatabaseConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDE0245CC88E452F5B81585 /* ResetDatabaseConfirmationView.swift */; };
 		5DE69FBE114736C02A08ABF1 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2BCB670C09F723372F279B /* DatabaseManager.swift */; };
+		61C38E14E10022C0CFEE07C4 /* DashboardKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD73E7C3B25BD7D8E86706E5 /* DashboardKPI.swift */; };
 		64800F8EC8B4CA5C8020DF84 /* KPIWidgetRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44217AEC2E696FC6A9E6577E /* KPIWidgetRowView.swift */; };
 		65FD64787C6780CC171080C7 /* ChartContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9226AFEF623490C7729AB56 /* ChartContextMenu.swift */; };
 		66DAE34CE1D956A64D454DBA /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9541B5443D8E71E9388A9E6C /* Enums.swift */; };
@@ -102,7 +101,6 @@
 		7086CA6A108D37FE02D61585 /* RecentPanelCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1080B1CB15D4F2CD2FD5885 /* RecentPanelCard.swift */; };
 		7239EE9307407D308F8EA550 /* WindowAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02230E3098088DAAF8FD8577 /* WindowAccessor.swift */; };
 		736C6AFF4F202B6C65AD7447 /* AnalyticsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D484E273283BFAE259D90 /* AnalyticsModels.swift */; };
-		73D99E3E42AFCC385840F269 /* AlertsWidgetContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB6822D2235A89C18E5CB0F /* AlertsWidgetContent.swift */; };
 		753416CC22CBBFE9B98625BE /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8503F2949FA2DCB8BCDF9CEF /* Item.swift */; };
 		784DD020EB63378845953570 /* ChartColorConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8FEB41623C7971C74D64F8 /* ChartColorConfigView.swift */; };
 		788A56FF9C59861D309D80D6 /* CustomFieldValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B008BE60C9ECB3C433913BAD /* CustomFieldValue.swift */; };
@@ -146,11 +144,9 @@
 		A6DD98D77D60441D7F79F879 /* LayoutConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619E9CD30BE0BA8426BBEB8F /* LayoutConstants.swift */; };
 		A84FB81F7E9B78FD727E4AB3 /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C8514138B9C7032EB8CE31 /* SettingsRowView.swift */; };
 		A890DFD6B948AA321CB0765F /* Sale.swift in Sources */ = {isa = PBXBuildFile; fileRef = E406E379CFBEF4439FDB3757 /* Sale.swift */; };
-		A90E840B8F148F194087D6BD /* AlertChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2B29D3E9B501158068F51 /* AlertChip.swift */; };
 		AA5D816E8EF94BF6B5A7A32B /* ChartFormulaConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11143DACBEF485D9EC7081E8 /* ChartFormulaConfigView.swift */; };
 		AAD7908302518CFCB32F2614 /* CustomFieldRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD156B42CD2DF31B9733BE5 /* CustomFieldRepository.swift */; };
 		AE79FBF3D45D9CAAA8FFF5EB /* SalesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D9770A7D6A7D6EB392AE567 /* SalesRepository.swift */; };
-		AE7BCB4AEF8FC2F9415DF84E /* PriorityAlertsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B1977E8B5EFBA84CF55A39 /* PriorityAlertsSection.swift */; };
 		AF1B582585A01575CBC4EAA0 /* Migrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1E6D1201DAEC723AB089BF /* Migrations.swift */; };
 		AF41471E78F535E42102230D /* CategoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B425866AA93B96A346884823 /* CategoryRepository.swift */; };
 		B092AC84750981C32710D234 /* RecentActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67ACDE0E645807602348DE55 /* RecentActivityView.swift */; };
@@ -186,7 +182,6 @@
 		CA93BA34F1A77D2405F7A56A /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602AF65CCA96082808BE0D7F /* AnalyticsService.swift */; };
 		CC2188344E636AE791D0EE9F /* DashboardModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5CD3BB986DCD751D328DD4 /* DashboardModels.swift */; };
 		CDF1D285908AC709ECA70C11 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0DBB50FB633578FE7EBC11 /* SwiftUI.framework */; };
-		CE454E43C0C7BBED562C244F /* NotificationToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FE936CE58560439D25A14FD /* NotificationToast.swift */; };
 		CFB29C067FC354FA0008945F /* ItemDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C679B93D7C63D4EEFE2D5763 /* ItemDetailViewModel.swift */; };
 		D06FF1DEA4025F9C589B8645 /* AnalyticsConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36914B836A71C4F6004249A /* AnalyticsConfigRepository.swift */; };
 		D0AEEDBD2495DFC8F31720ED /* ColumnConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFABD80A9A5C31681812F4 /* ColumnConfigRepository.swift */; };
@@ -195,18 +190,15 @@
 		D3916B62EE317BE34FF324AA /* QuickListCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA272916E46D0B628FD6CA39 /* QuickListCard.swift */; };
 		D41F1558C786F2343F7101B1 /* ChartFormulaConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11143DACBEF485D9EC7081E8 /* ChartFormulaConfigView.swift */; };
 		D5DF6E1FEB589D8BCBC0F96C /* KPICard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44FDB431E909075ECDB05EA /* KPICard.swift */; };
-		D61BBDD244A18293A72B7F3D /* DashboardAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FFB4C380E5EC861417C1C8 /* DashboardAlert.swift */; };
 		D6429FFE4FB601CE13239947 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A81255E797B156DD099FC59 /* Theme.swift */; };
 		D88CC343385035AAF04D3507 /* ChartWidgetContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A78AAA2EC27B016B73505F /* ChartWidgetContent.swift */; };
 		D89F5FAAD2596A47D7034058 /* QuickListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4941CE2D2E6BA378724F22E0 /* QuickListRow.swift */; };
 		D8B39A728BC29DCAB89B52AF /* QuickListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707A443667260169FD015730 /* QuickListItem.swift */; };
 		DA8C620405CE25D0DA4932FC /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035AA276CFA531298BCAAE58 /* AppTab.swift */; };
-		DD14F86EBCF0263E80712DB2 /* NotificationToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FE936CE58560439D25A14FD /* NotificationToast.swift */; };
 		DD30E064EB61691AAAD21BE3 /* InventorySoftContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685F28D682EDF92CC742D09 /* InventorySoftContextMenu.swift */; };
 		DDB6125D053D7B09FA7B372C /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = F167AE733843AC389398F550 /* ColorPalette.swift */; };
 		DDF3908B5F159F4B07D4C151 /* ListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B62DE3A9E14AC6CB49D634 /* ListRow.swift */; };
 		DE7CE52F968F48FF57A34B35 /* AnalyticsConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D2C3AF1EDAEEBAB1858FA67 /* AnalyticsConfigService.swift */; };
-		DEEE0887844D3565864189AC /* DashboardAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FFB4C380E5EC861417C1C8 /* DashboardAlert.swift */; };
 		DFEF4208379B2ABE9C1D8042 /* ItemRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAD9E9C642651EB6441F3AA /* ItemRepository.swift */; };
 		E023225A4B324153A373546A /* DashboardSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3F3B226ED2BC4AD8FA54C3 /* DashboardSectionHeader.swift */; };
 		E034C4DBA8E31D23EA935C9E /* DashboardModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5CD3BB986DCD751D328DD4 /* DashboardModels.swift */; };
@@ -220,7 +212,6 @@
 		E89B07984007A013282F1D26 /* ChartDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93EFF4BDAD81FA0A441C0A7 /* ChartDefinition.swift */; };
 		E8E3550E86EA0CA84F1CD38D /* ColumnConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BAF1C3B84263F48FD35ECB /* ColumnConfigService.swift */; };
 		E9ED1F7EAE2FD269E18712B6 /* StockAlertsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9EBD2659317572ACDF900A /* StockAlertsView.swift */; };
-		EA290B2A6C277474D8A26D04 /* DynamicTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF117EDB93AF4D371AC32BF /* DynamicTable.swift */; };
 		EAC136879616B37BC4D076DE /* KPIWidgetContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09FEE4826B3C21313ED37E5 /* KPIWidgetContent.swift */; };
 		EC2EFBF9005C81606B63EA82 /* ChartWidgetContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A78AAA2EC27B016B73505F /* ChartWidgetContent.swift */; };
 		ED1672BFCA00F6CACAD6C12A /* ColumnConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BAF1C3B84263F48FD35ECB /* ColumnConfigService.swift */; };
@@ -232,7 +223,6 @@
 		F286A0B797F3A320BE026188 /* ImportProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABBE6877171B59A5D77A9FE /* ImportProfile.swift */; };
 		F3300AC0B2E910BB3D06D8B9 /* SchemaDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E21C5071D2D149BC7D7AF2E /* SchemaDefinitions.swift */; };
 		F3C9497BBFAF7E9194017D22 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 559A953305DF9F93875C3678 /* Assets.xcassets */; };
-		F91DD7B11DB34A432228E3F8 /* AlertsWidgetContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB6822D2235A89C18E5CB0F /* AlertsWidgetContent.swift */; };
 		F9572914CF241B4D6E469006 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 3E4B599B6CAD89D4643B1E36 /* GRDB */; };
 		FADEAFD391A0CCE9DB06346E /* SettingsPickerPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B29A846261B2BA657901BB7 /* SettingsPickerPill.swift */; };
 		FB7D5A2CF7E0463E62FA0897 /* ImportMappingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51B2727E922BBF87151F425 /* ImportMappingService.swift */; };
@@ -257,7 +247,6 @@
 		17AD734F9EEA6E3E875453CD /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
 		1D9770A7D6A7D6EB392AE567 /* SalesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesRepository.swift; sourceTree = "<group>"; };
 		202826ED2896373A3133DFA2 /* ChartEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartEditorView.swift; sourceTree = "<group>"; };
-		21B1977E8B5EFBA84CF55A39 /* PriorityAlertsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityAlertsSection.swift; sourceTree = "<group>"; };
 		22333BDC4D176EF778D807E7 /* QuickListWidgetContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickListWidgetContent.swift; sourceTree = "<group>"; };
 		26F31941B4A6CABC6CBB5ED6 /* WidgetConfigurationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetConfigurationModels.swift; sourceTree = "<group>"; };
 		293AEA14DCBFB5C0C1ECC589 /* DashboardConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardConfigRepository.swift; sourceTree = "<group>"; };
@@ -270,6 +259,7 @@
 		3E15E386B748295219BE5DA4 /* PurchasesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasesViewModel.swift; sourceTree = "<group>"; };
 		401200BB58F08307A8AF9981 /* AnalyticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsViewModel.swift; sourceTree = "<group>"; };
 		429BE01EC3D6F09E2CA23529 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		42DC0588C272EF1E895FCBAC /* KPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KPIService.swift; sourceTree = "<group>"; };
 		44217AEC2E696FC6A9E6577E /* KPIWidgetRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KPIWidgetRowView.swift; sourceTree = "<group>"; };
 		45A9717CEED17A51479DB69D /* ColumnConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnConfigurationView.swift; sourceTree = "<group>"; };
 		4941CE2D2E6BA378724F22E0 /* QuickListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickListRow.swift; sourceTree = "<group>"; };
@@ -304,18 +294,15 @@
 		8D986EFA3EBE5B87507E33F8 /* MainShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainShellView.swift; sourceTree = "<group>"; };
 		8F7CCA4C2EBDE9939D09DC7D /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		8F9EBD2659317572ACDF900A /* StockAlertsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAlertsView.swift; sourceTree = "<group>"; };
-		8FE936CE58560439D25A14FD /* NotificationToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationToast.swift; sourceTree = "<group>"; };
 		90C8514138B9C7032EB8CE31 /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
 		91EC1C5A1554259E653E51C5 /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
 		9527E4AD0E1D15F6D4126A97 /* ImportProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportProfileRepository.swift; sourceTree = "<group>"; };
 		9541B5443D8E71E9388A9E6C /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
-		96C2B29D3E9B501158068F51 /* AlertChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertChip.swift; sourceTree = "<group>"; };
 		9D30F95323F370042E37ACF6 /* DataTransferService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferService.swift; sourceTree = "<group>"; };
 		A2F09BA470FB2A580FD7288F /* EditWidgetModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditWidgetModal.swift; sourceTree = "<group>"; };
 		A596A4481640366582C4C05B /* AppEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEntry.swift; sourceTree = "<group>"; };
 		A6F1B26A6C90E7FA2DEE90B0 /* TableColumnConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableColumnConfig.swift; sourceTree = "<group>"; };
 		A8896B045B7C2B7B3D75AF88 /* WidgetContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetContextMenu.swift; sourceTree = "<group>"; };
-		AA07D4E9CE5E2C7C5CE6B124 /* DashboardKPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardKPI.swift; sourceTree = "<group>"; };
 		AA55DFE5F3DBCBD5C87F5DBA /* UserPreferencesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferencesRepository.swift; sourceTree = "<group>"; };
 		AAA8D3705DCC68394EF615C8 /* StockAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAlert.swift; sourceTree = "<group>"; };
 		AC2BCB670C09F723372F279B /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
@@ -331,6 +318,7 @@
 		B81DB03351FF0610ABA1F351 /* UserWidgetRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserWidgetRepository.swift; sourceTree = "<group>"; };
 		BC5CD3BB986DCD751D328DD4 /* DashboardModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardModels.swift; sourceTree = "<group>"; };
 		BC8FEB41623C7971C74D64F8 /* ChartColorConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartColorConfigView.swift; sourceTree = "<group>"; };
+		BD73E7C3B25BD7D8E86706E5 /* DashboardKPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardKPI.swift; sourceTree = "<group>"; };
 		C00E7E18310D47ACC25A3CE6 /* BrandRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandRepository.swift; sourceTree = "<group>"; };
 		C0671BBFF4B467E58DA273CF /* MetricWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricWidget.swift; sourceTree = "<group>"; };
 		C09FEE4826B3C21313ED37E5 /* KPIWidgetContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KPIWidgetContent.swift; sourceTree = "<group>"; };
@@ -353,9 +341,6 @@
 		E2D2394732E2E0466CD064AF /* CustomFieldManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFieldManagementView.swift; sourceTree = "<group>"; };
 		E406E379CFBEF4439FDB3757 /* Sale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sale.swift; sourceTree = "<group>"; };
 		E51B2727E922BBF87151F425 /* ImportMappingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportMappingService.swift; sourceTree = "<group>"; };
-		E6FFB4C380E5EC861417C1C8 /* DashboardAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardAlert.swift; sourceTree = "<group>"; };
-		ECB6822D2235A89C18E5CB0F /* AlertsWidgetContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsWidgetContent.swift; sourceTree = "<group>"; };
-		EDF117EDB93AF4D371AC32BF /* DynamicTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicTable.swift; sourceTree = "<group>"; };
 		F167AE733843AC389398F550 /* ColorPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPalette.swift; sourceTree = "<group>"; };
 		F2A78AAA2EC27B016B73505F /* ChartWidgetContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartWidgetContent.swift; sourceTree = "<group>"; };
 		F318D98EB744C480507C9874 /* DashboardConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardConfigurationView.swift; sourceTree = "<group>"; };
@@ -498,8 +483,6 @@
 		592AC7EAE3F2EFC74A55E4E2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				E6FFB4C380E5EC861417C1C8 /* DashboardAlert.swift */,
-				AA07D4E9CE5E2C7C5CE6B124 /* DashboardKPI.swift */,
 				707A443667260169FD015730 /* QuickListItem.swift */,
 				FCFBE206187F6F51423FCF7D /* UserWidget.swift */,
 				26F31941B4A6CABC6CBB5ED6 /* WidgetConfigurationModels.swift */,
@@ -549,7 +532,6 @@
 		786D8164BFDC1F9A2AD3B86B /* Widgets */ = {
 			isa = PBXGroup;
 			children = (
-				ECB6822D2235A89C18E5CB0F /* AlertsWidgetContent.swift */,
 				FCA8D4682864CB5F3CAE703A /* DashboardWidgetGrid.swift */,
 				C09FEE4826B3C21313ED37E5 /* KPIWidgetContent.swift */,
 				44217AEC2E696FC6A9E6577E /* KPIWidgetRowView.swift */,
@@ -564,15 +546,6 @@
 				0CA1AC494045BADEA380BB53 /* PurchasesListView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		8DF648805F0486C0336ADE37 /* Alerts */ = {
-			isa = PBXGroup;
-			children = (
-				96C2B29D3E9B501158068F51 /* AlertChip.swift */,
-				21B1977E8B5EFBA84CF55A39 /* PriorityAlertsSection.swift */,
-			);
-			path = Alerts;
 			sourceTree = "<group>";
 		};
 		8FDC5CC6BFDF094089040D56 /* Features */ = {
@@ -664,9 +637,7 @@
 		B54D4F7CB9778EFDA6DFE250 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				EDF117EDB93AF4D371AC32BF /* DynamicTable.swift */,
 				E0B62DE3A9E14AC6CB49D634 /* ListRow.swift */,
-				8FE936CE58560439D25A14FD /* NotificationToast.swift */,
 				A9C52305E606AEF46059958A /* Feedback */,
 			);
 			path = Components;
@@ -699,7 +670,6 @@
 				B1080B1CB15D4F2CD2FD5885 /* RecentPanelCard.swift */,
 				8F9EBD2659317572ACDF900A /* StockAlertsView.swift */,
 				FE35F9B2A30E4542EE9B4CBD /* TotalItemsCard.swift */,
-				8DF648805F0486C0336ADE37 /* Alerts */,
 				F3BDE14F8C9C0FD1FC561282 /* KPI */,
 				C17E73C924A1AD2DB0465ED2 /* QuickLists */,
 				786D8164BFDC1F9A2AD3B86B /* Widgets */,
@@ -834,6 +804,7 @@
 				D93EFF4BDAD81FA0A441C0A7 /* ChartDefinition.swift */,
 				DC0ACADF5663EA0938BAE8B5 /* CustomFieldDefinition.swift */,
 				B008BE60C9ECB3C433913BAD /* CustomFieldValue.swift */,
+				BD73E7C3B25BD7D8E86706E5 /* DashboardKPI.swift */,
 				BC5CD3BB986DCD751D328DD4 /* DashboardModels.swift */,
 				9541B5443D8E71E9388A9E6C /* Enums.swift */,
 				05687149CC1F6487E4EEB979 /* ImageAttachment.swift */,
@@ -881,6 +852,7 @@
 				D560A799888943875609DDC7 /* ExportService.swift */,
 				0302F8B09372D5EA690A242E /* ImageService.swift */,
 				E51B2727E922BBF87151F425 /* ImportMappingService.swift */,
+				42DC0588C272EF1E895FCBAC /* KPIService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -1040,8 +1012,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				58FB60345EF2C9DC322E6A5E /* AddWidgetModal.swift in Sources */,
-				48AFED5D174408D531FA5DC3 /* AlertChip.swift in Sources */,
-				73D99E3E42AFCC385840F269 /* AlertsWidgetContent.swift in Sources */,
 				D06FF1DEA4025F9C589B8645 /* AnalyticsConfigRepository.swift in Sources */,
 				DE7CE52F968F48FF57A34B35 /* AnalyticsConfigService.swift in Sources */,
 				4832E888B600D2D0B5BB9052 /* AnalyticsModels.swift in Sources */,
@@ -1072,11 +1042,10 @@
 				2D7D745321C9100662D2A35C /* CustomFieldManagementView.swift in Sources */,
 				AAD7908302518CFCB32F2614 /* CustomFieldRepository.swift in Sources */,
 				B97753D37DA3A45F133A731B /* CustomFieldValue.swift in Sources */,
-				DEEE0887844D3565864189AC /* DashboardAlert.swift in Sources */,
 				A394776F8C0336ED8335F02F /* DashboardConfigRepository.swift in Sources */,
 				6D8901557697BC384DF2CB7A /* DashboardConfigService.swift in Sources */,
 				C133CECE97ED6DD322B95814 /* DashboardConfigurationView.swift in Sources */,
-				05C14A30E621E2D550AF43DA /* DashboardKPI.swift in Sources */,
+				61C38E14E10022C0CFEE07C4 /* DashboardKPI.swift in Sources */,
 				E034C4DBA8E31D23EA935C9E /* DashboardModels.swift in Sources */,
 				1C9F88F83725C2CF09E023AA /* DashboardSectionHeader.swift in Sources */,
 				6947ABB7F1D9549AE758C0EA /* DashboardView.swift in Sources */,
@@ -1085,7 +1054,6 @@
 				7B86409034B8145226229B21 /* DataTransferService.swift in Sources */,
 				C39963EB1250A666A975C118 /* DatabaseManager.swift in Sources */,
 				4E2534AE1C7DCE1269722CFE /* DateExtensions.swift in Sources */,
-				EA290B2A6C277474D8A26D04 /* DynamicTable.swift in Sources */,
 				55C579E8EE9463D598B7D1AF /* EditWidgetModal.swift in Sources */,
 				CA716739B391D80EFB0703DE /* Enums.swift in Sources */,
 				931C3298031267B1825607B1 /* ExportService.swift in Sources */,
@@ -1106,6 +1074,7 @@
 				DFEF4208379B2ABE9C1D8042 /* ItemRepository.swift in Sources */,
 				191A7FF4AF698CF88247DB46 /* KPICard.swift in Sources */,
 				17F0AB4639A208CB76FB7AFB /* KPIGridView.swift in Sources */,
+				48F8D21DB99695CA2A9724FD /* KPIService.swift in Sources */,
 				EAC136879616B37BC4D076DE /* KPIWidgetContent.swift in Sources */,
 				9A1FEB77FE8231F8AF930F64 /* KPIWidgetRowView.swift in Sources */,
 				FFD8D6D7A6C8A1D492351D41 /* LayoutConstants.swift in Sources */,
@@ -1114,9 +1083,7 @@
 				E4089505BA35F3DA1457F522 /* MetricWidget.swift in Sources */,
 				1D18FB5313FF74F6495F0A71 /* Migrations.swift in Sources */,
 				D1F6381F1ED2960025369324 /* ModelExtensions.swift in Sources */,
-				DD14F86EBCF0263E80712DB2 /* NotificationToast.swift in Sources */,
 				18E40E1F2A34639D2C6B43A8 /* OnboardingView.swift in Sources */,
-				4FDE7F977570008288DA3403 /* PriorityAlertsSection.swift in Sources */,
 				8BE1D09D3C4CC78450C4C22D /* Purchase.swift in Sources */,
 				4D782AD5BBD5A76AE9C0FC04 /* PurchaseRepository.swift in Sources */,
 				9D22AB981BCB31CA51AAA472 /* PurchasesListView.swift in Sources */,
@@ -1161,8 +1128,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				571928B8843D121B78656BA5 /* AddWidgetModal.swift in Sources */,
-				A90E840B8F148F194087D6BD /* AlertChip.swift in Sources */,
-				F91DD7B11DB34A432228E3F8 /* AlertsWidgetContent.swift in Sources */,
 				066774190DB87B6F223917E2 /* AnalyticsConfigRepository.swift in Sources */,
 				A56EAFF8BB56CCB820C09599 /* AnalyticsConfigService.swift in Sources */,
 				736C6AFF4F202B6C65AD7447 /* AnalyticsModels.swift in Sources */,
@@ -1193,11 +1158,10 @@
 				88F7D69CE26833EA90A68976 /* CustomFieldManagementView.swift in Sources */,
 				1ADC48A551E3125E5E9996FC /* CustomFieldRepository.swift in Sources */,
 				788A56FF9C59861D309D80D6 /* CustomFieldValue.swift in Sources */,
-				D61BBDD244A18293A72B7F3D /* DashboardAlert.swift in Sources */,
 				86F39146C538E4574A24262B /* DashboardConfigRepository.swift in Sources */,
 				41F4131CFA4C862E4298A7F3 /* DashboardConfigService.swift in Sources */,
 				50C2486EA0475B0BF8DD09CE /* DashboardConfigurationView.swift in Sources */,
-				17147BA7B4EDCAB130C02399 /* DashboardKPI.swift in Sources */,
+				47A4B3B924CB8858E562E0DA /* DashboardKPI.swift in Sources */,
 				CC2188344E636AE791D0EE9F /* DashboardModels.swift in Sources */,
 				E023225A4B324153A373546A /* DashboardSectionHeader.swift in Sources */,
 				2A1B5A3678C614A7735ED791 /* DashboardView.swift in Sources */,
@@ -1206,7 +1170,6 @@
 				51DC05583964A45CCD117D24 /* DataTransferService.swift in Sources */,
 				5DE69FBE114736C02A08ABF1 /* DatabaseManager.swift in Sources */,
 				01C411BCB448B922850CF590 /* DateExtensions.swift in Sources */,
-				54FA4173B8093AC261218C0B /* DynamicTable.swift in Sources */,
 				335488D6B71FCD3801AD3DA4 /* EditWidgetModal.swift in Sources */,
 				66DAE34CE1D956A64D454DBA /* Enums.swift in Sources */,
 				0B9E9E6AD26FB1100BAA174A /* ExportService.swift in Sources */,
@@ -1227,6 +1190,7 @@
 				7977DD4187AA7B7E3D98253C /* ItemRepository.swift in Sources */,
 				D5DF6E1FEB589D8BCBC0F96C /* KPICard.swift in Sources */,
 				BB589DEF34364B919CA2C3D2 /* KPIGridView.swift in Sources */,
+				0A325BCA079F02D6ED52B728 /* KPIService.swift in Sources */,
 				C82B61707195D30175B48497 /* KPIWidgetContent.swift in Sources */,
 				64800F8EC8B4CA5C8020DF84 /* KPIWidgetRowView.swift in Sources */,
 				A6DD98D77D60441D7F79F879 /* LayoutConstants.swift in Sources */,
@@ -1235,9 +1199,7 @@
 				15EF682AF656E1FC1113EDB1 /* MetricWidget.swift in Sources */,
 				AF1B582585A01575CBC4EAA0 /* Migrations.swift in Sources */,
 				C0EB57B5D98700380DE3AA2A /* ModelExtensions.swift in Sources */,
-				CE454E43C0C7BBED562C244F /* NotificationToast.swift in Sources */,
 				B2D22BDB4DAD0EADA3C03C39 /* OnboardingView.swift in Sources */,
-				AE7BCB4AEF8FC2F9415DF84E /* PriorityAlertsSection.swift in Sources */,
 				A688478AD7CA4861164D2606 /* Purchase.swift in Sources */,
 				E3341E5D8B80E51E7D34991D /* PurchaseRepository.swift in Sources */,
 				3A89912F2F99B7EAB59D90B5 /* PurchasesListView.swift in Sources */,

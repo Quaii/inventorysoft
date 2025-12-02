@@ -282,10 +282,6 @@ struct DashboardView: View {
             case .quickListSales, .quickListPurchases, .quickListItems:
                 EmptyView()
 
-            // Alert Widgets (shouldn't appear here)
-            case .priorityAlerts:
-                EmptyView()
-
             // Chart Widgets
             case .revenueChart, .profitChart, .itemsSoldOverTime,
                 .topCategories, .topBrands, .averageSalePrice, .customFormula:

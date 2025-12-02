@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ImageAttachment: Identifiable, Codable, Equatable {
+public struct ImageAttachment: Identifiable, Codable, Equatable, Hashable {
     public let id: UUID
     public var itemId: UUID
     public var fileName: String

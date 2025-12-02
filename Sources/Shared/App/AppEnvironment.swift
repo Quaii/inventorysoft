@@ -22,7 +22,6 @@ public final class AppEnvironment: ObservableObject {
     public let columnConfigService: ColumnConfigServiceProtocol
     public let importMappingService: ImportMappingServiceProtocol
     public let analyticsConfigService: AnalyticsConfigServiceProtocol
-    public let analyticsConfigService: AnalyticsConfigServiceProtocol
     public let exportService: ExportService
     public let kpiService: KPIServiceProtocol
 
